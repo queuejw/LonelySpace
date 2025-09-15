@@ -8,26 +8,65 @@ from core.console_manager import clear_terminal, print_colored_text
 from core.constants import DEBUG_MODE_ENABLED
 from core.core_utils import pause
 from core.menu_shared_functions import menu_unknown_key_code
+from core.menus import main_menu
 from game.classes.ship import PlayerShip
 from game.classes.universe import Universe
 
 UNIVERSE: Universe
 PLAYER: PlayerShip
 
-# Обработка команд в зависимости от действия
-def game_commands(keycode: str):
-    match keycode:
+PAUSED = False
+
+# Обработка ввода на экране паузы
+def pause_input():
+    key = kb.read_key()
+    if DEBUG_MODE_ENABLED:
+        print(key)
+    global PAUSED
+    match key:
+        case "delete":
+            # Останавливаем игру, пока что не реализовано
+            clear_terminal()
+            main_menu.run_main_menu()
+        case "enter":
+            # Продолжаем игру
+            PAUSED = False
+            clear_terminal(False)
+            show_main_game_screen()
         case _:
             menu_unknown_key_code()
 
-    game_input()
+    if PAUSED:
+        pause_input()
+
+# Выводит экран паузы
+def show_pause_screen():
+    global PAUSED
+    PAUSED = True
+    # В будущем нужно реализовать паузу, сейчас её нет. Как и игры.
+    text = "=== Пауза ===\nENTER - вернуться в игру\nDEL - выйти в главное меню"
+    clear_terminal(False)
+    if DEBUG_MODE_ENABLED:
+        print("Остановка игры: пауза")
+    print_colored_text(text)
+    pause_input()
+
+# Обработка команд в зависимости от действия
+def game_commands(keycode: str):
+    match keycode:
+        case "esc":
+            show_pause_screen()
+        case _:
+            menu_unknown_key_code()
+    if not PAUSED:
+        game_input()
 
 # Ввод игры
 def game_input():
     key = kb.read_key()
     game_commands(key)
 
-
+# Возвращает дату в таком формате: день, месяц, год
 def gui_launch_get_date() -> str:
     return f"{datetime.date.today().day}/{datetime.date.today().month}/{datetime.date.today().year}"
 
@@ -60,6 +99,12 @@ def get_player_stats_list() -> list:
     ]
     return l
 
+def get_main_buttons_tip_text() -> str:
+    text = (
+        "\n\n[ESC] - Пауза | [M] - Карта | [R] - Ремонт"
+    )
+    return text
+
 
 # Симуляция запуска компьютера
 def animate_gui_launch():
@@ -86,7 +131,7 @@ def animate_gui_launch():
         pause(0.1)
 
     print_colored_text("Нет соединения с сервером, получение данных о планетах невозможно", Fore.YELLOW)
-    pause(0.5)
+    pause(0.25)
     clear_terminal()
     show_main_game_screen()
 
@@ -104,7 +149,7 @@ def show_main_game_screen():
                 ship = ship.replace("p", "")
             n = n + 1
 
-    print_colored_text(ship)
+    print_colored_text(ship + get_main_buttons_tip_text())
 
 
 # Запускает интерфейс игры
