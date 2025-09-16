@@ -68,8 +68,7 @@ def init_survival_game():
     clear_terminal()
     if not DEBUG_MODE_ENABLED:
         slow_print_colored_text("Идёт загрузка...\n", 0.2)
-
-    print_colored_text("> Генерация космического пространства ...")
+        print_colored_text("> Генерация космического пространства ...")
     # Создание локации
     m_planets = create_planets(20)  # Генерируем планеты
     game_vars.UNIVERSE = create_universe(m_planets)  # Создаем вселенную с этими планетами.

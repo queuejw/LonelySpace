@@ -10,7 +10,7 @@ class PlayerShip:
         self.x = 0  # Положение корабля по координатам x
         self.y = 0  # Положение корабля по координатам y
         self.fuel = 100  # Топливо (от 0 до 100)
-        self.health = 100  # Прочность (от 0 до 100)
+        self.health = 25  # Прочность (от 0 до 100)
         self.oxygen = 100  # Уровень воздуха (от 0 до 100)
         self.speed = 100  # Скорость. По умолчанию 100.
         self.resources = random.randint(100,

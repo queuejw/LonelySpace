@@ -9,3 +9,4 @@ GAME_SCREEN = "main"  # Указывает текущий экран игры
 UPDATE_REQUIRED = False  # Требуется ли обновление данных на главном экране?
 
 MAIN_GAME_THREAD_RUNNING = False  # Указывает состояние основного потока игры
+REPAIR_RUNNING = False

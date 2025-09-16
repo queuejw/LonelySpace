@@ -1,5 +1,4 @@
 import asyncio
-import datetime
 import os.path
 
 import keyboard as kb
@@ -9,8 +8,10 @@ from core.console_manager import clear_terminal, print_colored_text
 from core.constants import DEBUG_MODE_ENABLED
 from core.core_utils import pause
 from core.menus import main_menu
+from core.translation_manager import TRANSLATIONS
 from game import game_threads
 from game import game_vars
+from game.game_utils import is_repair_needed, get_today_date
 
 
 # Запускает основной поток игры
@@ -31,11 +32,6 @@ def show_pause_screen():
     if DEBUG_MODE_ENABLED:
         print("Остановка игры: пауза")
     print_colored_text(text)
-
-
-# Возвращает дату в таком формате: день, месяц, год
-def gui_launch_get_date() -> str:
-    return f"{datetime.date.today().day}/{datetime.date.today().month}/{datetime.date.today().year}"
 
 
 # Возвращает ASCII рисунок корабля
@@ -72,7 +68,7 @@ def get_player_stats_list() -> list:
 
 def get_main_buttons_tip_text() -> str:
     text = (
-        "\n\n[ESC] - Пауза | [M] - Карта | [R] - Ремонт"
+        "\n\n[ESC] - Пауза | [M] - Карта | [R] - Ремонт | [H] - Как играть?"
     )
     return text
 
@@ -94,7 +90,7 @@ def animate_gui_launch():
         print_colored_text("> Проверка безопасности системы : Ошибка", Fore.RED)
         print_colored_text("> Проверка связи: Успешно")
         pause(0.75)
-        print_colored_text(f"> Последнее обновление прошивки: {gui_launch_get_date()}")
+        print_colored_text(f"> Последнее обновление прошивки: {get_today_date()}")
         pause(0.75)
 
         clear_terminal()
@@ -124,6 +120,17 @@ def show_main_game_screen():
             n = n + 1
 
     print_colored_text(ship + get_main_buttons_tip_text())
+
+
+# Запускает функцию ремонта, если все условия выполнены.
+def run_repair():
+    if is_repair_needed():
+        if game_vars.PLAYER.resources > 10:
+            asyncio.run(game_threads.repair())
+        else:
+            print_colored_text(TRANSLATIONS['not_enough_resources'], Back.RED)
+    else:
+        print_colored_text(TRANSLATIONS['repair_not_needed'], Back.YELLOW)
 
 
 async def game_cycle():
