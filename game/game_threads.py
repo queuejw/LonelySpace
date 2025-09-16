@@ -1,7 +1,7 @@
 import asyncio
 import random
 
-from colorama import Fore
+from colorama import Fore, Back
 
 from core.console_manager import print_colored_text
 from core.constants import SHIP_LVL_0_SPEED, SHIP_LVL_1_SPEED, DEBUG_MODE_ENABLED, SHIP_LVL_2_SPEED, SHIP_LVL_3_SPEED
@@ -73,18 +73,23 @@ async def main_thread():
 # Ремонт корабля.
 # Стоит учитывать, что ремонт будет работать даже во время паузы. Это не баг, это фича (мне лень реализовывать остановку цикла)
 async def repair():
+    if game_vars.REPAIR_RUNNING:
+        return
     game_vars.REPAIR_RUNNING = True  # Указываем, что ремонт идёт
     # Запускаем цикл со случайной длительностью (от 10 до 30 секунд)
     dur = random.randint(5, 30)
     if DEBUG_MODE_ENABLED:
         print(f"Начинается ремонт корабля длительностью {dur} секунд")
+
+    print_colored_text(Back.GREEN + TRANSLATIONS['repair_started'] + Back.RESET + Fore.RESET, Fore.BLACK)
+
     for x in range(dur):
 
         if not is_repair_needed():
             break
 
         if game_vars.PLAYER.resources < 10:
-            print_colored_text(TRANSLATIONS['not_enough_resources'], Fore.RED)
+            print_colored_text(TRANSLATIONS['not_enough_resources'] + Back.RESET + Fore.RESET, Fore.RED)
             break
 
         if game_vars.PLAYER.health < 100:
@@ -93,9 +98,13 @@ async def repair():
         if game_vars.PLAYER.oxygen < 100:
             game_vars.PLAYER.oxygen = clamp(game_vars.PLAYER.oxygen + random.randint(1, 2), 0, 100)
 
+        game_vars.PLAYER.resources = clamp(game_vars.PLAYER.resources - 10, 0, 99999)
+
         await asyncio.sleep(1)  # Ожидаем 1 секунду перед следующей итерацией
 
     game_vars.REPAIR_RUNNING = False  # Указываем, что ремонт закончился.
 
     if game_vars.PLAYER.resources > 10:
-        print_colored_text(TRANSLATIONS['repair_finished'])
+        print_colored_text(Back.GREEN + TRANSLATIONS['repair_finished'] + Back.RESET + Fore.RESET, Fore.BLACK)
+        print(Back.RESET)
+        print(Fore.RESET)

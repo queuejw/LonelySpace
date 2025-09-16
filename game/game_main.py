@@ -123,15 +123,16 @@ def show_main_game_screen():
 
 
 # Запускает функцию ремонта, если все условия выполнены.
-def run_repair():
+async def run_repair():
+    if DEBUG_MODE_ENABLED:
+        print("Попытка начать ремонт")
     if is_repair_needed():
         if game_vars.PLAYER.resources > 10:
-            asyncio.run(game_threads.repair())
+            asyncio.create_task(game_threads.repair())
         else:
-            print_colored_text(TRANSLATIONS['not_enough_resources'], Back.RED)
+            print_colored_text(Fore.BLACK + TRANSLATIONS['not_enough_resources'] + Back.RESET + Fore.RESET, Back.RED)
     else:
-        print_colored_text(TRANSLATIONS['repair_not_needed'], Back.YELLOW)
-
+        print_colored_text(Fore.BLACK + TRANSLATIONS['repair_not_needed'] + Back.RESET + Fore.RESET, Back.YELLOW)
 
 async def game_cycle():
     await start_main_thread()
@@ -142,6 +143,9 @@ async def game_cycle():
                     if game_vars.UPDATE_REQUIRED:
                         game_vars.UPDATE_REQUIRED = False
                         show_main_game_screen()
+                    if kb.is_pressed("r"):
+                        await run_repair()
+
                 case _:
                     pass
 
