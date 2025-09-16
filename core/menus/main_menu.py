@@ -1,7 +1,7 @@
 import time
 
 import keyboard as kb  # Библиотека keyboard, которая используется для получения нажатия клавиш.
-from colorama import Back
+from colorama import Back, Fore
 
 from core import saves_manager
 from core.console_manager import print_colored_text, slow_print_colored_text
@@ -76,6 +76,9 @@ def main_menu_key_code_check(code: str) -> bool:
 def print_main_menu():
     # Создаем и отправляем текст главного меню игры
     print_colored_text(TRANSLATIONS['main_menu_message'])
+    # Если включен режим отладки, уведомляем
+    if DEBUG_MODE_ENABLED:
+        print_colored_text(TRANSLATIONS['debug_mode_enabled'], Fore.RED)
 
 
 # Функция, которая обрабатывает нажатия в главном меню
