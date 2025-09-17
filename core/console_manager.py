@@ -19,5 +19,6 @@ def slow_print_colored_text(text: str, delay: float = 0.1, color: str = Fore.GRE
 # Функция, которая *очищает* окно с небольшой анимацией загрузки.
 def clear_terminal(anim_enabled: bool = True):
     if anim_enabled:
+        print()
         slow_print_colored_text("======")
     print("\n" * 100)

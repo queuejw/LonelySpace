@@ -27,11 +27,10 @@ async def start_main_thread():
 def show_pause_screen():
     game_vars.PAUSED = True  # Указываем, что игра приостановлена.
     # В будущем нужно реализовать паузу, сейчас её нет. Как и игры.
-    text = "=== Пауза ===\nENTER - вернуться в игру\nDEL - выйти в главное меню"
     clear_terminal(False)
     if DEBUG_MODE_ENABLED:
         print("Остановка игры: пауза")
-    print_colored_text(text)
+    print_colored_text(TRANSLATIONS['pause_screen'])
 
 
 # Возвращает ASCII рисунок корабля
@@ -46,60 +45,50 @@ def get_player_ship_ascii(level: int) -> str:
                 result += line
             return result
     else:
-        print_colored_text("Критическая ошибка, рисунок корабля не найден. Продолжение игры невозможно.", Back.RED)
+        print_colored_text(Fore.BLACK + TRANSLATIONS['ship_file_error'], Back.RED)
         exit(1)
 
 
 # Возвращает информацию о корабле
 def get_player_stats_list() -> list:
-    l = [
-        f"Корабль {game_vars.PLAYER.name}" + " " * 10,
-        f"Уровень: {game_vars.PLAYER.level}" + " " * 10,
+    s = [
+        f"{TRANSLATIONS['ship']} {game_vars.PLAYER.name}" + " " * 10,
+        f"{TRANSLATIONS['level']}: {game_vars.PLAYER.level}" + " " * 10,
         "======" + " " * 10,
-        f"Прочность корабля: {game_vars.PLAYER.health}%" + " " * 10,
-        f"Топливо: {game_vars.PLAYER.fuel}%" + " " * 10,
-        f"Кислород: {game_vars.PLAYER.oxygen}%" + " " * 10,
-        f"Скорость: {game_vars.PLAYER.speed}" + " " * 10,
+        f"{TRANSLATIONS['strength']}: {game_vars.PLAYER.strength}%" + " " * 10,
+        f"{TRANSLATIONS['fuel']}: {game_vars.PLAYER.fuel}%" + " " * 10,
+        f"{TRANSLATIONS['oxygen']}: {game_vars.PLAYER.oxygen}%" + " " * 10,
+        f"{TRANSLATIONS['speed']}: {game_vars.PLAYER.speed}" + " " * 10,
         "======" + " " * 10,
-        f"Ресурсы: {game_vars.PLAYER.resources}" + " " * 10,
+        f"{TRANSLATIONS['resources']}: {game_vars.PLAYER.resources}" + " " * 10,
     ]
-    return l
-
-
-def get_main_buttons_tip_text() -> str:
-    text = (
-        "\n\n[ESC] - Пауза | [M] - Карта | [R] - Ремонт | [H] - Как играть?"
-    )
-    return text
+    return s
 
 
 # Симуляция запуска компьютера
 def animate_gui_launch():
     # Если включен режим отладки, пропускаем бесполезные вещи.
     if not DEBUG_MODE_ENABLED:
-        print_colored_text("> Проверка целостности системы: Успешно")
-        print_colored_text("> Инициализация базовых систем")
+        print_colored_text(TRANSLATIONS['loading_5'])
+        print_colored_text(TRANSLATIONS['loading_6'])
         pause(1)
-        print_colored_text("> Подготовка орудий ...")
+        print_colored_text(TRANSLATIONS['loading_7'])
         pause(0.75)
-        print_colored_text("> Запуск оболочки SPACE_TERMINAL v.1.0 .")
+        for n in range(4):
+            print(f"\r{TRANSLATIONS['loading_8']}" + " ." * n, end="", flush=True)
+            pause(0.75)
+        print_colored_text(f"\n{TRANSLATIONS['loading_9']}", Fore.RED)
+        print_colored_text(TRANSLATIONS['loading_10'])
         pause(0.75)
-        print_colored_text("> Запуск оболочки SPACE_TERMINAL v.1.0 . .")
+        print_colored_text(f"{TRANSLATIONS['loading_11']}: {get_today_date()}")
         pause(0.75)
-        print_colored_text("> Запуск оболочки SPACE_TERMINAL v.1.0 . . .")
-        print_colored_text("> Проверка безопасности системы : Ошибка", Fore.RED)
-        print_colored_text("> Проверка связи: Успешно")
-        pause(0.75)
-        print_colored_text(f"> Последнее обновление прошивки: {get_today_date()}")
-        pause(0.75)
-
         clear_terminal()
-        print_colored_text("Оптимизация оболочки")
-        for n in range(10):
-            print_colored_text("[" + "=" * n + "]")
-            pause(0.1)
+        print_colored_text(TRANSLATIONS['loading_12'])
+        for n in range(15):
+            print("\r[" + "=" * n + "]", end="", flush=True)
+            pause(0.25)
 
-        print_colored_text("Нет соединения с сервером, получение данных о планетах невозможно", Fore.YELLOW)
+        print_colored_text(f"\n{TRANSLATIONS['loading_13']}", Fore.YELLOW)
         pause(0.25)
     show_main_game_screen()
 
@@ -119,7 +108,7 @@ def show_main_game_screen():
                 ship = ship.replace("p", "")
             n = n + 1
 
-    print_colored_text(ship + get_main_buttons_tip_text())
+    print_colored_text(ship + TRANSLATIONS['help_text'])
 
 
 # Запускает функцию ремонта, если все условия выполнены.
@@ -133,6 +122,7 @@ async def run_repair():
             print_colored_text(Fore.BLACK + TRANSLATIONS['not_enough_resources'] + Back.RESET + Fore.RESET, Back.RED)
     else:
         print_colored_text(Fore.BLACK + TRANSLATIONS['repair_not_needed'] + Back.RESET + Fore.RESET, Back.YELLOW)
+
 
 async def game_cycle():
     await start_main_thread()

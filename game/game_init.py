@@ -5,6 +5,7 @@ from core.console_manager import clear_terminal, slow_print_colored_text, print_
 from core.constants import DEBUG_MODE_ENABLED
 from core.core_utils import pause
 from core.name_generator import load_planet_list, create_random_ship_name
+from core.translation_manager import TRANSLATIONS
 from game import game_main, game_vars
 from game.classes.planet import Planet
 from game.classes.ship import PlayerShip
@@ -58,7 +59,7 @@ def create_player() -> PlayerShip:
         print(result.speed)
         print(result.x)
         print(result.y)
-        print(result.health)
+        print(result.strength)
         print(result.resources)
     # Возвращает корабль
     return result
@@ -67,8 +68,8 @@ def create_player() -> PlayerShip:
 def init_survival_game():
     clear_terminal()
     if not DEBUG_MODE_ENABLED:
-        slow_print_colored_text("Идёт загрузка...\n", 0.2)
-        print_colored_text("> Генерация космического пространства ...")
+        slow_print_colored_text(f"{TRANSLATIONS['loading']}\n", 0.2)
+        print_colored_text(TRANSLATIONS['loading_1'])
     # Создание локации
     m_planets = create_planets(20)  # Генерируем планеты
     game_vars.UNIVERSE = create_universe(m_planets)  # Создаем вселенную с этими планетами.
@@ -76,11 +77,11 @@ def init_survival_game():
 
     # Если режим отладки включен, пропускаем это.
     if not DEBUG_MODE_ENABLED:
-        print_colored_text("> Оптимизация путей ...")
+        print_colored_text(TRANSLATIONS['loading_2'])
         pause(1)
-        print_colored_text("> Обновление прошивки ...")
+        print_colored_text(TRANSLATIONS['loading_3'])
         pause(1)
-        print_colored_text("> Подготовка к запуску ...")
+        print_colored_text(TRANSLATIONS['loading_4'])
         pause(1)
     # Конец искусственного замедления, перейдем к делу.
     # Создание игрока

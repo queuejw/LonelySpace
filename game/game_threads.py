@@ -36,6 +36,9 @@ def calculate_new_speed(old, new) -> int:
 def update_ship_data(ship: PlayerShip) -> PlayerShip:
     ship.speed = clamp(calculate_new_speed(ship.speed, random.randint(ship.speed // 2, ship.speed * 2)), 0,
                        get_ship_max_speed(ship.level))
+    if random.random() < 0.1:
+        if ship.fuel > 0:
+            ship.fuel = clamp(ship.fuel - 1, 0, 100)
     return ship
 
 
@@ -92,8 +95,8 @@ async def repair():
             print_colored_text(TRANSLATIONS['not_enough_resources'] + Back.RESET + Fore.RESET, Fore.RED)
             break
 
-        if game_vars.PLAYER.health < 100:
-            game_vars.PLAYER.health = clamp(game_vars.PLAYER.health + random.randint(1, 2), 0, 100)
+        if game_vars.PLAYER.strength < 100:
+            game_vars.PLAYER.strength = clamp(game_vars.PLAYER.strength + random.randint(1, 2), 0, 100)
 
         if game_vars.PLAYER.oxygen < 100:
             game_vars.PLAYER.oxygen = clamp(game_vars.PLAYER.oxygen + random.randint(1, 2), 0, 100)
@@ -106,5 +109,3 @@ async def repair():
 
     if game_vars.PLAYER.resources > 10:
         print_colored_text(Back.GREEN + TRANSLATIONS['repair_finished'] + Back.RESET + Fore.RESET, Fore.BLACK)
-        print(Back.RESET)
-        print(Fore.RESET)

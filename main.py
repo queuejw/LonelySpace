@@ -1,4 +1,5 @@
 from core.console_manager import print_colored_text
+from core.translation_manager import TRANSLATIONS
 
 print("Загрузка ...")
 
@@ -13,7 +14,7 @@ if __name__ == '__main__':
     try:
         main_menu.run_main_menu()  # Запуск главного меню, из которого выполняется вся остальная работа
     except KeyboardInterrupt:
-        print_colored_text(Fore.BLACK + "Работы игры была завершена неправильно. Данные могут быть повреждены.",
+        print_colored_text(Fore.BLACK + TRANSLATIONS['keyboard_interrupt'],
                            Back.RED)
         exit(0)
     except Exception as e:
