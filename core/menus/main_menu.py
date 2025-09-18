@@ -6,7 +6,6 @@ from colorama import Back, Fore
 from core import saves_manager
 from core.console_manager import print_colored_text, slow_print_colored_text
 from core.constants import DEBUG_MODE_ENABLED
-from core.menu_shared_functions import menu_unknown_key_code
 from core.menus import settings_menu
 from core.menus.about_menu import run_about_menu
 from core.translation_manager import TRANSLATIONS
@@ -61,13 +60,13 @@ def main_menu_key_code_check(code: str) -> bool:
         case '3':  # Параметры игры
             settings_menu.run_settings_menu()
         case 'esc':  # Выход из игры
-            slow_print_colored_text(TRANSLATIONS['exit_message'])
+            slow_print_colored_text(Back.GREEN + TRANSLATIONS['exit_message'], delay=0.05, color=Fore.BLACK)
+            print(Fore.RESET, Back.RESET)
             time.sleep(1)
             exit(0)
         case 'a':  # меню "Авторы игры"
             run_about_menu()
-        case _:  # Неизвестное действие, уведомляем игрока
-            menu_unknown_key_code()
+        case _:  # Неизвестное действие
             return False
     return True
 

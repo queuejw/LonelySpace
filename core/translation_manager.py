@@ -1,7 +1,7 @@
 import json
 import os
 
-from colorama import Back
+from colorama import Back, Fore
 
 from core.config_manager import CONFIG
 from core.console_manager import print_colored_text
@@ -21,7 +21,8 @@ def load_translations(code: str) -> dict:
             return translations_json
     else:
         print_colored_text(
-            "Unable to continue game launch. Check lang folder, maybe translation files broken or missing.", Back.RED)
+            Fore.BLACK + "Unable to continue game launch. Check lang folder, maybe translation files broken or missing.",
+            Back.RED)
         exit(1)
 
 

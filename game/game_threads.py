@@ -7,7 +7,7 @@ from core.console_manager import print_colored_text
 from core.constants import SHIP_LVL_0_SPEED, SHIP_LVL_1_SPEED, DEBUG_MODE_ENABLED, SHIP_LVL_2_SPEED, SHIP_LVL_3_SPEED
 from core.core_utils import clamp
 from core.translation_manager import TRANSLATIONS
-from game import game_vars
+from game import game_vars, game_over
 from game.classes.ship import PlayerShip
 from game.game_utils import is_repair_needed
 
@@ -61,6 +61,13 @@ async def main_thread():
             global main_n
             main_n = main_n + 1
             print(f"{main_n} цикл основного потока")
+
+        if game_vars.PLAYER.strength < 1:
+            if DEBUG_MODE_ENABLED:
+                print("Игрок умер, завершаем игру")
+            game_vars.MAIN_GAME_THREAD_RUNNING = False
+            game_over.run_game_over_screen()
+            return
 
         # Обновляем данные
         game_vars.PLAYER = update_ship_data(game_vars.PLAYER)

@@ -17,7 +17,7 @@ def create_planets(num: int) -> list:
     if DEBUG_MODE_ENABLED:
         print("Генерация списка планет")
 
-    planet_names = load_planet_list(CONFIG['lang'])  # Получаем имена
+    planet_names = load_planet_list(CONFIG['lang'])  # Получаем названия
     result = [Planet(random.choice(planet_names)) for _ in range(num)]  # Создаем планеты со случайными названиями
 
     # Выводит некоторую информацию о планетах в режиме отладки.

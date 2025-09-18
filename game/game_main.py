@@ -126,7 +126,11 @@ async def run_repair():
 
 async def game_cycle():
     await start_main_thread()
-    while True:
+    active = True
+    while active:
+        if not game_vars.MAIN_GAME_THREAD_RUNNING and not game_vars.PAUSED:
+            print("По какой-то причине основной поток остановлен, завершаем игру. ")
+            active = False
         if not game_vars.PAUSED:
             match game_vars.GAME_SCREEN:
                 case "main":
@@ -134,7 +138,11 @@ async def game_cycle():
                         game_vars.UPDATE_REQUIRED = False
                         show_main_game_screen()
                     if kb.is_pressed("r"):
-                        await run_repair()
+                        if not game_vars.REPAIR_RUNNING:
+                            await run_repair()
+                    if DEBUG_MODE_ENABLED:
+                        if kb.is_pressed("insert"):
+                            game_vars.PLAYER.strength = 0
 
                 case _:
                     pass
@@ -144,6 +152,7 @@ async def game_cycle():
         else:
             if kb.is_pressed("delete"):
                 # Останавливаем игру, пока что не реализовано
+                game_vars.MAIN_GAME_THREAD_RUNNING = True
                 clear_terminal()
                 main_menu.run_main_menu()
             if kb.is_pressed("enter"):

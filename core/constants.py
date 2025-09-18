@@ -1,5 +1,5 @@
 # Режим отладки, только для разработчиков.
-DEBUG_MODE_ENABLED = False
+DEBUG_MODE_ENABLED = True
 
 # Название файла конфигурации.
 DEFAULT_CONFIG_NAME = "game_config.json"
