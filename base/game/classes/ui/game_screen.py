@@ -1,0 +1,167 @@
+import asyncio
+
+import colorama
+
+from base.core import components
+from base.core.console import clear_terminal
+from base.core.constants import DEBUG_MODE
+from base.core.io.save_manager import save_ship_state
+from base.game.classes.game import print_terminal_help, print_game_help, print_ship_help, print_planets_help
+from base.game.classes.ui.base.screen import ScreenBase
+
+
+def is_int(value) -> bool:
+    try:
+        int(value)
+        return True
+    except ValueError:
+        return False
+
+class GameScreen(ScreenBase):
+
+    def render(self):
+        if not components.ENGINE.pending_input:
+            text = components.GAME.generate_main_text()
+            clear_terminal()
+            print(text)
+            del text
+
+    def handle_input(self, command: str):
+
+        command = command.split()
+
+        if len(command) < 1:
+            return
+
+        if DEBUG_MODE:
+            print(f"{colorama.Fore.MAGENTA}Игрок ввёл команду: {command}{colorama.Fore.RESET}")
+
+        # Помощь
+        if command[0].lower() == 'help':
+            if len(command) > 1:
+                if command[1].lower() == 'game':
+                    print_game_help()
+                elif command[1].lower() == 'ship':
+                    print_ship_help()
+                elif command[1].lower() == 'planets':
+                    print_planets_help(len(components.GAME.planets) - 1)
+                else:
+                    print(
+                        f"{colorama.Fore.RED}Неизвестный аргумент команды help. Введите {colorama.Fore.CYAN}help{colorama.Fore.RED},чтобы вывести общие инструкции.")
+            else:
+                print_terminal_help()
+        # Сохранить игру
+        elif command[0].lower() == 'save':
+            if save_ship_state(components.GAME.player.export_as_dict()):
+                print(f"{colorama.Fore.CYAN}Игра сохранена!")
+            else:
+                print(f"{colorama.Fore.RED}Не получилось сохранить игру.")
+        # Переименовать корабль
+        elif command[0].lower() == 'rename':
+            if len(command) > 1:
+                new_name = ''
+                command.pop(0)
+                for i in command:
+                    new_name += f'{i} '
+                if len(new_name) > 30:
+                    print(f"{colorama.Fore.RED}Название слишком длинное.")
+                else:
+                    components.GAME.player.ship_name = new_name
+                    print(f"{colorama.Fore.GREEN}Название корабля изменено на {colorama.Fore.CYAN}{new_name}{colorama.Fore.GREEN}.")
+                del new_name
+            else:
+                print(
+                    f"{colorama.Fore.RED}Вы не указали новое название для корабля. Введите {colorama.Fore.CYAN}help ship{colorama.Fore.RED}, если понадобится помощь.")
+         # Ремонтировать корабль
+        elif command[0].lower() == 'repair':
+            asyncio.create_task(components.GAME.repair_cycle())
+        # Переименовать корабль
+        elif command[0].lower() == 'goto':
+            # Если указан аргумент команды (какой-то)
+            if len(command) > 1:
+                # Если игрок ввёл число
+                if is_int(command[1]):
+                    # Если игрок не на планете, то он может начать полёт
+                    if not components.GAME.player.on_planet:
+                        planet_id = int(command[1])
+                        # Если ID в диапазоне от 0 до кол-во планет - 1
+                        if 0 <= planet_id <= len(components.GAME.planets) - 1:
+                            # Если в данный момент корабль не в пути, можем начать полёт
+                            if not components.GAME.planet_flying_active:
+                                components.GAME.player.planet_id = planet_id
+                                planet = components.GAME.get_planet_by_id(planet_id)
+                                asyncio.create_task(components.GAME.fly_cycle(planet.planet_eta, False))
+                                print(
+                                    f"{colorama.Fore.GREEN}Маршрут установлен. Летим на планету {colorama.Fore.CYAN}{planet.planet_name}{colorama.Fore.GREEN}.")
+                                del planet
+                                del planet_id
+                            else:
+                                # Игрок уже в пути, мы не можем начать одновременно два и более полёта.
+                                del planet_id
+                                print(
+                                    f"{colorama.Fore.RED}Корабль уже в пути. Если хотите изменить маршрут, отмените этот полёт. Введите {colorama.Fore.CYAN}help ship{colorama.Fore.RED}, если понадобится помощь.")
+                        else:
+                            print(
+                                f"{colorama.Fore.RED}Неверный ID планеты. Убедитесь, что ID верный. Введите {colorama.Fore.CYAN}help ship{colorama.Fore.RED}, если понадобится помощь.")
+                    # Игрок уже на планете, сначала нужно покинуть её.
+                    else:
+                        print(
+                            f"{colorama.Fore.RED}Прежде чем лететь на другую планету, нужно покинуть текущую.")
+                # Отмена полёта
+                elif command[1] == 'cancel':
+                    if components.GAME.planet_flying_active:
+                        # Отмечаем, что полёт был завершен.
+                        # Цикл прервется автоматически.
+                        components.GAME.planet_flying_active = False
+                        print(f"{colorama.Fore.YELLOW}Маршрут был сброшен! Полёт прерван.")
+                    else:
+                        print(f"{colorama.Fore.RED}Корабль не находится в пути. Невозможно прервать полёт.")
+                # Покинуть планету
+                elif command[1] == 'leave':
+                    # Покинуть планету
+                    if components.GAME.player.on_planet:
+                        if not components.GAME.planet_flying_active:
+                            planet = components.GAME.get_planet_by_id(components.GAME.player.planet_id)
+                            asyncio.create_task(components.GAME.fly_cycle(planet.planet_eta, True))
+                            print(
+                                f"{colorama.Fore.GREEN}Маршрут установлен. Покидаем планету {colorama.Fore.CYAN}{planet.planet_name}{colorama.Fore.GREEN}.")
+                            del planet
+                        else:
+                            print(
+                                f"{colorama.Fore.RED}Корабль уже в пути. Отмените этот полёт, если хотите вернуться на планету. Введите {colorama.Fore.CYAN}help ship{colorama.Fore.RED}, если понадобится помощь.")
+                    else:
+                        print(
+                            f"{colorama.Fore.RED}В данный момент корабль не находится на поверхности какой-либо планеты.")
+                else:
+                    print(
+                        f"{colorama.Fore.RED}Неверный аргумент команды. Введите {colorama.Fore.CYAN}help ship{colorama.Fore.RED}, если понадобится помощь.")
+            else:
+                print(
+                    f"{colorama.Fore.RED}Укажите аргумент команды. Введите {colorama.Fore.CYAN}help ship{colorama.Fore.RED}, если понадобится помощь.")
+        # Вывести инфо о планете
+        elif command[0].lower() == 'planet':
+            if len(command) > 1:
+                try:
+                    pos = int(command[1])
+                    print(components.GAME.get_text_planet_list(pos))
+                    del pos
+                except ValueError:
+                    print(components.GAME.get_text_planet_list(-1))
+            else:
+                import random
+                print(components.GAME.get_text_planet_list(random.randint(0, len(components.GAME.planets) - 1)))
+        # Закрыть терминал
+        elif command[0].lower() == 'exit':
+            components.ENGINE.pending_input = False
+            self.update(True)
+
+        else:
+            print(
+                f"{colorama.Fore.RED}Неизвестная команда. Если возникли трудности, введите команду {colorama.Fore.CYAN}help{colorama.Fore.GREEN}.")
+        del command
+
+
+    def update(self, force_update: bool = False):
+        if components.GAME.pending_update:
+            components.GAME.pending_update = False
+            self.render()
