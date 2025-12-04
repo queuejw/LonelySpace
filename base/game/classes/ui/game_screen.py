@@ -9,7 +9,7 @@ from base.core.io.save_manager import save_ship_state
 from base.game.classes.game import print_terminal_help, print_game_help, print_ship_help, print_planets_help
 from base.game.classes.ui.base.screen import ScreenBase
 
-
+# Если перевод переменной в int успешный, вернёт True
 def is_int(value) -> bool:
     try:
         int(value)
@@ -31,6 +31,7 @@ class GameScreen(ScreenBase):
         command = command.split()
 
         if len(command) < 1:
+            del command
             return
 
         if DEBUG_MODE:

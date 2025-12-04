@@ -71,6 +71,7 @@ def init_game_launch(skip: bool = False):
     components.ENGINE.pending_input = False
     del loaded_data
 
+    # Возвращаем экран игры.
     return GameScreen()
 
 

@@ -71,9 +71,11 @@ class Engine:
                     command)  # Для обновления экрана эта функция возвращает значение текущего экрана.
                 # Если экран был изменен, обновляем его.
                 del command
+                # Убеждаемся, что новый экран действительно был изменён.
                 if updated_screen is not None and updated_screen != self.screen:
                     self.screen = updated_screen
                     clear_terminal()
                     self.screen.render()
             else:
+                # Если ожидается ввод, то пропускаем итерацию, просто ждём.
                 await asyncio.sleep(0.05)

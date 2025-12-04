@@ -1,7 +1,7 @@
-DEBUG_MODE = True
-PRODUCT_NAME = 'Lonely Space: Deluxe Edition - 2025 Remastered'
+DEBUG_MODE = True # Режим отладки
+PRODUCT_NAME = 'Lonely Space' # Название игры
 
-PLANETS_FILE_PATH = 'base\\game\\res\\planets.json'
+PLANETS_FILE_PATH = 'base\\game\\res\\planets.json' # Путь до списка планет
 
-SAVES_FOLDER_NAME = 'SAVES'
-SAVES_FILE_PATH = f'{SAVES_FOLDER_NAME}\\save.json'
+SAVES_FOLDER_NAME = 'SAVES' # Папка с сохранениями
+SAVES_FILE_PATH = f'{SAVES_FOLDER_NAME}\\save.json' # Путь до файла с сохранением

@@ -18,6 +18,7 @@ class Planet:
         self.planet_danger = m_danger  # Уровень опасности (от 0 до 9)
         self.planet_eta = m_eta  # Примерное время полёта
 
+    # Возвращает текст типа планеты
     def get_planet_type_name(self) -> str:
         match self.planet_type:
             case 0:

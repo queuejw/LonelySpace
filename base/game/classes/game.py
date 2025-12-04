@@ -9,7 +9,7 @@ from base.core.constants import DEBUG_MODE
 from base.game.classes.planet import Planet
 from base.game.classes.ship import Ship
 
-
+# Выводит на экран текст помощи (основной)
 def print_terminal_help():
     text = (
         f"{colorama.Fore.CYAN}Инструкция по использованию терминала.\n\n"
@@ -28,7 +28,7 @@ def print_terminal_help():
     )
     print(text)
 
-
+# Выводит на экран текст помощи по игре
 def print_game_help():
     text = (
         f"{colorama.Fore.CYAN}Как играть\n\n"
@@ -42,7 +42,7 @@ def print_game_help():
     )
     print(text)
 
-
+# Выводит на экран текст помощи по управлению кораблём
 def print_ship_help():
     text = (
         f"{colorama.Fore.CYAN}Инструкции по управлению кораблём\n\n"
@@ -55,7 +55,7 @@ def print_ship_help():
     )
     print(text)
 
-
+# Выводит на экран текст помощи по планетам
 def print_planets_help(planets_count: int):
     text = (
         f"{colorama.Fore.CYAN}Справка по планетам\n\n"
@@ -125,7 +125,7 @@ def update_oxygen(ship: Ship) -> int:
         # Без изменений
         return ship.oxygen
 
-
+# Класс игры
 class Game:
 
     def __init__(self):
@@ -260,6 +260,7 @@ class Game:
 
     # Создаёт случайные события в игре
     async def events_generator(self):
+        # Пока пусто :p
         pass
 
     # Основной цикл игры
@@ -337,6 +338,7 @@ class Game:
         self.timer = -1
         self.update_last_messages(f"{colorama.Fore.GREEN}Ремонт успешно завершён!")
 
+    # Цикл полёта.
     async def fly_cycle(self, time: int, leave_planet: bool):
         self.planet_flying_active = True
 
@@ -378,7 +380,7 @@ class Game:
                     self.update_last_messages(f"{colorama.Fore.YELLOW}Жёсткая посадка! Причина: {colorama.Fore.RED}Недостаточно топлива для завершения полёта")
                     components.GAME.player.planet_id = self.player.planet_id
                     components.GAME.player.on_planet = True
-                    # Реализовать жесткую посадку
+                    # todo: Реализовать жесткую посадку
                 else:
                     self.update_last_messages(f"{colorama.Fore.RED}Двигатели заглохли, закончилось топливо. Невозможно продолжить полёт." if not leave_planet else f"{colorama.Fore.RED}Двигатели заглохли, закончилось топливо. Мы не смогли покинуть планету.")
                 break
