@@ -260,8 +260,12 @@ class Game:
 
     # Создаёт случайные события в игре
     async def events_generator(self):
-        # Пока пусто :p
-        pass
+        if self.player.on_planet:
+            # События, которые происходят только на планетах
+            pass
+        else:
+            # События, которые происходят только в космосе
+            pass
 
     # Основной цикл игры
     async def main_loop(self):

@@ -1,7 +1,7 @@
 import colorama
 
 from base.core.console import clear_terminal, slow_print
-from base.core.constants import PRODUCT_NAME, DEBUG_MODE
+from base.core.constants import PRODUCT_NAME, DEBUG_MODE, PRODUCT_GITHUB_LINK
 from base.game.classes.ui.base.screen import ScreenBase
 from base.game.classes.ui.game_screen import GameScreen
 
@@ -21,7 +21,6 @@ def init_game_launch(skip: bool = False):
     loaded_data = save_manager.load_ship_state()
     # Выводим забавные сообщения, которые никак не влияют на игру
     if not skip:
-        import colorama
         if not loaded_data['default']:
             print(colorama.Back.GREEN + colorama.Fore.BLACK + "Вы продолжите игру с последнего сохранения")
         slow_print("Инициализация базовой системы ...", colorama.Fore.GREEN)
@@ -82,6 +81,7 @@ class MainMenu(ScreenBase):
         text = (
             f"{colorama.Fore.GREEN}Добро пожаловать в {colorama.Fore.CYAN}{PRODUCT_NAME}\n\n"
             f"{colorama.Fore.CYAN}start {colorama.Fore.GREEN}- Начать игру\n"
+            f"{colorama.Fore.CYAN}info {colorama.Fore.GREEN}- Об игре\n"
             f"{colorama.Fore.CYAN}exit {colorama.Fore.GREEN}- Закрыть игру\n\n"
             f"{colorama.Fore.GREEN}Введите команду в терминал:\n"
         )
@@ -93,6 +93,15 @@ class MainMenu(ScreenBase):
                 if DEBUG_MODE:
                     print("Ожидается запуск игры")
                 return init_game_launch(DEBUG_MODE)
+            case "info":
+                t = (
+                    f"{colorama.Fore.CYAN}{PRODUCT_NAME}{colorama.Fore.GREEN} - игра про космос на Python, которая разрабатывается в свободное время небольшой командой разработчиков.\n\n"
+                    f"{colorama.Fore.CYAN}@pxffd{colorama.Fore.GREEN} - Автор идеи и главный разработчик\n"
+                    f"{colorama.Fore.CYAN}неизвестный фанат{colorama.Fore.GREEN} - Автор обложки игры.\n\n"
+                    f"{colorama.Fore.CYAN}{PRODUCT_GITHUB_LINK}{colorama.Fore.GREEN} - Исходный код игры и обратная связь."
+                )
+                print(t)
+                del t
             case "exit":
                 if DEBUG_MODE:
                     print("Ожидается выход из игры")
