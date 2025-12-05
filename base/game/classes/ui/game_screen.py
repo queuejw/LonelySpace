@@ -92,8 +92,10 @@ class GameScreen(ScreenBase):
                                 components.GAME.player.planet_id = planet_id
                                 planet = components.GAME.get_planet_by_id(planet_id)
                                 asyncio.create_task(components.GAME.fly_cycle(planet.planet_eta, False))
-                                print(
-                                    f"{colorama.Fore.GREEN}Маршрут установлен. Летим на планету {colorama.Fore.CYAN}{planet.planet_name}{colorama.Fore.GREEN}.")
+                                t = f"{colorama.Fore.GREEN}Маршрут установлен. Летим на планету {colorama.Fore.CYAN}{planet.planet_name}{colorama.Fore.GREEN}."
+                                print(t)
+                                components.GAME.update_last_messages(t)
+                                del t
                                 del planet
                                 del planet_id
                             else:
@@ -124,8 +126,10 @@ class GameScreen(ScreenBase):
                         if not components.GAME.planet_flying_active:
                             planet = components.GAME.get_planet_by_id(components.GAME.player.planet_id)
                             asyncio.create_task(components.GAME.fly_cycle(planet.planet_eta, True))
-                            print(
-                                f"{colorama.Fore.GREEN}Маршрут установлен. Покидаем планету {colorama.Fore.CYAN}{planet.planet_name}{colorama.Fore.GREEN}.")
+                            t = f"{colorama.Fore.GREEN}Маршрут установлен. Покидаем планету {colorama.Fore.CYAN}{planet.planet_name}{colorama.Fore.GREEN}."
+                            print(t)
+                            components.GAME.update_last_messages(t)
+                            del t
                             del planet
                         else:
                             print(

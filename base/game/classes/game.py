@@ -399,7 +399,7 @@ class Game:
             return
 
         if leave_planet:
-            self.update_last_messages(f"{colorama.Fore.GREEN}Мы покинули планету {planet.planet_name}!")
+            self.update_last_messages(f"{colorama.Fore.BLACK}{colorama.Back.GREEN}Мы покинули планету {planet.planet_name}!{colorama.Back.RESET}")
             components.GAME.player.planet_id = -1
             components.GAME.player.on_planet = False
         else:
