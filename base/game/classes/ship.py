@@ -12,6 +12,7 @@ class Ship:
         self.fuel = 100  # Уровень топлива 0 - 100
         self.oxygen = 100  # Уровень кислорода 0 - 100
         self.resources = 300 # Ресурсы
+        self.day = 0 # Количество прожитых дней.
         self.on_planet = False  # Корабль находится на планете?
         self.planet_id = -1  # ID планеты, на которой находится корабль. Если -1, значит корабль не находится на планете (см. выше)
         self.actions_blocked = False  # Действия игроков заблокированы?
@@ -27,6 +28,7 @@ class Ship:
             'fuel': self.fuel,
             'oxygen': self.oxygen,
             'resources' : self.resources,
+            'day': self.day,
             'on_planet': self.on_planet,
             'planet_id': self.planet_id,
             'actions_blocked': self.actions_blocked
@@ -44,6 +46,7 @@ class Ship:
             self.fuel = imported_ship['fuel']
             self.oxygen = imported_ship['oxygen']
             self.resources = imported_ship['resources']
+            self.day = imported_ship['day']
             self.on_planet = imported_ship['on_planet']
             self.planet_id = imported_ship['planet_id']
             self.actions_blocked = imported_ship['actions_blocked']

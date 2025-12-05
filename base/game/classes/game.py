@@ -9,6 +9,7 @@ from base.core.constants import DEBUG_MODE
 from base.game.classes.planet import Planet
 from base.game.classes.ship import Ship
 
+
 # Выводит на экран текст помощи (основной)
 def print_terminal_help():
     text = (
@@ -28,6 +29,7 @@ def print_terminal_help():
     )
     print(text)
 
+
 # Выводит на экран текст помощи по игре
 def print_game_help():
     text = (
@@ -42,6 +44,7 @@ def print_game_help():
     )
     print(text)
 
+
 # Выводит на экран текст помощи по управлению кораблём
 def print_ship_help():
     text = (
@@ -54,6 +57,7 @@ def print_ship_help():
         f"{colorama.Fore.CYAN}repair [todo]{colorama.Fore.GREEN} - Начать ремонт корабля. Для 1 секунды ремонта требуется 5 ресурсов. todo"
     )
     print(text)
+
 
 # Выводит на экран текст помощи по планетам
 def print_planets_help(planets_count: int):
@@ -78,6 +82,7 @@ def clamp(value, min_value, max_value):
     if value < min_value:
         return min_value
     return value
+
 
 # Вычисляет время до завершения полёта, в секундах
 def calculate_time(ship_speed: int, planet_distance: int) -> int:
@@ -125,14 +130,15 @@ def update_oxygen(ship: Ship) -> int:
         # Без изменений
         return ship.oxygen
 
+
 # Класс игры
 class Game:
 
     def __init__(self):
-        self.paused = False # Игра приостановлена?
-        self.running = False # Игра запущена?
-        self.pending_update = False # Ожидается ли обновление экрана?
-        self.planet_flying_active = False # Летит ли игрок на планету?
+        self.paused = False  # Игра приостановлена?
+        self.running = False  # Игра запущена?
+        self.pending_update = False  # Ожидается ли обновление экрана?
+        self.planet_flying_active = False  # Летит ли игрок на планету?
         self.player: Ship = Ship("{SHIP_PLACEHOLDER}")  # Корабль игрока. При создании используется пустышка.
         self.player_drawing: str = ''  # ASCII рисунок корабля
         self.planets: list[Planet] = []  # Список планет
@@ -160,7 +166,6 @@ class Game:
             f"Корабль " + f"{colorama.Fore.CYAN}{self.player.ship_name}" + colorama.Fore.GREEN,
             colorama.Fore.GREEN + "=" * 15,
         ]
-
         if self.player.on_planet:
             planet = self.get_planet_by_id(self.player.planet_id)
             computer_text += [
@@ -173,14 +178,19 @@ class Game:
             ]
 
         computer_text += [
-            colorama.Fore.GREEN + f"Здоровье экипажа: " + get_percentage_value_color(self.player.crew_health) + f"{self.player.crew_health}%" + colorama.Fore.GREEN,
-            colorama.Fore.GREEN + f"Прочность: " + get_percentage_value_color(self.player.strength) + f"{self.player.strength}%" + colorama.Fore.GREEN,
+            colorama.Fore.GREEN + f"Здоровье экипажа: " + get_percentage_value_color(
+                self.player.crew_health) + f"{self.player.crew_health}%" + colorama.Fore.GREEN,
+            colorama.Fore.GREEN + f"Прочность: " + get_percentage_value_color(
+                self.player.strength) + f"{self.player.strength}%" + colorama.Fore.GREEN,
             colorama.Fore.GREEN + f"Ресурсы: " + colorama.Fore.CYAN + f"{self.player.resources}" + colorama.Fore.GREEN,
-            colorama.Fore.GREEN + f"Топливо: " + get_percentage_value_color(self.player.fuel) + f"{self.player.fuel}%" + colorama.Fore.GREEN,
-            colorama.Fore.GREEN + f"Кислород: " + get_percentage_value_color(self.player.oxygen) + f"{self.player.oxygen}%" + colorama.Fore.GREEN,
+            colorama.Fore.GREEN + f"Топливо: " + get_percentage_value_color(
+                self.player.fuel) + f"{self.player.fuel}%" + colorama.Fore.GREEN,
+            colorama.Fore.GREEN + f"Кислород: " + get_percentage_value_color(
+                self.player.oxygen) + f"{self.player.oxygen}%" + colorama.Fore.GREEN,
         ]
-
         computer_text += [
+            colorama.Fore.GREEN + "=" * 15,
+            colorama.Fore.GREEN + f"Прожито дней: " + colorama.Fore.CYAN + f"{self.player.day}" + colorama.Fore.GREEN,
             colorama.Fore.GREEN + "=" * 15,
             colorama.Fore.GREEN + "ПОСЛЕДНИЕ ДЕЙСТВИЯ:"
         ]
@@ -274,6 +284,7 @@ class Game:
         no_fuel_notification_enabled = True
         strength_notification_enabled = True
 
+        c = 0  # Простой счетчик, который нужен для обновления количества дней.
         while components.ENGINE.running:
             # Если движок был остановлен, то нужно остановить игру
             if not components.ENGINE.running:
@@ -311,8 +322,15 @@ class Game:
             if random.random() > 0.5:
                 await self.events_generator()
 
+            # Обновление счётчика дней.
+            c += 1
+            if c > 45:
+                self.player.day += 1
+                c = 0
+
+            # Помечаем, что ожидается обновление экрана.
             self.pending_update = True
-            await asyncio.sleep(2)
+            await asyncio.sleep(4)
 
     # Ремонт корабля, нужно доработать это.
     async def repair_cycle(self):
@@ -377,20 +395,24 @@ class Game:
             if self.player.fuel < 1:
                 successful = False
                 if final_time < 5 and leave_planet:
-                    self.update_last_messages(f"{colorama.Fore.YELLOW}Мы покинули планету {planet.planet_name}, но двигатели заглохли. Причина: {colorama.Fore.RED}Недостаточно топлива.")
+                    self.update_last_messages(
+                        f"{colorama.Fore.YELLOW}Мы покинули планету {planet.planet_name}, но двигатели заглохли. Причина: {colorama.Fore.RED}Недостаточно топлива.")
                     components.GAME.player.planet_id = -1
                     components.GAME.player.on_planet = False
                 elif final_time < 5 and not leave_planet:
-                    self.update_last_messages(f"{colorama.Fore.YELLOW}Жёсткая посадка! Причина: {colorama.Fore.RED}Недостаточно топлива для завершения полёта")
+                    self.update_last_messages(
+                        f"{colorama.Fore.YELLOW}Жёсткая посадка! Причина: {colorama.Fore.RED}Недостаточно топлива для завершения полёта")
                     components.GAME.player.planet_id = self.player.planet_id
                     components.GAME.player.on_planet = True
                     # todo: Реализовать жесткую посадку
                 else:
-                    self.update_last_messages(f"{colorama.Fore.RED}Двигатели заглохли, закончилось топливо. Невозможно продолжить полёт." if not leave_planet else f"{colorama.Fore.RED}Двигатели заглохли, закончилось топливо. Мы не смогли покинуть планету.")
+                    self.update_last_messages(
+                        f"{colorama.Fore.RED}Двигатели заглохли, закончилось топливо. Невозможно продолжить полёт." if not leave_planet else f"{colorama.Fore.RED}Двигатели заглохли, закончилось топливо. Мы не смогли покинуть планету.")
                 break
 
             if final_time % 4 == 0:
-                self.update_last_messages(f"{colorama.Fore.GREEN}Летим на планету {planet.planet_name}. Оставшееся время: {final_time} с" if not leave_planet else f"{colorama.Fore.GREEN}Покидаем планету {planet.planet_name}. Оставшееся время: {final_time} с")
+                self.update_last_messages(
+                    f"{colorama.Fore.GREEN}Летим на планету {planet.planet_name}. Оставшееся время: {final_time} с" if not leave_planet else f"{colorama.Fore.GREEN}Покидаем планету {planet.planet_name}. Оставшееся время: {final_time} с")
 
             final_time -= 1
             await asyncio.sleep(1)
@@ -403,7 +425,8 @@ class Game:
             return
 
         if leave_planet:
-            self.update_last_messages(f"{colorama.Fore.BLACK}{colorama.Back.GREEN}Мы покинули планету {planet.planet_name}!{colorama.Back.RESET}")
+            self.update_last_messages(
+                f"{colorama.Fore.BLACK}{colorama.Back.GREEN}Мы покинули планету {planet.planet_name}!{colorama.Back.RESET}")
             components.GAME.player.planet_id = -1
             components.GAME.player.on_planet = False
         else:
@@ -414,6 +437,3 @@ class Game:
         del planet
         del final_time
         self.planet_flying_active = False
-
-
-
