@@ -149,6 +149,7 @@ class Game:
     # Генерирует текст информации о корабле в игре.
     # В чём суть:
     # Берём рисунок корабля, затем заменяем p на данные о корабле. Если осталось свободное место, заменяем p на пустоту.
+    # Вместо s может нарисовать звёзды.
     def generate_main_text(self) -> str:
 
         def get_percentage_value_color(value: int):
@@ -202,6 +203,22 @@ class Game:
         c = 0
         wc = 0
         for line in d:
+
+            # Если игрок на планете, нам не нужно рисовать звезды.
+            if self.player.on_planet:
+                line = line.replace("s", " ")
+            else:
+                n = 0
+                text = list(line)
+                for symbol in text:
+                    if symbol == "s":
+                        if random.random() > 0.9:
+                            text[n] = f"{colorama.Fore.WHITE}*{colorama.Fore.GREEN}"
+                        else:
+                            text[n] = " "
+                    n += 1
+                line = ''.join(text)
+
             if c < len(computer_text):
                 result += f"\n{line.replace("p", computer_text[c])}"
             else:
