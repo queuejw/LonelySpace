@@ -10,6 +10,8 @@ class Ship:
         self.speed = 100  # Скорость корабля
         self.fuel = 100  # Уровень топлива 0 - 100
         self.oxygen = 100  # Уровень кислорода 0 - 100
+        self.inside_temperature = 36 # Температура внутри корабля
+        self.outside_temperature = 0  # Температура вне корабля
         self.resources = 300  # Ресурсы
         self.day = 0  # Количество прожитых дней.
         self.on_planet = False  # Корабль находится на планете?
@@ -34,6 +36,8 @@ class Ship:
             'speed': self.speed,
             'fuel': self.fuel,
             'oxygen': self.oxygen,
+            'inside_temperature': self.inside_temperature,
+            'outside_temperature': self.outside_temperature,
             'resources': self.resources,
             'day': self.day,
             'on_planet': self.on_planet,
@@ -75,6 +79,8 @@ class Ship:
                 print(f"[W] Неправильное значение переменной oxygen, сброс до значений по умолчанию.")
                 self.oxygen = 100
 
+            self.inside_temperature = imported_ship['inside_temperature']
+            self.outside_temperature = imported_ship['outside_temperature']
             self.resources = imported_ship['resources']
             self.day = imported_ship['day']
             self.on_planet = imported_ship['on_planet']

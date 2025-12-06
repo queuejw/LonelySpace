@@ -183,6 +183,8 @@ class Game:
                 self.player.crew_health) + f"{self.player.crew_health}%" + colorama.Fore.GREEN,
             colorama.Fore.GREEN + f"Прочность: " + get_percentage_value_color(
                 self.player.strength) + f"{self.player.strength}%" + colorama.Fore.GREEN,
+            colorama.Fore.GREEN + f"Температура внутри: {colorama.Fore.CYAN}{self.player.inside_temperature}°C" + colorama.Fore.GREEN,
+            colorama.Fore.GREEN + f"Температура за бортом: {colorama.Fore.CYAN}{self.player.outside_temperature}°C" + colorama.Fore.GREEN,
             colorama.Fore.GREEN + f"Ресурсы: " + colorama.Fore.CYAN + f"{self.player.resources}" + colorama.Fore.GREEN,
             colorama.Fore.GREEN + f"Топливо: " + get_percentage_value_color(
                 self.player.fuel) + f"{self.player.fuel}%" + colorama.Fore.GREEN,
@@ -221,7 +223,7 @@ class Game:
         if self.planets is None:
             if DEBUG_MODE:
                 print(colorama.Fore.RED + "Список планет не был загружен.")
-            return Planet(0, "None", "None", 0, 0, 0)
+            return Planet(0, "None", "None", 0, 0, 0, 0)
 
         l = [x for x in self.planets if x.planet_id == m_id]
         if len(l) < 1:
@@ -258,6 +260,7 @@ class Game:
             f"{colorama.Fore.GREEN}ID: {colorama.Fore.CYAN}{planet.planet_id}{colorama.Fore.GREEN}\n\n"
             f"{colorama.Fore.GREEN}Описание: {planet.planet_description}\n\n"
             f"{colorama.Fore.GREEN}Тип планеты: {colorama.Fore.CYAN}{planet.get_planet_type_name()}{colorama.Fore.GREEN}\n"
+            f"{get_danger_color(planet.planet_danger)}Средняя температура: {planet.planet_temp}°C{colorama.Fore.GREEN}\n"
             f"{get_danger_color(planet.planet_danger)}Уровень опасности: {planet.planet_danger}{colorama.Fore.GREEN}\n\n"
         )
         del planet
@@ -294,6 +297,17 @@ class Game:
             if self.player.ship_name == "{SHIP_PLACEHOLDER}" or self.paused or not self.running or components.ENGINE.pending_input:
                 await asyncio.sleep(1)
                 continue
+
+            # Обновляем температуру
+            # todo: изменять температуру внутри корабля в зависимости от темп. планеты
+            # todo: плавное изменение температуры
+            self.player.inside_temperature = random.randint(20, 30)
+            if self.player.on_planet:
+                pl = self.get_planet_by_id(self.player.planet_id)
+                self.player.outside_temperature = pl.planet_temp + random.randint(-5, 5)
+                del pl
+            else:
+                self.player.outside_temperature = random.randint(-273, -180)
 
             # Если игрок не на планете, изменяем скорость и топливо
             if not self.player.on_planet:
