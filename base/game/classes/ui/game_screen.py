@@ -95,7 +95,7 @@ class GameScreen(ScreenBase):
                                 t = f"{colorama.Fore.GREEN}Маршрут установлен. Летим на планету {colorama.Fore.CYAN}{planet.planet_name}{colorama.Fore.GREEN}."
                                 print(t)
                                 components.GAME.update_last_messages(t)
-                                del t
+                                del t   
                                 del planet
                                 del planet_id
                             else:

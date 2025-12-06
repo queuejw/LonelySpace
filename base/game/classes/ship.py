@@ -16,6 +16,14 @@ class Ship:
         self.on_planet = False  # Корабль находится на планете?
         self.planet_id = -1  # ID планеты, на которой находится корабль. Если -1, значит корабль не находится на планете (см. выше)
         self.actions_blocked = False  # Действия игроков заблокированы?
+        # Модули корабля
+        self.module_main_engine_health = 100 # Прочность главного двигателя.
+        self.module_fuel_tank_health = 100  # Прочность топливного бака.
+        self.module_cooling_system_health = 100  # Прочность систем охлаждения.
+        self.module_life_support_health = 100  # Прочность системы жизнеобеспечения.
+        self.module_command_bridge_health = 100 # Прочность капитанского мостика.
+        self.module_computer_health = 100  # Прочность бортового компьютера.
+        self.module_weapon_health = 100  # Прочность орудия.
 
     # Экспортирует этот объект в виде словаря, для удобного сохранения в json.
     def export_as_dict(self) -> dict:

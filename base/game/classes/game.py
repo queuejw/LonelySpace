@@ -51,6 +51,7 @@ def print_ship_help():
         f"{colorama.Fore.CYAN}Инструкции по управлению кораблём\n\n"
         f"{colorama.Fore.GREEN}Основные команды:\n"
         f"{colorama.Fore.CYAN}rename [НАЗВАНИЕ]{colorama.Fore.GREEN} - Изменяет название корабля на [НАЗВАНИЕ]. Это бесплатно и ни на что не влияет.\n"
+        f"{colorama.Fore.CYAN}status{colorama.Fore.GREEN} - Выводит полную информацию о корабле.\n"
         f"{colorama.Fore.CYAN}goto [ID]{colorama.Fore.GREEN} - Отправиться на планету с выбранным ID\n"
         f"{colorama.Fore.CYAN}goto leave{colorama.Fore.GREEN} - Покинуть планету\n"
         f"{colorama.Fore.CYAN}goto cancel{colorama.Fore.GREEN} - Отменить полёт\n"
@@ -324,13 +325,13 @@ class Game:
 
             # Обновление счётчика дней.
             c += 1
-            if c > 45:
+            if c > 60:
                 self.player.day += 1
                 c = 0
 
             # Помечаем, что ожидается обновление экрана.
             self.pending_update = True
-            await asyncio.sleep(4)
+            await asyncio.sleep(3)
 
     # Ремонт корабля, нужно доработать это.
     async def repair_cycle(self):
