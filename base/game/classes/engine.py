@@ -37,6 +37,8 @@ class Engine:
         # Циклы самой игры
         components.GAME = Game()
         game_task = asyncio.create_task(components.GAME.main_loop())
+        from base.core import constants
+        components.GAME.update_last_messages(f"Добро пожаловать в {constants.PRODUCT_NAME}!")
         await asyncio.gather(tick_task, input_task, game_task)
 
     # Функция для остановки движка

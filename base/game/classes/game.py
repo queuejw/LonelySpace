@@ -51,7 +51,7 @@ def print_ship_help():
         f"{colorama.Fore.CYAN}Инструкции по управлению кораблём\n\n"
         f"{colorama.Fore.GREEN}Основные команды:\n"
         f"{colorama.Fore.CYAN}rename [НАЗВАНИЕ]{colorama.Fore.GREEN} - Изменяет название корабля на [НАЗВАНИЕ]. Это бесплатно и ни на что не влияет.\n"
-        f"{colorama.Fore.CYAN}status{colorama.Fore.GREEN} - Выводит полную информацию о корабле.\n"
+        f"{colorama.Fore.CYAN}status{colorama.Fore.GREEN} - Выводит информацию о статусе систем корабля.\n"
         f"{colorama.Fore.CYAN}goto [ID]{colorama.Fore.GREEN} - Отправиться на планету с выбранным ID\n"
         f"{colorama.Fore.CYAN}goto leave{colorama.Fore.GREEN} - Покинуть планету\n"
         f"{colorama.Fore.CYAN}goto cancel{colorama.Fore.GREEN} - Отменить полёт\n"
@@ -132,6 +132,18 @@ def update_oxygen(ship: Ship) -> int:
         return ship.oxygen
 
 
+# Возвращает цвет для переменных с процентами.
+def get_percentage_value_color(m: int):
+    if m > 50:
+        return colorama.Fore.CYAN
+    if 50 >= m >= 25:
+        return colorama.Fore.YELLOW
+    if m < 25:
+        return colorama.Fore.RED
+
+    return colorama.Fore.CYAN
+
+
 # Класс игры
 class Game:
 
@@ -151,17 +163,6 @@ class Game:
     # Берём рисунок корабля, затем заменяем p на данные о корабле. Если осталось свободное место, заменяем p на пустоту.
     # Вместо s может нарисовать звёзды.
     def generate_main_text(self) -> str:
-
-        def get_percentage_value_color(value: int):
-            if value > 50:
-                return colorama.Fore.CYAN
-            if 50 >= value >= 25:
-                return colorama.Fore.YELLOW
-            if value < 25:
-                return colorama.Fore.RED
-
-            return colorama.Fore.CYAN
-
         d = self.player_drawing.splitlines()
 
         computer_text = [
@@ -180,18 +181,21 @@ class Game:
             ]
 
         computer_text += [
+            colorama.Fore.GREEN + f"Температура внутри: {colorama.Fore.CYAN}{self.player.inside_temperature}°C" + colorama.Fore.GREEN,
+            colorama.Fore.GREEN + f"Температура за бортом: {colorama.Fore.CYAN}{self.player.outside_temperature}°C" + colorama.Fore.GREEN,
             colorama.Fore.GREEN + f"Здоровье экипажа: " + get_percentage_value_color(
                 self.player.crew_health) + f"{self.player.crew_health}%" + colorama.Fore.GREEN,
             colorama.Fore.GREEN + f"Прочность: " + get_percentage_value_color(
                 self.player.strength) + f"{self.player.strength}%" + colorama.Fore.GREEN,
-            colorama.Fore.GREEN + f"Температура внутри: {colorama.Fore.CYAN}{self.player.inside_temperature}°C" + colorama.Fore.GREEN,
-            colorama.Fore.GREEN + f"Температура за бортом: {colorama.Fore.CYAN}{self.player.outside_temperature}°C" + colorama.Fore.GREEN,
             colorama.Fore.GREEN + f"Ресурсы: " + colorama.Fore.CYAN + f"{self.player.resources}" + colorama.Fore.GREEN,
-            colorama.Fore.GREEN + f"Топливо: " + get_percentage_value_color(
-                self.player.fuel) + f"{self.player.fuel}%" + colorama.Fore.GREEN,
             colorama.Fore.GREEN + f"Кислород: " + get_percentage_value_color(
                 self.player.oxygen) + f"{self.player.oxygen}%" + colorama.Fore.GREEN,
         ]
+        if not self.player.on_planet:
+            computer_text += [
+                colorama.Fore.GREEN + f"Топливо: " + get_percentage_value_color(
+                    self.player.fuel) + f"{self.player.fuel}%" + colorama.Fore.GREEN
+            ]
         computer_text += [
             colorama.Fore.GREEN + "=" * 15,
             colorama.Fore.GREEN + f"Прожито дней: " + colorama.Fore.CYAN + f"{self.player.day}" + colorama.Fore.GREEN,
@@ -203,7 +207,6 @@ class Game:
         c = 0
         wc = 0
         for line in d:
-
             # Если игрок на планете, нам не нужно рисовать звезды.
             if self.player.on_planet:
                 line = line.replace("s", " ")
@@ -218,6 +221,8 @@ class Game:
                             text[n] = " "
                     n += 1
                 line = ''.join(text)
+                del text
+                del n
 
             if c < len(computer_text):
                 result += f"\n{line.replace("p", computer_text[c])}"
@@ -233,6 +238,24 @@ class Game:
 
             c += 1
 
+        return result
+
+    # Возвращает текст со статусом систем корабля
+    def get_ship_status_text(self) -> str:
+
+        def get_module_status_text(value: bool) -> str:
+            return f'{colorama.Fore.RED}повреждено' if value else f'{colorama.Fore.GREEN}работает'
+
+        result = (
+            f"{colorama.Fore.GREEN}Основные системы:\n"
+            f"{colorama.Fore.CYAN}Системы жизнеобеспечения: {get_module_status_text(self.player.module_life_support_damaged)}\n"
+            f"{colorama.Fore.CYAN}Система охлаждения двигателей: {get_module_status_text(self.player.module_cooling_system_damaged)}\n"
+            f"{colorama.Fore.CYAN}Бортовой компьютер: {get_module_status_text(self.player.module_computer_damaged)}\n"
+            f"{colorama.Fore.GREEN}Корабль:\n"
+            f"{colorama.Fore.CYAN}Двигатель: {get_module_status_text(self.player.module_main_engine_damaged)}\n"
+            f"{colorama.Fore.CYAN}Топливный бак: {get_module_status_text(self.player.module_fuel_tank_damaged)}\n"
+            f"{colorama.Fore.CYAN}Орудие: {get_module_status_text(self.player.module_weapon_damaged)}\n"
+        )
         return result
 
     # Возвращает планету по её ID
@@ -255,8 +278,7 @@ class Game:
     def get_text_planet_list(self, position: int) -> str:
 
         if self.planets is None:
-            if DEBUG_MODE:
-                return f'{colorama.Fore.RED}Внутренняя ошибка ядра системы. Невозможно получить описание планет.'
+            return f'{colorama.Fore.RED}Внутренняя ошибка ядра системы. Невозможно получить описание планет.'
 
         # Возвращает цвет текста для уровня опасности планеты
         def get_danger_color(value: int):
@@ -304,27 +326,70 @@ class Game:
         low_fuel_notification_enabled = True
         no_fuel_notification_enabled = True
         strength_notification_enabled = True
+        temperature_notification_enabled = True
+
+        # Обновляет температуру
+        def update_temperature():
+            if self.player.on_planet:
+                pl = self.get_planet_by_id(self.player.planet_id)
+
+                # Если температура на планете выше 100 C
+                if pl.planet_temp > 100:
+                    if pl.planet_type in [3, 5]:
+                        self.player.inside_temperature = clamp(self.player.inside_temperature + random.randint(-1,
+                                                                                                               8 if not self.player.module_life_support_damaged else 14),
+                                                               0,
+                                                               55 if not self.player.module_life_support_damaged else 90)
+                    else:
+                        self.player.inside_temperature = clamp(self.player.inside_temperature + random.randint(-1,
+                                                                                                               4 if not self.player.module_life_support_damaged else 8),
+                                                               0,
+                                                               35 if not self.player.module_life_support_damaged else 55)
+                # Если температура на планете ниже -100 C
+                elif pl.planet_temp < -100:
+                    if pl.planet_type in [1, 2, 4]:
+                        self.player.inside_temperature = clamp(self.player.inside_temperature + random.randint(
+                            -4 if not self.player.module_life_support_damaged else -8, 1),
+                                                               -50 if not self.player.module_life_support_damaged else -90,
+                                                               20)
+                    else:
+                        self.player.inside_temperature = clamp(self.player.inside_temperature + random.randint(
+                            -2 if not self.player.module_life_support_damaged else -1, 1),
+                                                               -45 if not self.player.module_life_support_damaged else -65,
+                                                               20)
+
+                self.player.outside_temperature = clamp(pl.planet_temp + random.randint(-2, 2), pl.planet_temp - 15,
+                                                        pl.planet_temp + 15)
+                del pl
+            else:
+                min_inside_temp = 17 if not self.player.module_life_support_damaged else -30
+                max_inside_temp = 25 if not self.player.module_life_support_damaged else 45
+
+                if self.player.inside_temperature < min_inside_temp:
+                    self.player.inside_temperature += 2 if not self.player.module_life_support_damaged else 1
+                elif self.player.inside_temperature > max_inside_temp:
+                    self.player.inside_temperature -= 2 if not self.player.module_life_support_damaged else 1
+                else:
+                    self.player.inside_temperature = clamp(self.player.inside_temperature + random.randint(
+                        -1 if not self.player.module_life_support_damaged else -4,
+                        1 if not self.player.module_life_support_damaged else 4),
+                                                           min_inside_temp, max_inside_temp)
+
+                self.player.outside_temperature = clamp(self.player.outside_temperature + random.randint(-2, 2),
+                                                        -273,
+                                                        -180)
 
         c = 0  # Простой счетчик, который нужен для обновления количества дней.
         while components.ENGINE.running:
             # Если движок был остановлен, то нужно остановить игру
             if not components.ENGINE.running:
                 break
-            # Если игрок еще не был загружен или игра приостановлена (например, ожидается ввод игрока), пропускаем этот цикл.
+            # Если игрок еще не был загружен или игра приостановлена (например, ожидается ввод игрока), пропускаем итерацию, засыпая на секунду.
             if self.player.ship_name == "{SHIP_PLACEHOLDER}" or self.paused or not self.running or components.ENGINE.pending_input:
                 await asyncio.sleep(1)
                 continue
 
-            # Обновляем температуру
-            # todo: изменять температуру внутри корабля в зависимости от темп. планеты
-            # todo: плавное изменение температуры
-            self.player.inside_temperature = random.randint(20, 30)
-            if self.player.on_planet:
-                pl = self.get_planet_by_id(self.player.planet_id)
-                self.player.outside_temperature = pl.planet_temp + random.randint(-5, 5)
-                del pl
-            else:
-                self.player.outside_temperature = random.randint(-273, -180)
+            update_temperature()
 
             # Если игрок не на планете, изменяем скорость и топливо
             if not self.player.on_planet:
@@ -332,6 +397,24 @@ class Game:
                 self.player.fuel = update_fuel(self.player)
 
             self.player.oxygen = update_oxygen(self.player)
+
+            # ТЕМПЕРАТУРА
+            if self.player.inside_temperature > 39:
+                if random.random() > 0.6:
+                    self.player.crew_health = clamp(self.player.crew_health - 1, 0, 100)
+                if temperature_notification_enabled:
+                    temperature_notification_enabled = False
+                    self.update_last_messages(f"{colorama.Fore.RED}Высокая температура внутри корабля!")
+            elif self.player.inside_temperature < -24:
+                if random.random() > 0.6:
+                    self.player.crew_health = clamp(self.player.crew_health - 1, 0, 100)
+                if temperature_notification_enabled:
+                    temperature_notification_enabled = False
+                    self.update_last_messages(f"{colorama.Fore.RED}Крайне низкая температура внутри корабля!")
+            else:
+                if not temperature_notification_enabled:
+                    temperature_notification_enabled = True
+            # ТЕМПЕРАТУРА КОНЕЦ
 
             # УВЕДОМЛЕНИЯ - ТОПЛИВО
             if self.player.fuel > 10:
@@ -351,7 +434,7 @@ class Game:
             # УВЕДОМЛЕНИЯ - ТОПЛИВО - КОНЕЦ
 
             # Генерируем случайное событие, если повезет
-            if random.random() > 0.5:
+            if random.random() > 0.9:
                 await self.events_generator()
 
             # Обновление счётчика дней.
@@ -400,7 +483,7 @@ class Game:
 
         # В режиме отладки время полёта значительно меньше
         if DEBUG_MODE:
-            final_time = 15 if not leave_planet else 8
+            final_time = 8
 
         planet = self.get_planet_by_id(self.player.planet_id)
 

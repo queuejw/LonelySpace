@@ -98,7 +98,8 @@ class MainMenu(ScreenBase):
                     f"{colorama.Fore.CYAN}{PRODUCT_NAME}{colorama.Fore.GREEN} - игра про космос на Python, которая разрабатывается в свободное время небольшой командой разработчиков.\n\n"
                     f"{colorama.Fore.CYAN}@pxffd{colorama.Fore.GREEN} - Автор идеи и главный разработчик\n"
                     f"{colorama.Fore.CYAN}неизвестный фанат{colorama.Fore.GREEN} - Автор обложки игры.\n\n"
-                    f"{colorama.Fore.CYAN}{PRODUCT_GITHUB_LINK}{colorama.Fore.GREEN} - Исходный код игры и обратная связь."
+                    f"{colorama.Fore.CYAN}{PRODUCT_GITHUB_LINK}{colorama.Fore.GREEN} - Исходный код игры и обратная связь.\n"
+                    f"[РЕКЛАМА] {colorama.Fore.CYAN}https://t.me/mars_1323{colorama.Fore.GREEN} - тематический чат в Telegram про Марс"
                 )
                 print(t)
                 del t

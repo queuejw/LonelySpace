@@ -10,21 +10,20 @@ class Ship:
         self.speed = 100  # Скорость корабля
         self.fuel = 100  # Уровень топлива 0 - 100
         self.oxygen = 100  # Уровень кислорода 0 - 100
-        self.inside_temperature = 36 # Температура внутри корабля
-        self.outside_temperature = 0  # Температура вне корабля
+        self.inside_temperature = 25  # Температура внутри корабля
+        self.outside_temperature = -260  # Температура вне корабля
         self.resources = 300  # Ресурсы
         self.day = 0  # Количество прожитых дней.
         self.on_planet = False  # Корабль находится на планете?
         self.planet_id = -1  # ID планеты, на которой находится корабль. Если -1, значит корабль не находится на планете (см. выше)
         self.actions_blocked = False  # Действия игроков заблокированы?
         # Модули корабля
-        self.module_main_engine_health = 100  # Прочность главного двигателя.
-        self.module_fuel_tank_health = 100  # Прочность топливного бака.
-        self.module_cooling_system_health = 100  # Прочность систем охлаждения.
-        self.module_life_support_health = 100  # Прочность системы жизнеобеспечения.
-        self.module_command_bridge_health = 100  # Прочность капитанского мостика.
-        self.module_computer_health = 100  # Прочность бортового компьютера.
-        self.module_weapon_health = 100  # Прочность орудия.
+        self.module_main_engine_damaged = False  # Статус главного двигателя.
+        self.module_fuel_tank_damaged = False  # Статус топливного бака.
+        self.module_cooling_system_damaged = False  # Статус систем охлаждения двигателя.
+        self.module_life_support_damaged = False  # Статус системы жизнеобеспечения.
+        self.module_computer_damaged = False  # Статус бортового компьютера.
+        self.module_weapon_damaged = False  # Статус орудия.
 
     # Экспортирует этот объект в виде словаря, для удобного сохранения в json.
     def export_as_dict(self) -> dict:
@@ -43,13 +42,12 @@ class Ship:
             'on_planet': self.on_planet,
             'planet_id': self.planet_id,
             'actions_blocked': self.actions_blocked,
-            'module_main_engine_health': self.module_main_engine_health,
-            'module_fuel_tank_health': self.module_fuel_tank_health,
-            'module_cooling_system_health': self.module_cooling_system_health,
-            'module_life_support_health': self.module_life_support_health,
-            'module_command_bridge_health': self.module_command_bridge_health,
-            'module_computer_health': self.module_computer_health,
-            'module_weapon_health': self.module_weapon_health
+            'module_main_engine_damaged': self.module_main_engine_damaged,
+            'module_fuel_tank_damaged': self.module_fuel_tank_damaged,
+            'module_cooling_system_damaged': self.module_cooling_system_damaged,
+            'module_life_support_damaged': self.module_life_support_damaged,
+            'module_computer_damaged': self.module_computer_damaged,
+            'module_weapon_damaged': self.module_weapon_damaged
         }
 
     # Применяет значения из словаря.
@@ -86,13 +84,12 @@ class Ship:
             self.on_planet = imported_ship['on_planet']
             self.planet_id = imported_ship['planet_id']
             self.actions_blocked = imported_ship['actions_blocked']
-            self.module_main_engine_health = imported_ship['module_main_engine_health']
-            self.module_fuel_tank_health = imported_ship['module_fuel_tank_health']
-            self.module_cooling_system_health = imported_ship['module_cooling_system_health']
-            self.module_life_support_health = imported_ship['module_life_support_health']
-            self.module_command_bridge_health = imported_ship['module_command_bridge_health']
-            self.module_computer_health = imported_ship['module_computer_health']
-            self.module_weapon_health = imported_ship['module_weapon_health']
+            self.module_main_engine_damaged = imported_ship['module_main_engine_damaged']
+            self.module_fuel_tank_damaged = imported_ship['module_fuel_tank_damaged']
+            self.module_cooling_system_damaged = imported_ship['module_cooling_system_damaged']
+            self.module_life_support_damaged = imported_ship['module_life_support_damaged']
+            self.module_computer_damaged = imported_ship['module_computer_damaged']
+            self.module_weapon_damaged = imported_ship['module_weapon_damaged']
         except KeyError as e:
             print(f"[E] Не удалось импортировать какие-то данные из JSON. Возможно, файл устарел. Детали: {e}")
         return self

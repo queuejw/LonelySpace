@@ -9,6 +9,7 @@ from base.core.io.save_manager import save_ship_state
 from base.game.classes.game import print_terminal_help, print_game_help, print_ship_help, print_planets_help
 from base.game.classes.ui.base.screen import ScreenBase
 
+
 # Если перевод переменной в int успешный, вернёт True
 def is_int(value) -> bool:
     try:
@@ -16,6 +17,7 @@ def is_int(value) -> bool:
         return True
     except ValueError:
         return False
+
 
 class GameScreen(ScreenBase):
 
@@ -68,15 +70,19 @@ class GameScreen(ScreenBase):
                     print(f"{colorama.Fore.RED}Название слишком длинное.")
                 else:
                     components.GAME.player.ship_name = new_name
-                    print(f"{colorama.Fore.GREEN}Название корабля изменено на {colorama.Fore.CYAN}{new_name}{colorama.Fore.GREEN}.")
+                    print(
+                        f"{colorama.Fore.GREEN}Название корабля изменено на {colorama.Fore.CYAN}{new_name}{colorama.Fore.GREEN}.")
                 del new_name
             else:
                 print(
                     f"{colorama.Fore.RED}Вы не указали новое название для корабля. Введите {colorama.Fore.CYAN}help ship{colorama.Fore.RED}, если понадобится помощь.")
-         # Ремонтировать корабль
+        # Ремонтировать корабль
         elif command[0].lower() == 'repair':
             asyncio.create_task(components.GAME.repair_cycle())
-        # Переименовать корабль
+        # Статус корабля
+        elif command[0].lower() == 'status':
+            print(components.GAME.get_ship_status_text())
+        # Перемещение корабля по планетам
         elif command[0].lower() == 'goto':
             # Если указан аргумент команды (какой-то)
             if len(command) > 1:
@@ -95,7 +101,7 @@ class GameScreen(ScreenBase):
                                 t = f"{colorama.Fore.GREEN}Маршрут установлен. Летим на планету {colorama.Fore.CYAN}{planet.planet_name}{colorama.Fore.GREEN}."
                                 print(t)
                                 components.GAME.update_last_messages(t)
-                                del t   
+                                del t
                                 del planet
                                 del planet_id
                             else:
@@ -165,8 +171,8 @@ class GameScreen(ScreenBase):
                 f"{colorama.Fore.RED}Неизвестная команда. Если возникли трудности, введите команду {colorama.Fore.CYAN}help{colorama.Fore.GREEN}.")
         del command
 
-
     def update(self, force_update: bool = False):
         if components.GAME.pending_update:
-            components.GAME.pending_update = False
-            self.render()
+            if not components.ENGINE.pending_input or force_update:
+                components.GAME.pending_update = False
+                self.render()
