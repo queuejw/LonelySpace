@@ -1,5 +1,6 @@
 import colorama
 
+from base.core import constants
 from base.core.console import clear_terminal, slow_print
 from base.core.constants import PRODUCT_NAME, DEBUG_MODE, PRODUCT_GITHUB_LINK
 from base.game.classes.ui.base.screen import ScreenBase
@@ -68,6 +69,8 @@ def init_game_launch(skip: bool = False):
     components.GAME.running = True
     # Блокируем ввод.
     components.ENGINE.pending_input = False
+    components.GAME.last_messages.clear()
+    components.GAME.update_last_messages(f"Добро пожаловать в {constants.PRODUCT_NAME}!")
     del loaded_data
 
     # Возвращаем экран игры.

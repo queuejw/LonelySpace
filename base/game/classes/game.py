@@ -158,7 +158,7 @@ class Game:
 
     def __init__(self):
         self.paused = False  # Игра приостановлена?
-        self.running = False  # Игра запущена?
+        self.running = True  # Игра запущена?
         self.pending_update = False  # Ожидается ли обновление экрана?
         self.planet_flying_active = False  # Летит ли игрок на планету?
         self.player: Ship = Ship("{SHIP_PLACEHOLDER}")  # Корабль игрока. При создании используется пустышка.
@@ -402,21 +402,30 @@ class Game:
         c = 0  # Простой счетчик, который нужен для обновления количества дней.
         while components.ENGINE.running:
             # Если движок был остановлен, то нужно остановить игру
-            if not components.ENGINE.running:
+            if not components.ENGINE.running or not self.running:
                 break
             # Если игрок еще не был загружен или игра приостановлена (например, ожидается ввод игрока), пропускаем итерацию, засыпая на секунду.
-            if self.player.ship_name == "{SHIP_PLACEHOLDER}" or self.paused or not self.running or components.ENGINE.pending_input:
+            if self.player.ship_name == "{SHIP_PLACEHOLDER}" or self.paused or components.ENGINE.pending_input:
                 await asyncio.sleep(1)
                 continue
 
             # Если экипаж погибает, игра завершается. Увы.
             if self.player.crew_health < 1:
+                if DEBUG_MODE:
+                    print("Игра закончилась, игрок погиб.")
+                print(f"{colorama.Fore.BLACK}{colorama.Back.RED}ИГРА ЗАВЕРШЕНА: ВЫ ПОГИБЛИ{colorama.Back.RESET}{colorama.Fore.GREEN}")
                 for _ in range(3):
                     self.update_last_messages(
                         f"{colorama.Fore.BLACK}{colorama.Back.RED}ИГРА ЗАВЕРШЕНА: ВЫ ПОГИБЛИ{colorama.Back.RESET}{colorama.Fore.GREEN}")
+                self.update_last_messages(
+                    f"{colorama.Fore.BLACK}{colorama.Back.RED}Используйте команду stop, чтобы выйти в главное меню.{colorama.Back.RESET}{colorama.Fore.GREEN}")
+                self.pending_update = True
+                self.running = False
                 components.ENGINE.blocked = True
                 await asyncio.sleep(5)
                 components.ENGINE.blocked = False
+                if DEBUG_MODE:
+                    print("Основной цикл подходит к концу.")
                 break
 
             # Обновляет температуру
@@ -587,7 +596,13 @@ class Game:
         if self.player.crew_health < 1:
             pass
         else:
-            pass
+            if DEBUG_MODE:
+                print("Игра была завершена по желанию игрока, наверное.")
+            self.player.ship_name = "{SHIP_PLACEHOLDER}"
+            if components.ENGINE.running:
+                # Я не уверен, что это безопасно.
+                self.running = True
+                await self.main_loop()
 
     # Ремонт корабля, нужно доработать это.
     async def repair_cycle(self):
@@ -596,10 +611,10 @@ class Game:
             f"{colorama.Fore.CYAN}Начинаем ремонт корабля!{colorama.Fore.GREEN}")
         while repair_time > 0:
             # Если движок был остановлен, то нужно остановить цикл
-            if not components.ENGINE.running:
+            if not components.ENGINE.running or not self.running:
                 break
             # Если игра приостановлена, пропускаем итерацию
-            if self.paused or not self.running or components.ENGINE.pending_input:
+            if self.paused or components.ENGINE.pending_input:
                 await asyncio.sleep(1)
                 continue
 
@@ -654,7 +669,7 @@ class Game:
         while final_time > 0:
 
             # Если движок был остановлен ИЛИ полёт был отменен, то нужно остановить цикл
-            if not components.ENGINE.running:
+            if not components.ENGINE.running or not self.running:
                 successful = False
                 break
 
@@ -664,7 +679,7 @@ class Game:
                 successful = False
                 break
             # Если игра приостановлена, пропускаем итерацию
-            if self.paused or not self.running or components.ENGINE.pending_input:
+            if self.paused or components.ENGINE.pending_input:
                 await asyncio.sleep(1)
                 continue
 

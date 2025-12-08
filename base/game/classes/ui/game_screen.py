@@ -35,7 +35,7 @@ class GameScreen(ScreenBase):
 
         if len(command) < 1:
             del command
-            return
+            return self
 
         if DEBUG_MODE:
             print(f"{colorama.Fore.MAGENTA}Игрок ввёл команду: {command}{colorama.Fore.RESET}")
@@ -44,10 +44,25 @@ class GameScreen(ScreenBase):
         if components.GAME.player.module_computer_damaged and random.random() < 0.2:
             print(
                 f"{colorama.Fore.RED}[СБОЙ] {colorama.Fore.GREEN}Попробу{colorama.Fore.YELLOW}йте ещё р{colorama.Fore.WHITE}аз.")
-            return
+            return self
 
+        # Мы не можем выполнять команды, если игра была остановлена.
+        if not components.GAME.running:
+            if command[0].lower() == 'stop':
+                from base.game.classes.ui.main_menu import MainMenu
+                return MainMenu()
+            else:
+                print(
+                    f"{colorama.Fore.YELLOW}Игра завершена, введите {colorama.Fore.CYAN}stop{colorama.Fore.YELLOW}, чтобы отключить бортовой компьютер.")
+                return self
+
+        # Остановка игры
+        if command[0].lower() == 'stop':
+            components.GAME.running = False
+            from base.game.classes.ui.main_menu import MainMenu
+            return MainMenu()
         # Помощь
-        if command[0].lower() == 'help':
+        elif command[0].lower() == 'help':
             if len(command) > 1:
                 if command[1].lower() == 'game':
                     print_game_help()
