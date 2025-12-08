@@ -43,7 +43,7 @@ class GameScreen(ScreenBase):
         # Если бортовой компьютер поврежден, есть шанс, что произойдет сбой.
         if components.GAME.player.module_computer_damaged and random.random() < 0.2:
             print(
-                f"{colorama.Fore.RED}[СБОЙ] {colorama.Fore.GREEN}Попробу{colorama.Fore.YELLOW}йте ещё р{colorama.Fore.CYAN}аз.")
+                f"{colorama.Fore.RED}[СБОЙ] {colorama.Fore.GREEN}Попробу{colorama.Fore.YELLOW}йте ещё р{colorama.Fore.WHITE}аз.")
             return
 
         # Помощь
