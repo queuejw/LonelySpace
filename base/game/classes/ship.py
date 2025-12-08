@@ -16,7 +16,6 @@ class Ship:
         self.day = 0  # Количество прожитых дней.
         self.on_planet = False  # Корабль находится на планете?
         self.planet_id = -1  # ID планеты, на которой находится корабль. Если -1, значит корабль не находится на планете (см. выше)
-        self.actions_blocked = False  # Действия игроков заблокированы?
         # Модули корабля
         self.module_main_engine_damaged = False  # Статус главного двигателя.
         self.module_fuel_tank_damaged = False  # Статус топливного бака.
@@ -41,7 +40,6 @@ class Ship:
             'day': self.day,
             'on_planet': self.on_planet,
             'planet_id': self.planet_id,
-            'actions_blocked': self.actions_blocked,
             'module_main_engine_damaged': self.module_main_engine_damaged,
             'module_fuel_tank_damaged': self.module_fuel_tank_damaged,
             'module_cooling_system_damaged': self.module_cooling_system_damaged,
@@ -83,7 +81,6 @@ class Ship:
             self.day = imported_ship['day']
             self.on_planet = imported_ship['on_planet']
             self.planet_id = imported_ship['planet_id']
-            self.actions_blocked = imported_ship['actions_blocked']
             self.module_main_engine_damaged = imported_ship['module_main_engine_damaged']
             self.module_fuel_tank_damaged = imported_ship['module_fuel_tank_damaged']
             self.module_cooling_system_damaged = imported_ship['module_cooling_system_damaged']

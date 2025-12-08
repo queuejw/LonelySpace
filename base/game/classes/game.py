@@ -328,6 +328,8 @@ class Game:
         strength_notification_enabled = True
         temperature_notification_enabled = True
 
+        # Уведомления для модулей
+
         # Обновляет температуру
         def update_temperature():
             if self.player.on_planet:
@@ -389,6 +391,7 @@ class Game:
                 await asyncio.sleep(1)
                 continue
 
+            # Обновляет температуру
             update_temperature()
 
             # Если игрок не на планете, изменяем скорость и топливо
@@ -404,7 +407,7 @@ class Game:
                     self.player.crew_health = clamp(self.player.crew_health - 1, 0, 100)
                 if temperature_notification_enabled:
                     temperature_notification_enabled = False
-                    self.update_last_messages(f"{colorama.Fore.RED}Высокая температура внутри корабля!")
+                    self.update_last_messages(f"{colorama.Fore.RED}Крайне высокая температура внутри корабля!")
             elif self.player.inside_temperature < -24:
                 if random.random() > 0.6:
                     self.player.crew_health = clamp(self.player.crew_health - 1, 0, 100)
@@ -489,6 +492,21 @@ class Game:
 
         successful = True
 
+        # Повреждает все модули на корабле с шансом 50% на каждый
+        def damage_all_modules():
+            if random.random() > 0.5:
+                self.player.module_main_engine_damaged = True
+            if random.random() > 0.5:
+                self.player.module_fuel_tank_damaged = True
+            if random.random() > 0.5:
+                self.player.module_cooling_system_damaged = True
+            if random.random() > 0.5:
+                self.player.module_life_support_damaged = True
+            if random.random() > 0.5:
+                self.player.module_computer_damaged = True
+            if random.random() > 0.5:
+                self.player.module_weapon_damaged = True
+
         while final_time > 0:
 
             # Если движок был остановлен ИЛИ полёт был отменен, то нужно остановить цикл
@@ -519,7 +537,7 @@ class Game:
                         f"{colorama.Fore.YELLOW}Жёсткая посадка! Причина: {colorama.Fore.RED}Недостаточно топлива для завершения полёта")
                     components.GAME.player.planet_id = self.player.planet_id
                     components.GAME.player.on_planet = True
-                    # todo: Реализовать жесткую посадку
+                    damage_all_modules()
                 else:
                     self.update_last_messages(
                         f"{colorama.Fore.RED}Двигатели заглохли, закончилось топливо. Невозможно продолжить полёт." if not leave_planet else f"{colorama.Fore.RED}Двигатели заглохли, закончилось топливо. Мы не смогли покинуть планету.")
