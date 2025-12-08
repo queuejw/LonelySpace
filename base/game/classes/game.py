@@ -466,7 +466,7 @@ class Game:
             # ТОПЛИВО - КОНЕЦ
 
             # ПРОЧНОСТЬ
-            if self.player.strength > 10:
+            if self.player.strength > 25:
                 if not low_strength_notification_enabled:
                     low_strength_notification_enabled = True
             if 1 < self.player.strength < 25:
@@ -484,7 +484,7 @@ class Game:
             # ПРОЧНОСТЬ - КОНЕЦ
 
             # КИСЛОРОД
-            if self.player.oxygen > 10:
+            if self.player.oxygen > 20:
                 if not low_oxygen_notification_enabled:
                     low_oxygen_notification_enabled = True
             if 1 < self.player.oxygen < 20:
