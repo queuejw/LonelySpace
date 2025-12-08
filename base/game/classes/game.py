@@ -336,6 +336,8 @@ class Game:
         no_fuel_notification_enabled = True
         low_strength_notification_enabled = True
         no_strength_notification_enabled = True
+        low_oxygen_notification_enabled = True
+        no_oxygen_notification_enabled = True
         temperature_notification_enabled = True
 
         # Уведомления для модулей
@@ -445,7 +447,7 @@ class Game:
                     temperature_notification_enabled = True
             # ТЕМПЕРАТУРА КОНЕЦ
 
-            # УВЕДОМЛЕНИЯ - ТОПЛИВО
+            # ТОПЛИВО
             if self.player.fuel > 10:
                 if not low_fuel_notification_enabled:
                     low_fuel_notification_enabled = True
@@ -461,9 +463,9 @@ class Game:
             if self.player.fuel > 1:
                 if not no_fuel_notification_enabled:
                     no_fuel_notification_enabled = True
-            # УВЕДОМЛЕНИЯ - ТОПЛИВО - КОНЕЦ
+            # ТОПЛИВО - КОНЕЦ
 
-            # УВЕДОМЛЕНИЯ - ПРОЧНОСТЬ
+            # ПРОЧНОСТЬ
             if self.player.strength > 10:
                 if not low_strength_notification_enabled:
                     low_strength_notification_enabled = True
@@ -479,7 +481,28 @@ class Game:
             if self.player.strength > 1:
                 if not no_strength_notification_enabled:
                     no_strength_notification_enabled = True
-            # УВЕДОМЛЕНИЯ - ПРОЧНОСТЬ - КОНЕЦ
+            # ПРОЧНОСТЬ - КОНЕЦ
+
+            # КИСЛОРОД
+            if self.player.oxygen > 10:
+                if not low_oxygen_notification_enabled:
+                    low_oxygen_notification_enabled = True
+            if 1 < self.player.oxygen < 20:
+                if low_oxygen_notification_enabled:
+                    low_oxygen_notification_enabled = False
+                    self.update_last_messages(f"{colorama.Fore.YELLOW}Критически низкий уровень кислорода!")
+            if self.player.oxygen < 1:
+                # Если кислород на нуле, наносим урон экипажу с шансом 70%
+                if random.random() > 0.3:
+                    self.player.crew_health = clamp(self.player.crew_health - random.randint(1, 4), 0, 100)
+                if no_oxygen_notification_enabled:
+                    no_oxygen_notification_enabled = False
+                    self.update_last_messages(
+                        f"{colorama.Fore.BLACK}{colorama.Back.RED}Кислород закончился!{colorama.Back.RESET}{colorama.Fore.GREEN}")
+            if self.player.oxygen > 1:
+                if not no_oxygen_notification_enabled:
+                    no_oxygen_notification_enabled = True
+            # КИСЛОРОД - КОНЕЦ
 
             # Проверка модулей корабля
             # Двигатель
