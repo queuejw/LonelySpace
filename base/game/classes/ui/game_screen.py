@@ -201,6 +201,7 @@ class GameScreen(ScreenBase):
             print(
                 f"{colorama.Fore.RED}Неизвестная команда. Если возникли трудности, введите команду {colorama.Fore.CYAN}help{colorama.Fore.GREEN}.")
         del command
+        return self
 
     def update(self, force_update: bool = False):
         if components.GAME.pending_update:

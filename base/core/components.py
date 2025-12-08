@@ -3,5 +3,5 @@ from base.game.classes.game import Game
 
 # Связующее звено между элементами игры
 
-ENGINE = Engine() # Движок
-GAME: Game # Игра
+ENGINE = Engine()  # Движок
+GAME: Game  # Игра

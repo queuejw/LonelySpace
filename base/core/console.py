@@ -1,6 +1,7 @@
 import os
 import time
 
+
 # Очищает терминал
 def clear_terminal():
     os.system('cls' if os.name == 'nt' else 'clear')

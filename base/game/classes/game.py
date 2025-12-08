@@ -17,9 +17,9 @@ def print_terminal_help():
         f"{colorama.Fore.GREEN}Терминал - это проводник между Вами и Бортовым Компьютером. Введите команду, чтобы выполнить какое-то действие.\n"
         "Запущенный терминал автоматически приостанавливает игру, а Бортовой Компьютер ожидает Ваших команд.\n\n"
         "Ниже вы увидите общие команды терминала:\n"
-        f"{colorama.Fore.CYAN}exit{colorama.Fore.GREEN} - Выход из терминала.\n"
+        f"{colorama.Fore.CYAN}stop{colorama.Fore.GREEN} - Выход в главное меню игры без сохранения (не путать с терминалом)\n"
         f"{colorama.Fore.CYAN}help{colorama.Fore.GREEN} - Помощь с терминалом.\n"
-        f"{colorama.Fore.CYAN}pause{colorama.Fore.GREEN} - Приостановить игру.\n"
+        f"{colorama.Fore.CYAN}exit{colorama.Fore.GREEN} - Выход из терминала.\n"
         f"{colorama.Fore.CYAN}save{colorama.Fore.GREEN} - Сохранить игру.\n"
         "\n"
         "Чтобы открыть инструкции для других элементов игры, введите следующие команды:\n"
@@ -413,7 +413,8 @@ class Game:
             if self.player.crew_health < 1:
                 if DEBUG_MODE:
                     print("Игра закончилась, игрок погиб.")
-                print(f"{colorama.Fore.BLACK}{colorama.Back.RED}ИГРА ЗАВЕРШЕНА: ВЫ ПОГИБЛИ{colorama.Back.RESET}{colorama.Fore.GREEN}")
+                print(
+                    f"{colorama.Fore.BLACK}{colorama.Back.RED}ИГРА ЗАВЕРШЕНА: ВЫ ПОГИБЛИ{colorama.Back.RESET}{colorama.Fore.GREEN}")
                 for _ in range(3):
                     self.update_last_messages(
                         f"{colorama.Fore.BLACK}{colorama.Back.RED}ИГРА ЗАВЕРШЕНА: ВЫ ПОГИБЛИ{colorama.Back.RESET}{colorama.Fore.GREEN}")
