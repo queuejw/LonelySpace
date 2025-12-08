@@ -111,6 +111,11 @@ def calculate_speed(ship: Ship) -> int:
 
 # Возвращает обновленное значение топлива
 def update_fuel(ship: Ship) -> int:
+    # Если топливный бак пробит
+    if ship.module_fuel_tank_damaged:
+        if random.random() > 0.75:
+            ship.fuel = clamp(ship.fuel - 1, 0, 100)
+
     if random.random() > 0.89:
         # Если повезло
         return clamp(ship.fuel - 1, 0, 100)
@@ -121,6 +126,10 @@ def update_fuel(ship: Ship) -> int:
 
 # Возвращает обновленное значение кислорода
 def update_oxygen(ship: Ship) -> int:
+    # Если система жизнеобеспечения повреждена
+    if ship.module_life_support_damaged and random.random() > 0.6:
+        ship.oxygen = clamp(ship.oxygen - 1, 0, 100)
+
     if random.random() > 0.5 and ship.fuel < 1:
         # Если закончилось топливо и повезло
         return clamp(ship.oxygen - random.randint(1, 5), 0, 100)
@@ -325,10 +334,17 @@ class Game:
         # Здесь хранятся переменные, контролирующие уведомления
         low_fuel_notification_enabled = True
         no_fuel_notification_enabled = True
-        strength_notification_enabled = True
+        low_strength_notification_enabled = True
+        no_strength_notification_enabled = True
         temperature_notification_enabled = True
 
         # Уведомления для модулей
+        module_main_engine_notification_enabled = True
+        module_fuel_tank_notification_enabled = True
+        module_cooling_system_notification_enabled = True
+        module_life_support_notification_enabled = True
+        module_computer_notification_enabled = True
+        module_weapon_notification_enabled = True
 
         # Обновляет температуру
         def update_temperature():
@@ -391,6 +407,16 @@ class Game:
                 await asyncio.sleep(1)
                 continue
 
+            # Если экипаж погибает, игра завершается. Увы.
+            if self.player.crew_health < 1:
+                for _ in range(3):
+                    self.update_last_messages(
+                        f"{colorama.Fore.BLACK}{colorama.Back.RED}ИГРА ЗАВЕРШЕНА: ВЫ ПОГИБЛИ{colorama.Back.RESET}{colorama.Fore.GREEN}")
+                components.ENGINE.blocked = True
+                await asyncio.sleep(5)
+                components.ENGINE.blocked = False
+                break
+
             # Обновляет температуру
             update_temperature()
 
@@ -430,11 +456,94 @@ class Game:
             if self.player.fuel < 1:
                 if no_fuel_notification_enabled:
                     no_fuel_notification_enabled = False
-                    self.update_last_messages(f"{colorama.Fore.RED}Закончилось топливо!")
+                    self.update_last_messages(
+                        f"{colorama.Fore.BLACK}{colorama.Back.RED}Закончилось топливо!{colorama.Back.RESET}{colorama.Fore.GREEN}")
             if self.player.fuel > 1:
                 if not no_fuel_notification_enabled:
                     no_fuel_notification_enabled = True
             # УВЕДОМЛЕНИЯ - ТОПЛИВО - КОНЕЦ
+
+            # УВЕДОМЛЕНИЯ - ПРОЧНОСТЬ
+            if self.player.strength > 10:
+                if not low_strength_notification_enabled:
+                    low_strength_notification_enabled = True
+            if 1 < self.player.strength < 25:
+                if low_strength_notification_enabled:
+                    low_strength_notification_enabled = False
+                    self.update_last_messages(f"{colorama.Fore.YELLOW}Корпус критически повреждён!")
+            if self.player.strength < 1:
+                if no_strength_notification_enabled:
+                    no_strength_notification_enabled = False
+                    self.update_last_messages(
+                        f"{colorama.Fore.BLACK}{colorama.Back.RED}Корпус разрушен!{colorama.Back.RESET}{colorama.Fore.GREEN}")
+            if self.player.strength > 1:
+                if not no_strength_notification_enabled:
+                    no_strength_notification_enabled = True
+            # УВЕДОМЛЕНИЯ - ПРОЧНОСТЬ - КОНЕЦ
+
+            # Проверка модулей корабля
+            # Двигатель
+            if self.player.module_main_engine_damaged:
+                if module_main_engine_notification_enabled:
+                    module_main_engine_notification_enabled = False
+                    self.update_last_messages(f"{colorama.Fore.RED}Двигатель повреждён, максимальная скорость снижена!")
+            else:
+                if not module_main_engine_notification_enabled:
+                    module_main_engine_notification_enabled = True
+                    self.update_last_messages(f"{colorama.Fore.GREEN}Двигатель восстановлен, можно лететь!")
+
+            # Топливный бак
+            if self.player.module_fuel_tank_damaged:
+                if module_fuel_tank_notification_enabled:
+                    module_fuel_tank_notification_enabled = False
+                    self.update_last_messages(f"{colorama.Fore.RED}Топливный бак повреждён!")
+            else:
+                if not module_fuel_tank_notification_enabled:
+                    module_fuel_tank_notification_enabled = True
+                    self.update_last_messages(f"{colorama.Fore.GREEN}Топливный бак восстановлен!")
+
+            # Система охлаждения
+            if self.player.module_cooling_system_damaged:
+                if module_cooling_system_notification_enabled:
+                    module_cooling_system_notification_enabled = False
+                    self.update_last_messages(
+                        f"{colorama.Fore.RED}Система охлаждения двигателей повреждена! Шанс пожара увеличен, максимальная скорость снижена.")
+            else:
+                if not module_cooling_system_notification_enabled:
+                    module_cooling_system_notification_enabled = True
+                    self.update_last_messages(f"{colorama.Fore.GREEN}Система охлаждения двигателей восстановлена.")
+
+            # Система жизнеобеспечения
+            if self.player.module_life_support_damaged:
+                if module_life_support_notification_enabled:
+                    module_life_support_notification_enabled = False
+                    self.update_last_messages(
+                        f"{colorama.Fore.RED}Система жизнеобеспечения повреждена! Стабилизация температуры недоступна, отключение подачи кислорода.")
+            else:
+                if not module_life_support_notification_enabled:
+                    module_life_support_notification_enabled = True
+                    self.update_last_messages(f"{colorama.Fore.GREEN}Система жизнеобеспечения восстановлена.")
+
+            # Компьютер
+            if self.player.module_computer_damaged:
+                if module_computer_notification_enabled:
+                    module_computer_notification_enabled = False
+                    self.update_last_messages(
+                        f"{colorama.Fore.RED}Бортовой компьютер повреждён! Сбой систем навигаций, нарушение работы терминала.")
+            else:
+                if not module_computer_notification_enabled:
+                    module_computer_notification_enabled = True
+                    self.update_last_messages(f"{colorama.Fore.GREEN}Бортовой компьютер восстановлен.")
+            # todo: стрельба не реализована.
+            # Орудие
+            if self.player.module_weapon_damaged:
+                if module_weapon_notification_enabled:
+                    module_weapon_notification_enabled = False
+                    self.update_last_messages(f"{colorama.Fore.RED}Орудие повреждено! Точность стрельбы снижена.")
+            else:
+                if not module_weapon_notification_enabled:
+                    module_weapon_notification_enabled = True
+                    self.update_last_messages(f"{colorama.Fore.GREEN}Орудие восстановлено.")
 
             # Генерируем случайное событие, если повезет
             if random.random() > 0.9:
@@ -449,6 +558,13 @@ class Game:
             # Помечаем, что ожидается обновление экрана.
             self.pending_update = True
             await asyncio.sleep(3)
+
+        # Здесь уже не цикл while.
+        # Если игра была завершена тем, что игрок погиб, то todo.
+        if self.player.crew_health < 1:
+            pass
+        else:
+            pass
 
     # Ремонт корабля, нужно доработать это.
     async def repair_cycle(self):
@@ -483,7 +599,12 @@ class Game:
         self.planet_flying_active = True
 
         final_time = random.randint(time - 20, time + 40) if not leave_planet else random.randint(20, 40)
-
+        # Увеличиваем время полёта, если двигатель повреждён.
+        if self.player.module_main_engine_damaged:
+            final_time += random.randint(10, 40)
+        # Немного увеличиваем время полёта, если система охлаждения повреждена.
+        if self.player.module_cooling_system_damaged:
+            final_time += random.randint(5, 25)
         # В режиме отладки время полёта значительно меньше
         if DEBUG_MODE:
             final_time = 8

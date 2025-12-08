@@ -20,16 +20,16 @@ class Engine:
 
     # Инициализация движка
     def __init__(self):
-        self.screen = get_default_screen() # Текущий экземпляр объекта экрана.
-        self.running = True # Запущен ли движок? Если нет, игра закрывается.
-        self.blocked = False # Заблокировано ли ядро? Блокирует работу циклов движка (просто пропускает итерацию)
+        self.screen = get_default_screen()  # Текущий экземпляр объекта экрана.
+        self.running = True  # Запущен ли движок? Если нет, игра закрывается.
+        self.blocked = False  # Заблокировано ли ядро? Блокирует работу циклов движка (просто пропускает итерацию)
         self.pending_input = True  # Ожидается ли ввод игрока. Костыль для нормальной работы терминала. Работает же)
 
     # Управляет состоянием интерфейса (блокирует его, либо разблокирует)
     def engine_block_control(self):
         self.blocked = (not self.blocked)
 
-    # Запуск движка
+    # Запуск движка (и игры)
     async def start(self):
         # Циклы движка
         tick_task = asyncio.create_task(self.ui_loop())
@@ -55,18 +55,20 @@ class Engine:
                 self.screen.update()
             await asyncio.sleep(0.5)
 
-    # Устанавливает ожидание ввода игрока.
+    # Устанавливает ожидание ввода игрока, если движок не заблокирован.
     def on_space(self) -> bool:
+        if self.blocked:
+            return False
         if not self.pending_input:
             self.pending_input = True
         return True
 
     # Цикл, в котором происходит обработка ввода игрока.
     async def input_loop(self):
-        keyboard.add_hotkey('space', self.on_space) # Если игрок нажал пробел, выполнится функция on_space
+        keyboard.add_hotkey('space', self.on_space)  # Если игрок нажал пробел, выполнится функция on_space
         while self.running:
             if not self.blocked and self.pending_input:
-                command = await asyncio.to_thread(input,f"{colorama.Fore.GREEN}> ") # Получаем ввод
+                command = await asyncio.to_thread(input, f"{colorama.Fore.GREEN}> ")  # Получаем ввод
                 if self.blocked:
                     continue
                 updated_screen = self.screen.handle_input(

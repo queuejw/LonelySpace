@@ -1,4 +1,5 @@
 import asyncio
+import random
 
 import colorama
 
@@ -38,6 +39,12 @@ class GameScreen(ScreenBase):
 
         if DEBUG_MODE:
             print(f"{colorama.Fore.MAGENTA}Игрок ввёл команду: {command}{colorama.Fore.RESET}")
+
+        # Если бортовой компьютер поврежден, есть шанс, что произойдет сбой.
+        if components.GAME.player.module_computer_damaged and random.random() < 0.2:
+            print(
+                f"{colorama.Fore.RED}[СБОЙ] {colorama.Fore.GREEN}Попробу{colorama.Fore.YELLOW}йте ещё р{colorama.Fore.CYAN}аз.")
+            return
 
         # Помощь
         if command[0].lower() == 'help':
@@ -95,12 +102,22 @@ class GameScreen(ScreenBase):
                         if 0 <= planet_id <= len(components.GAME.planets) - 1:
                             # Если в данный момент корабль не в пути, можем начать полёт
                             if not components.GAME.planet_flying_active:
+                                planet_was_changed = False
+                                # Если компьютер поврежден, есть шанс, что планета изменится на случайную.
+                                if components.GAME.player.module_computer_damaged and random.random() > 0.7:
+                                    planet_was_changed = True
+                                    planet_id = random.randint(0, len(components.GAME.planets) - 1)
+                                # Обновляем значений переменных и запускаем цикл полёта.
                                 components.GAME.player.planet_id = planet_id
                                 planet = components.GAME.get_planet_by_id(planet_id)
                                 asyncio.create_task(components.GAME.fly_cycle(planet.planet_eta, False))
-                                t = f"{colorama.Fore.GREEN}Маршрут установлен. Летим на планету {colorama.Fore.CYAN}{planet.planet_name}{colorama.Fore.GREEN}."
+                                if not planet_was_changed:
+                                    t = f"{colorama.Fore.GREEN}Маршрут установлен. Летим на планету {colorama.Fore.CYAN}{planet.planet_name}{colorama.Fore.GREEN}."
+                                else:
+                                    t = f"{colorama.Fore.RED}Маршрут установлен. {colorama.Fore.GREEN}Летим на план{colorama.Fore.RED}ету {colorama.Fore.CYAN}{planet.planet_name}{colorama.Fore.RED}."
                                 print(t)
                                 components.GAME.update_last_messages(t)
+                                del planet_was_changed
                                 del t
                                 del planet
                                 del planet_id
@@ -159,7 +176,6 @@ class GameScreen(ScreenBase):
                 except ValueError:
                     print(components.GAME.get_text_planet_list(-1))
             else:
-                import random
                 print(components.GAME.get_text_planet_list(random.randint(0, len(components.GAME.planets) - 1)))
         # Закрыть терминал
         elif command[0].lower() == 'exit':
