@@ -1,11 +1,9 @@
-from base.core.constants import DEBUG_MODE
-
-
+# Запускает движок игры
 async def init_game():
     from base.core import components
     await components.ENGINE.start()
 
-
+# Здесь происходит запуск программы 
 if __name__ == "__main__":
     import asyncio
     import colorama
@@ -13,6 +11,7 @@ if __name__ == "__main__":
     colorama.init(autoreset=True)
     try:
         asyncio.run(init_game())
+        from base.core.constants import DEBUG_MODE
         if DEBUG_MODE:
             print("Выполнение программы завершено. До скорой встречи!")
     except KeyboardInterrupt:
