@@ -4,10 +4,6 @@ from base.core.constants import DEBUG_MODE
 
 
 class ScreenBase:
-
-    def __init__(self):
-        pass
-
     def render(self):
         if DEBUG_MODE:
             print(colorama.Fore.RED + "This screen not implemented")
