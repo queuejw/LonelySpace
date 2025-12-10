@@ -158,10 +158,10 @@ class Game:
 
     def __init__(self):
         self.paused = False  # Игра приостановлена?
-        self.running = True  # Игра запущена?
+        self.running = False  # Игра запущена?
         self.pending_update = False  # Ожидается ли обновление экрана?
         self.planet_flying_active = False  # Летит ли игрок на планету?
-        self.player: Ship = Ship("{SHIP_PLACEHOLDER}")  # Корабль игрока. При создании используется пустышка.
+        self.player: Ship = Ship("")  # Корабль игрока. При создании используется пустышка.
         self.player_drawing: str = ''  # ASCII рисунок корабля
         self.planets: list[Planet] = []  # Список планет
         self.last_messages: list[str] = []  # Список последних действий
@@ -402,10 +402,10 @@ class Game:
         c = 0  # Простой счетчик, который нужен для обновления количества дней.
         while components.ENGINE.running:
             # Если движок был остановлен, то нужно остановить игру
-            if not components.ENGINE.running or not self.running:
+            if not components.ENGINE.running and not self.running:
                 break
             # Если игрок еще не был загружен или игра приостановлена (например, ожидается ввод игрока), пропускаем итерацию, засыпая на секунду.
-            if self.player.ship_name == "{SHIP_PLACEHOLDER}" or self.paused or components.ENGINE.pending_input:
+            if self.player.ship_name == "" or self.paused or components.ENGINE.pending_input:
                 await asyncio.sleep(1)
                 continue
 
@@ -426,8 +426,10 @@ class Game:
                 await asyncio.sleep(5)
                 components.ENGINE.blocked = False
                 if DEBUG_MODE:
-                    print("Основной цикл подходит к концу.")
-                break
+                    print("Игра была завершена")
+                # Костыль, чтобы цикл никогда не завершался.
+                self.player.ship_name = ""
+                continue
 
             # Обновляет температуру
             update_temperature()
@@ -592,19 +594,6 @@ class Game:
             self.pending_update = True
             await asyncio.sleep(3)
 
-        # Здесь уже не цикл while.
-        # Если игра была завершена тем, что игрок погиб, то todo.
-        if self.player.crew_health < 1:
-            pass
-        else:
-            if DEBUG_MODE:
-                print("Игра была завершена по желанию игрока, наверное.")
-            self.player.ship_name = "{SHIP_PLACEHOLDER}"
-            if components.ENGINE.running:
-                # Я не уверен, что это безопасно.
-                self.running = True
-                await self.main_loop()
-
     # Ремонт корабля, нужно доработать это.
     async def repair_cycle(self):
         repair_time = round(40 * (self.player.strength / 100))
@@ -612,7 +601,7 @@ class Game:
             f"{colorama.Fore.CYAN}Начинаем ремонт корабля!{colorama.Fore.GREEN}")
         while repair_time > 0:
             # Если движок был остановлен, то нужно остановить цикл
-            if not components.ENGINE.running or not self.running:
+            if not components.ENGINE.running and not self.running:
                 break
             # Если игра приостановлена, пропускаем итерацию
             if self.paused or components.ENGINE.pending_input:
@@ -670,7 +659,7 @@ class Game:
         while final_time > 0:
 
             # Если движок был остановлен ИЛИ полёт был отменен, то нужно остановить цикл
-            if not components.ENGINE.running or not self.running:
+            if not components.ENGINE.running and not self.running:
                 successful = False
                 break
 

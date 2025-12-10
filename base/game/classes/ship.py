@@ -52,6 +52,11 @@ class Ship:
     def import_from_dict(self, imported_ship: dict):
         try:
             self.ship_name = imported_ship['ship_name']
+            # Название корабля должно быть больше 3 и менее 16 символов.
+            if len(self.ship_name) < 3 or len(self.ship_name) > 15:
+                print(f"[W] Неправильная длина названия корабля, сброс до значений по умолчанию.")
+                self.ship_name = "ERROR"
+
             self.level = imported_ship['level']
 
             self.strength = imported_ship['strength']
