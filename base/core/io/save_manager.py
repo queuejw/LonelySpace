@@ -4,11 +4,13 @@ import os
 from base.core.constants import DEBUG_MODE, SAVES_FILE_PATH, SAVES_FOLDER_NAME
 from base.game.classes.ship import Ship
 
-
+# Возвращает случайное название для корабля
 def create_random_name() -> str:
-    return "TestPlane-20"
+    import random
+    names = ["Спутник-", "Марс-", "Луна-", "F-", "G-"]
+    return f"{random.choice(names)}{random.randint(1, 999)}"
 
-
+# Возвращает стандартный корабль
 def get_default_ship() -> Ship:
     return Ship(create_random_name())
 
