@@ -327,7 +327,9 @@ class Game:
             pass
         else:
             # События, которые происходят только в космосе
-            pass
+            if random.random() < 0.05:
+                # Ни на что не влияет =)
+                self.update_last_messages(f"{colorama.Fore.YELLOW}Незначительное ухудшение связи! Бортовой компьютер устранит проблему автоматически.")
 
     # Основной цикл игры
     async def main_loop(self):
