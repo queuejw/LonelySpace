@@ -172,21 +172,28 @@ class Game:
     # Берём рисунок корабля, затем заменяем p на данные о корабле. Если осталось свободное место, заменяем p на пустоту.
     # Вместо s может нарисовать звёзды.
     def generate_main_text(self) -> str:
+        # Если компьютер повреждён, есть шанс, что вместо информации о корабле будет написано ошибка.
+        def get_ship_state_value_text(value) -> str:
+            if self.player.module_computer_damaged and random.random() > 0.5:
+                return f"{colorama.Fore.RED}ошибка доступа"
+            else:
+                return value
+                
         d = self.player_drawing.splitlines()
 
         computer_text = [
-            f"Корабль " + f"{colorama.Fore.CYAN}{self.player.ship_name}" + colorama.Fore.GREEN,
+            f"Корабль " + f"{colorama.Fore.CYAN}{get_ship_state_value_text(self.player.ship_name)}" + colorama.Fore.GREEN,
             colorama.Fore.GREEN + "=" * 15,
         ]
         if self.player.on_planet:
             planet = self.get_planet_by_id(self.player.planet_id)
             computer_text += [
-                colorama.Fore.GREEN + f"Сейчас мы находимся на планете " + colorama.Fore.CYAN + f"{planet.planet_name}" + colorama.Fore.GREEN,
+                colorama.Fore.GREEN + f"Сейчас мы находимся на планете " + colorama.Fore.CYAN + f"{get_ship_state_value_text(planet.planet_name)}" + colorama.Fore.GREEN,
                 colorama.Fore.GREEN + "=" * 15,
             ]
         else:
             computer_text += [
-                colorama.Fore.GREEN + f"Скорость: " + colorama.Fore.CYAN + f"{self.player.speed} км/с" + colorama.Fore.GREEN,
+                colorama.Fore.GREEN + f"Скорость: " + colorama.Fore.CYAN + f"{get_ship_state_value_text(self.player.speed)} км/с" + colorama.Fore.GREEN,
             ]
 
         computer_text += [
