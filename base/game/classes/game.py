@@ -5,7 +5,6 @@ import random
 import colorama
 
 from base.core import components
-from base.core.constants import DEBUG_MODE
 from base.game.classes.planet import Planet
 from base.game.classes.ship import Ship
 
@@ -277,13 +276,13 @@ class Game:
     # Возвращает планету по её ID
     def get_planet_by_id(self, m_id: int) -> Planet:
         if self.planets is None:
-            if DEBUG_MODE:
+            if components.SETTINGS.get_debug_mode():
                 print(colorama.Fore.RED + "Список планет не был загружен.")
             return Planet(0, "None", "None", 0, 0, 0, 0)
 
         l = [x for x in self.planets if x.planet_id == m_id]
         if len(l) < 1:
-            if DEBUG_MODE:
+            if components.SETTINGS.get_debug_mode():
                 print(colorama.Fore.YELLOW + "Планета не обнаружена, возвращаем случайную")
             return random.choice(self.planets)
         pl = l[0]
@@ -420,7 +419,7 @@ class Game:
 
             # Если экипаж погибает, игра завершается. Увы.
             if self.player.crew_health < 1:
-                if DEBUG_MODE:
+                if components.SETTINGS.get_debug_mode():
                     print("Игра закончилась, игрок погиб.")
                 print(
                     f"{colorama.Fore.BLACK}{colorama.Back.RED}ИГРА ЗАВЕРШЕНА: ВЫ ПОГИБЛИ{colorama.Back.RESET}{colorama.Fore.GREEN}")
@@ -434,7 +433,7 @@ class Game:
                 components.ENGINE.blocked = True
                 await asyncio.sleep(5)
                 components.ENGINE.blocked = False
-                if DEBUG_MODE:
+                if components.SETTINGS.get_debug_mode():
                     print("Игра была завершена")
                 # Костыль, чтобы цикл никогда не завершался.
                 self.player.ship_name = ""
@@ -643,7 +642,7 @@ class Game:
         if self.player.module_cooling_system_damaged:
             final_time += random.randint(5, 25)
         # В режиме отладки время полёта значительно меньше
-        if DEBUG_MODE:
+        if components.SETTINGS.get_debug_mode():
             final_time = 8
 
         planet = self.get_planet_by_id(self.player.planet_id)

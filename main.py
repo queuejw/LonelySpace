@@ -11,9 +11,6 @@ if __name__ == "__main__":
     colorama.init(autoreset=True)
     try:
         asyncio.run(init_game())
-        from base.core.constants import DEBUG_MODE
-        if DEBUG_MODE:
-            print("Выполнение программы завершено. До скорой встречи!")
     except KeyboardInterrupt:
         print(f"{colorama.Back.RED}{colorama.Fore.BLACK}Экстренное завершение работы системы ...")
     except Exception as e:

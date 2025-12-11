@@ -1,4 +1,3 @@
-DEBUG_MODE = True  # Режим отладки
 PRODUCT_NAME = 'Lonely Space'  # Название игры
 PRODUCT_GITHUB_LINK = 'https://github.com/queuejw/lonelyspace'  # Ссылка на GitHub
 

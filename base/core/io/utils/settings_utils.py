@@ -2,5 +2,6 @@
 def get_default_settings_file() -> dict:
     return {
         'lang': 'ru',
-        'sound': True
+        'sound': True,
+        'debug_mode': False
     }

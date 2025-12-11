@@ -3,7 +3,7 @@ import colorama
 from base.core import components
 from base.core import constants
 from base.core.console import clear_terminal, slow_print
-from base.core.constants import PRODUCT_NAME, DEBUG_MODE, PRODUCT_GITHUB_LINK
+from base.core.constants import PRODUCT_NAME, PRODUCT_GITHUB_LINK
 from base.core.io.json_manager import save_file
 from base.game.classes.ui.base.screen import ScreenBase
 from base.game.classes.ui.game_screen import GameScreen
@@ -134,9 +134,9 @@ class MainMenu(ScreenBase):
         command = command.split()
         match command[0]:
             case "start":
-                if DEBUG_MODE:
+                if components.SETTINGS.get_debug_mode():
                     print("Ожидается запуск игры")
-                return init_game_launch(DEBUG_MODE)
+                return init_game_launch(components.SETTINGS.get_debug_mode())
             case "info":
                 t = (
                     f"{colorama.Fore.CYAN}{PRODUCT_NAME}{colorama.Fore.GREEN} - игра про космос на Python, которая разрабатывается в свободное время небольшой командой разработчиков.\n\n"
@@ -162,6 +162,7 @@ class MainMenu(ScreenBase):
                             else:
                                 print(
                                     f"{colorama.Fore.RED}Этот язык не поддерживается игрой.")
+                            del new_lang
                         case 'sound':
                             new_sound_value = command[2]
                             if new_sound_value == '1':
@@ -179,6 +180,25 @@ class MainMenu(ScreenBase):
                             else:
                                 print(
                                     f"{colorama.Fore.RED}Недопустимое значение для аргумента sound.")
+                            del new_sound_value
+                        case 'debug':
+                            new_debug_value = command[2]
+                            if new_debug_value == '1':
+                                components.SETTINGS.debug_mode = True
+                                save_file(components.SETTINGS.export_as_dict(), constants.SETTINGS_FILE_PATH,
+                                          constants.USER_FOLDER_NAME)
+                                print(
+                                    f"{colorama.Fore.GREEN}Режим отладки включен. Перезапустите игру, чтобы полностью применить изменения.")
+                            elif new_debug_value == '0':
+                                components.SETTINGS.debug_mode = False
+                                save_file(components.SETTINGS.export_as_dict(), constants.SETTINGS_FILE_PATH,
+                                          constants.USER_FOLDER_NAME)
+                                print(
+                                    f"{colorama.Fore.GREEN}Режим отладки отключен. Перезапустите игру, чтобы полностью применить изменения.")
+                            else:
+                                print(
+                                    f"{colorama.Fore.RED}Недопустимое значение для аргумента debug.")
+                            del new_debug_value
                 elif len(command) == 2:
                     match command[1]:
                         case 'lang':
@@ -191,6 +211,9 @@ class MainMenu(ScreenBase):
                         case 'sound':
                             print(
                                 f"{colorama.Fore.CYAN}settings sound [0 / 1]{colorama.Fore.GREEN} - звук в игре. 0 - отключить, 1 - включить.\n")
+                        case 'debug':
+                            print(
+                                f"{colorama.Fore.CYAN}settings debug [0 / 1]{colorama.Fore.GREEN} - режим отладки (для разработчиков). 0 - отключить, 1 - включить.\n")
                         case _:
                             print(
                                 f"{colorama.Fore.RED}Неизвестный аргумент команды. Введите {colorama.Fore.CYAN}settings{colorama.Fore.RED}, если понадобится помощь.")
@@ -203,11 +226,12 @@ class MainMenu(ScreenBase):
                         "Изменение настроек:\n"
                         f"{colorama.Fore.CYAN}settings lang [код]{colorama.Fore.GREEN} - смена языка по коду, которые вы увидите выше.\n"
                         f"{colorama.Fore.CYAN}settings sound [0 / 1]{colorama.Fore.GREEN} - звук в игре. 0 - отключить, 1 - включить.\n"
+                        f"{colorama.Fore.CYAN}settings debug [0 / 1]{colorama.Fore.GREEN} - режим отладки (для разработчиков). 0 - отключить, 1 - включить.\n"
                     )
                     print(t)
                     del t
             case "exit":
-                if DEBUG_MODE:
+                if components.SETTINGS.get_debug_mode():
                     print("Ожидается выход из игры")
                 slow_print("Отключение базовых систем...", colorama.Fore.GREEN)
                 components.ENGINE.stop()

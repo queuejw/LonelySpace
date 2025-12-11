@@ -37,7 +37,7 @@ class GameScreen(ScreenBase):
             del command
             return self
 
-        if constants.DEBUG_MODE:
+        if components.SETTINGS.get_debug_mode():
             print(f"{colorama.Fore.MAGENTA}Игрок ввёл команду: {command}{colorama.Fore.RESET}")
 
         # Если бортовой компьютер поврежден, есть шанс, что произойдет сбой.
