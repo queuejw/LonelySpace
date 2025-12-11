@@ -317,6 +317,7 @@ class Game:
     # Добавляет событие в список
     def update_last_messages(self, new_message: str):
         self.last_messages = [f"{datetime.datetime.now().strftime("%H:%M:%S")} : {new_message}{colorama.Fore.GREEN}"] + self.last_messages
+        # Если количество элементов превышает лимит, ликвидируем самое старое
         if len(self.last_messages) > 12:
             self.last_messages.pop()
 
@@ -327,9 +328,8 @@ class Game:
             pass
         else:
             # События, которые происходят только в космосе
-            if random.random() < 0.05:
-                # Ни на что не влияет =)
-                self.update_last_messages(f"{colorama.Fore.YELLOW}Незначительное ухудшение связи! Бортовой компьютер устранит проблему автоматически.")
+            #todo: нужно наконец начать делать события
+            pass
 
     # Основной цикл игры
     async def main_loop(self):
