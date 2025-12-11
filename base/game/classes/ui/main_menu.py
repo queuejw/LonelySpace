@@ -1,12 +1,15 @@
 import colorama
 
+from base.core import components
 from base.core import constants
 from base.core.console import clear_terminal, slow_print
 from base.core.constants import PRODUCT_NAME, DEBUG_MODE, PRODUCT_GITHUB_LINK
+from base.core.io.json_manager import save_file
 from base.game.classes.ui.base.screen import ScreenBase
 from base.game.classes.ui.game_screen import GameScreen
 
 
+# Возвращает рисунок корабля в зависимости от уровня игрока
 def get_ship_drawing(level: int) -> str:
     from base.core.io.txt_loader import load_txt_file
     match level:
@@ -16,28 +19,34 @@ def get_ship_drawing(level: int) -> str:
             return "error"
 
 
+# Симуляция запуска игры, возвращает экран игры.
 def init_game_launch(skip: bool = False):
     clear_terminal()
-    from base.core.io import save_manager
-    loaded_data = save_manager.load_ship_state()
+    from base.core import components
+    from base.core.io import json_manager
+    loaded_data = json_manager.load_file(constants.SAVE_FILE_PATH)
     # Выводим забавные сообщения, которые никак не влияют на игру
     if not skip:
         if not loaded_data['default']:
             print(colorama.Back.GREEN + colorama.Fore.BLACK + "Вы продолжите игру с последнего сохранения")
         from playsound3 import playsound
-        sound1 = playsound("base//game//res//audio//starting_basic_systems.mp3", False)
+        if components.SETTINGS.get_sound():
+            sound1 = playsound("base//game//res//audio//starting_basic_systems.mp3", False)
         slow_print("Запуск базовых систем ...", colorama.Fore.GREEN)
         import time
         time.sleep(1)
-        sound2 = playsound("base//game//res//audio//loading_firmware.mp3", False)
+        if components.SETTINGS.get_sound():
+            sound2 = playsound("base//game//res//audio//loading_firmware.mp3", False)
         slow_print("Загрузка прошивки ...", colorama.Fore.GREEN)
         time.sleep(1)
-        sound2 = playsound("base//game//res//audio//checking_basic_systems.mp3", False)
+        if components.SETTINGS.get_sound():
+            sound2 = playsound("base//game//res//audio//checking_basic_systems.mp3", False)
         slow_print("Проверка базовых систем ...", colorama.Fore.GREEN)
         time.sleep(2)
         print(
             colorama.Fore.YELLOW + "Внимание: Автоматическая система диагностики обнаружила проблемы с безопасностью. Запущен глубокий анализ.")
-        sound3 = playsound("base//game//res//audio//starting_hardware.mp3", False)
+        if components.SETTINGS.get_sound():
+            sound3 = playsound("base//game//res//audio//starting_hardware.mp3", False)
         slow_print("Запуск оборудования ...", colorama.Fore.GREEN)
         time.sleep(1)
         print(colorama.Fore.YELLOW + "-> Проверка системы жизнеобеспечения ...", end='\r')
@@ -49,10 +58,12 @@ def init_game_launch(skip: bool = False):
         print(colorama.Fore.YELLOW + "-> Очистка временных файлов базовой системы ...", end='\r')
         time.sleep(0.2)
         print(colorama.Fore.GREEN + "-> Завершено" + " " * 40)
-        sound4 = playsound("base//game//res//audio//starting_ui.mp3", False)
+        if components.SETTINGS.get_sound():
+            sound4 = playsound("base//game//res//audio//starting_ui.mp3", False)
         slow_print("Подготовка пользовательского интерфейса ...", colorama.Fore.GREEN)
         time.sleep(1.5)
-        sound5 = playsound("base//game//res//audio//init_user_space.mp3", False)
+        if components.SETTINGS.get_sound():
+            sound5 = playsound("base//game//res//audio//init_user_space.mp3", False)
         slow_print("Инициализация пространства пользователя ...", colorama.Fore.GREEN)
         print(colorama.Fore.RED + "Ошибка: Обнаружена критическая уязвимость в системе безопасности.")
         time.sleep(0.1)
@@ -66,17 +77,19 @@ def init_game_launch(skip: bool = False):
         time.sleep(0.3)
         clear_terminal()
         print(colorama.Fore.GREEN + "Все системы в рабочем состоянии.")
-        sound6 = playsound("base//game//res//audio//systems_ready.mp3", True)
-        del sound1
-        del sound2
-        del sound3
-        del sound4
-        del sound5
-        del sound6
+        if components.SETTINGS.get_sound():
+            sound6 = playsound("base//game//res//audio//systems_ready.mp3", True)
+            del sound1
+            del sound2
+            del sound3
+            del sound4
+            del sound5
+            del sound6
+        if components.SETTINGS.get_sound():
+            playsound("base//game//res//audio//welcome.mp3", False)
         clear_terminal()
 
     # Здесь по факту происходит запуск игры.
-    from base.core import components
     components.GAME.player = loaded_data['ship']
     components.GAME.player_drawing = get_ship_drawing(loaded_data['ship'].level)
     from base.core.io import planet_manager
@@ -93,6 +106,15 @@ def init_game_launch(skip: bool = False):
     return GameScreen()
 
 
+# Возвращает название языка по его коду
+def get_lang_name(value: str) -> str:
+    match value:
+        case 'ru':
+            return "Русский"
+        case _:
+            return "Unknown"
+
+
 class MainMenu(ScreenBase):
 
     def render(self):
@@ -100,14 +122,17 @@ class MainMenu(ScreenBase):
         text = (
             f"{colorama.Fore.GREEN}Добро пожаловать в {colorama.Fore.CYAN}{PRODUCT_NAME}\n\n"
             f"{colorama.Fore.CYAN}start {colorama.Fore.GREEN}- Начать игру\n"
+            f"{colorama.Fore.CYAN}settings {colorama.Fore.GREEN}- Настроить игру\n\n"
             f"{colorama.Fore.CYAN}info {colorama.Fore.GREEN}- Об игре\n"
             f"{colorama.Fore.CYAN}exit {colorama.Fore.GREEN}- Закрыть игру\n\n"
             f"{colorama.Fore.GREEN}Введите команду в терминал:\n"
         )
         print(text)
+        del text
 
     def handle_input(self, command: str):
-        match command:
+        command = command.split()
+        match command[0]:
             case "start":
                 if DEBUG_MODE:
                     print("Ожидается запуск игры")
@@ -122,15 +147,73 @@ class MainMenu(ScreenBase):
                 )
                 print(t)
                 del t
+            case "settings":
+                if len(command) == 3:
+                    match command[1]:
+                        case 'lang':
+                            new_lang = command[2]
+                            # Если язык есть в списке доступных.
+                            if new_lang in ['ru', 'en']:
+                                components.SETTINGS.lang = new_lang
+                                save_file(components.SETTINGS.export_as_dict(), constants.SETTINGS_FILE_PATH,
+                                          constants.USER_FOLDER_NAME)
+                                print(
+                                    f"{colorama.Fore.GREEN}Язык успешно изменен. Перезапустите игру, чтобы полностью изменить его.")
+                            else:
+                                print(
+                                    f"{colorama.Fore.RED}Этот язык не поддерживается игрой.")
+                        case 'sound':
+                            new_sound_value = command[2]
+                            if new_sound_value == '1':
+                                components.SETTINGS.sound = True
+                                save_file(components.SETTINGS.export_as_dict(), constants.SETTINGS_FILE_PATH,
+                                          constants.USER_FOLDER_NAME)
+                                print(
+                                    f"{colorama.Fore.GREEN}Звук включен. Перезапустите игру, чтобы полностью применить изменения.")
+                            elif new_sound_value == '0':
+                                components.SETTINGS.sound = False
+                                save_file(components.SETTINGS.export_as_dict(), constants.SETTINGS_FILE_PATH,
+                                          constants.USER_FOLDER_NAME)
+                                print(
+                                    f"{colorama.Fore.GREEN}Звук отключен. Перезапустите игру, чтобы полностью применить изменения.")
+                            else:
+                                print(
+                                    f"{colorama.Fore.RED}Недопустимое значение для аргумента sound.")
+                elif len(command) == 2:
+                    match command[1]:
+                        case 'lang':
+                            t = (
+                                f"Доступные языки: {colorama.Fore.CYAN}ru{colorama.Fore.GREEN}\n"
+                                f"{colorama.Fore.CYAN}settings lang [код]{colorama.Fore.GREEN} - смена языка по коду, которые вы увидите выше.\n"
+                            )
+                            print(t)
+                            del t
+                        case 'sound':
+                            print(
+                                f"{colorama.Fore.CYAN}settings sound [0 / 1]{colorama.Fore.GREEN} - звук в игре. 0 - отключить, 1 - включить.\n")
+                        case _:
+                            print(
+                                f"{colorama.Fore.RED}Неизвестный аргумент команды. Введите {colorama.Fore.CYAN}settings{colorama.Fore.RED}, если понадобится помощь.")
+                else:
+                    t = (
+                        f"{colorama.Fore.GREEN}Настройки игры:\n"
+                        f"Язык: {colorama.Fore.CYAN}{get_lang_name(components.SETTINGS.get_lang())}{colorama.Fore.GREEN}\n"
+                        f"Звуки: {colorama.Fore.CYAN}{'включены' if components.SETTINGS.get_sound() else 'отключены'}{colorama.Fore.GREEN}\n\n"
+                        f"Доступные языки: {colorama.Fore.CYAN}ru{colorama.Fore.GREEN}\n\n"
+                        "Изменение настроек:\n"
+                        f"{colorama.Fore.CYAN}settings lang [код]{colorama.Fore.GREEN} - смена языка по коду, которые вы увидите выше.\n"
+                        f"{colorama.Fore.CYAN}settings sound [0 / 1]{colorama.Fore.GREEN} - звук в игре. 0 - отключить, 1 - включить.\n"
+                    )
+                    print(t)
+                    del t
             case "exit":
                 if DEBUG_MODE:
                     print("Ожидается выход из игры")
                 slow_print("Отключение базовых систем...", colorama.Fore.GREEN)
-                from base.core import components
                 components.ENGINE.stop()
             case _:
                 print(colorama.Fore.RED + "Неизвестная команда.")
-
+        del command
         return self
 
     def update(self):

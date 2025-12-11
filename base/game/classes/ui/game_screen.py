@@ -4,9 +4,9 @@ import random
 import colorama
 
 from base.core import components
+from base.core import constants
 from base.core.console import clear_terminal
-from base.core.constants import DEBUG_MODE
-from base.core.io.save_manager import save_ship_state
+from base.core.io.json_manager import save_file
 from base.game.classes.game import print_terminal_help, print_game_help, print_ship_help, print_planets_help
 from base.game.classes.ui.base.screen import ScreenBase
 
@@ -37,7 +37,7 @@ class GameScreen(ScreenBase):
             del command
             return self
 
-        if DEBUG_MODE:
+        if constants.DEBUG_MODE:
             print(f"{colorama.Fore.MAGENTA}Игрок ввёл команду: {command}{colorama.Fore.RESET}")
 
         # Если бортовой компьютер поврежден, есть шанс, что произойдет сбой.
@@ -77,7 +77,8 @@ class GameScreen(ScreenBase):
                 print_terminal_help()
         # Сохранить игру
         elif command[0].lower() == 'save':
-            if save_ship_state(components.GAME.player.export_as_dict()):
+            if save_file(components.GAME.player.export_as_dict(), constants.SAVE_FILE_PATH,
+                         constants.USER_FOLDER_NAME):
                 print(f"{colorama.Fore.CYAN}Игра сохранена!")
             else:
                 print(f"{colorama.Fore.RED}Не получилось сохранить игру.")

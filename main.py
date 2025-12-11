@@ -19,3 +19,5 @@ if __name__ == "__main__":
     except Exception as e:
         print(
             f"{colorama.Back.RED}{colorama.Fore.BLACK}Возникла критическая ошибка. Игру необходимо перезапустить.{colorama.Style.RESET_ALL}\n\n{colorama.Fore.RED}Информация для разработчиков:\n{e}")
+        from playsound3 import playsound
+        playsound("base//game//res//audio//crash.mp3", True)
