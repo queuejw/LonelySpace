@@ -174,11 +174,11 @@ class Game:
     def generate_main_text(self) -> str:
         # Если компьютер повреждён, есть шанс, что вместо информации о корабле будет написано ошибка.
         def get_ship_state_value_text(value) -> str:
-            if self.player.module_computer_damaged and random.random() > 0.5:
-                return f"{colorama.Fore.RED}ошибка доступа"
+            if self.player.module_computer_damaged and random.random() > 0.7:
+                return f"{colorama.Fore.RED}ошибка "
             else:
                 return value
-                
+
         d = self.player_drawing.splitlines()
 
         computer_text = [
@@ -197,20 +197,20 @@ class Game:
             ]
 
         computer_text += [
-            colorama.Fore.GREEN + f"Температура внутри: {colorama.Fore.CYAN}{self.player.inside_temperature}°C" + colorama.Fore.GREEN,
-            colorama.Fore.GREEN + f"Температура за бортом: {colorama.Fore.CYAN}{self.player.outside_temperature}°C" + colorama.Fore.GREEN,
+            colorama.Fore.GREEN + f"Температура внутри: {colorama.Fore.CYAN}{get_ship_state_value_text(self.player.inside_temperature)}°C" + colorama.Fore.GREEN,
+            colorama.Fore.GREEN + f"Температура за бортом: {colorama.Fore.CYAN}{get_ship_state_value_text(self.player.outside_temperature)}°C" + colorama.Fore.GREEN,
             colorama.Fore.GREEN + f"Здоровье экипажа: " + get_percentage_value_color(
-                self.player.crew_health) + f"{self.player.crew_health}%" + colorama.Fore.GREEN,
+                self.player.crew_health) + f"{get_ship_state_value_text(self.player.crew_health)}%" + colorama.Fore.GREEN,
             colorama.Fore.GREEN + f"Прочность: " + get_percentage_value_color(
-                self.player.strength) + f"{self.player.strength}%" + colorama.Fore.GREEN,
-            colorama.Fore.GREEN + f"Ресурсы: " + colorama.Fore.CYAN + f"{self.player.resources}" + colorama.Fore.GREEN,
+                self.player.strength) + f"{get_ship_state_value_text(self.player.strength)}%" + colorama.Fore.GREEN,
+            colorama.Fore.GREEN + f"Ресурсы: " + colorama.Fore.CYAN + f"{get_ship_state_value_text(self.player.resources)}" + colorama.Fore.GREEN,
             colorama.Fore.GREEN + f"Кислород: " + get_percentage_value_color(
-                self.player.oxygen) + f"{self.player.oxygen}%" + colorama.Fore.GREEN,
+                self.player.oxygen) + f"{get_ship_state_value_text(self.player.oxygen)}%" + colorama.Fore.GREEN,
         ]
         if not self.player.on_planet:
             computer_text += [
                 colorama.Fore.GREEN + f"Топливо: " + get_percentage_value_color(
-                    self.player.fuel) + f"{self.player.fuel}%" + colorama.Fore.GREEN
+                    self.player.fuel) + f"{get_ship_state_value_text(self.player.fuel)}%" + colorama.Fore.GREEN
             ]
         computer_text += [
             colorama.Fore.GREEN + "=" * 15,
@@ -335,7 +335,7 @@ class Game:
             pass
         else:
             # События, которые происходят только в космосе
-            #todo: нужно наконец начать делать события
+            # todo: нужно наконец начать делать события
             pass
 
     # Основной цикл игры

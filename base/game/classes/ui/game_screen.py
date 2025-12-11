@@ -90,7 +90,7 @@ class GameScreen(ScreenBase):
                     new_name += f'{i} '
                 if len(new_name) > 15:
                     print(f"{colorama.Fore.RED}Название слишком длинное.")
-                elif len(new_name) < 3:
+                elif len(new_name) < 4:
                     print(f"{colorama.Fore.RED}Название слишком короткое.")
                 else:
                     components.GAME.player.ship_name = new_name

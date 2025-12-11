@@ -24,15 +24,20 @@ def init_game_launch(skip: bool = False):
     if not skip:
         if not loaded_data['default']:
             print(colorama.Back.GREEN + colorama.Fore.BLACK + "Вы продолжите игру с последнего сохранения")
-        slow_print("Инициализация базовой системы ...", colorama.Fore.GREEN)
+        from playsound3 import playsound
+        sound1 = playsound("base//game//res//audio//starting_basic_systems.mp3", False)
+        slow_print("Запуск базовых систем ...", colorama.Fore.GREEN)
         import time
-        time.sleep(2)
+        time.sleep(1)
+        sound2 = playsound("base//game//res//audio//loading_firmware.mp3", False)
         slow_print("Загрузка прошивки ...", colorama.Fore.GREEN)
-        time.sleep(0.75)
+        time.sleep(1)
+        sound2 = playsound("base//game//res//audio//checking_basic_systems.mp3", False)
         slow_print("Проверка базовых систем ...", colorama.Fore.GREEN)
-        time.sleep(0.1)
+        time.sleep(2)
         print(
             colorama.Fore.YELLOW + "Внимание: Автоматическая система диагностики обнаружила проблемы с безопасностью. Запущен глубокий анализ.")
+        sound3 = playsound("base//game//res//audio//starting_hardware.mp3", False)
         slow_print("Запуск оборудования ...", colorama.Fore.GREEN)
         time.sleep(1)
         print(colorama.Fore.YELLOW + "-> Проверка системы жизнеобеспечения ...", end='\r')
@@ -44,8 +49,10 @@ def init_game_launch(skip: bool = False):
         print(colorama.Fore.YELLOW + "-> Очистка временных файлов базовой системы ...", end='\r')
         time.sleep(0.2)
         print(colorama.Fore.GREEN + "-> Завершено" + " " * 40)
+        sound4 = playsound("base//game//res//audio//starting_ui.mp3", False)
         slow_print("Подготовка пользовательского интерфейса ...", colorama.Fore.GREEN)
-        time.sleep(1)
+        time.sleep(1.5)
+        sound5 = playsound("base//game//res//audio//init_user_space.mp3", False)
         slow_print("Инициализация пространства пользователя ...", colorama.Fore.GREEN)
         print(colorama.Fore.RED + "Ошибка: Обнаружена критическая уязвимость в системе безопасности.")
         time.sleep(0.1)
@@ -57,6 +64,15 @@ def init_game_launch(skip: bool = False):
         time.sleep(0.75)
         print(colorama.Fore.CYAN + "Неизвестный пользователь: Предупреждения об угрозах безопасности отключены.")
         time.sleep(0.3)
+        clear_terminal()
+        print(colorama.Fore.GREEN + "Все системы в рабочем состоянии.")
+        sound6 = playsound("base//game//res//audio//systems_ready.mp3", True)
+        del sound1
+        del sound2
+        del sound3
+        del sound4
+        del sound5
+        del sound6
         clear_terminal()
 
     # Здесь по факту происходит запуск игры.
