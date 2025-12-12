@@ -31,6 +31,7 @@
    
     - pip install <b>colorama</b>
     - pip install <b>keyboard</b>
+    - pip install <b>playsound3</b>
 3. Запустите при помощи Python файл <b>main.py</b>
     - python .\main.py
 
