@@ -1,4 +1,5 @@
 import colorama
+import playsound3
 
 from base.core import components
 from base.core import constants
@@ -160,6 +161,8 @@ class MainMenu(ScreenBase):
                                 print(
                                     f"{colorama.Fore.GREEN}Язык успешно изменен. Перезапустите игру, чтобы полностью изменить его.")
                             else:
+                                if components.SETTINGS.sound:
+                                    playsound3.playsound("base//game//res//audio//invalid_argument.mp3", False)
                                 print(
                                     f"{colorama.Fore.RED}Этот язык не поддерживается игрой.")
                             del new_lang
@@ -178,6 +181,8 @@ class MainMenu(ScreenBase):
                                 print(
                                     f"{colorama.Fore.GREEN}Звук отключен. Перезапустите игру, чтобы полностью применить изменения.")
                             else:
+                                if components.SETTINGS.sound:
+                                    playsound3.playsound("base//game//res//audio//invalid_argument.mp3", False)
                                 print(
                                     f"{colorama.Fore.RED}Недопустимое значение для аргумента sound.")
                             del new_sound_value
@@ -196,6 +201,8 @@ class MainMenu(ScreenBase):
                                 print(
                                     f"{colorama.Fore.GREEN}Режим отладки отключен. Перезапустите игру, чтобы полностью применить изменения.")
                             else:
+                                if components.SETTINGS.sound:
+                                    playsound3.playsound("base//game//res//audio//invalid_argument.mp3", False)
                                 print(
                                     f"{colorama.Fore.RED}Недопустимое значение для аргумента debug.")
                             del new_debug_value
@@ -215,6 +222,8 @@ class MainMenu(ScreenBase):
                             print(
                                 f"{colorama.Fore.CYAN}settings debug [0 / 1]{colorama.Fore.GREEN} - режим отладки (для разработчиков). 0 - отключить, 1 - включить.\n")
                         case _:
+                            if components.SETTINGS.sound:
+                                playsound3.playsound("base//game//res//audio//invalid_argument.mp3", False)
                             print(
                                 f"{colorama.Fore.RED}Неизвестный аргумент команды. Введите {colorama.Fore.CYAN}settings{colorama.Fore.RED}, если понадобится помощь.")
                 else:
@@ -235,7 +244,10 @@ class MainMenu(ScreenBase):
                     print("Ожидается выход из игры")
                 slow_print("Отключение базовых систем...", colorama.Fore.GREEN)
                 components.ENGINE.stop()
+            # Игрок ввёл неизвестную команду
             case _:
+                if components.SETTINGS.sound:
+                    playsound3.playsound("base//game//res//audio//unknown_command.mp3", False)
                 print(colorama.Fore.RED + "Неизвестная команда.")
         del command
         return self

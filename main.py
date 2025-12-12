@@ -1,6 +1,17 @@
+from base.core import components
+
+# Загружает настройки игры
+def create_game_settings():
+    from base.core.io import json_manager
+    from base.core.constants import SETTINGS_FILE_PATH
+    from base.core.settings import Settings
+    loaded_settings = json_manager.load_file(SETTINGS_FILE_PATH, True)
+    components.SETTINGS = Settings(loaded_settings['lang'], loaded_settings['sound'], loaded_settings['debug_mode'])
+    del loaded_settings
+
 # Запускает движок игры
 async def init_game():
-    from base.core import components
+    create_game_settings()
     await components.ENGINE.start()
 
 # Здесь происходит запуск программы 

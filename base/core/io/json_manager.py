@@ -8,16 +8,18 @@ from base.core.io.utils.settings_utils import get_default_settings_file
 
 # Загружает содержимое json с диска.
 # Если это сохранение, возвращает словарь со значениями ship : Ship, default: bool
-def load_file(path: str) -> dict:
-    if components.SETTINGS.get_debug_mode():
-        print(f"Попытка загрузить файл {path}")
+def load_file(path: str, skip_debug_prints: bool = False) -> dict:
+    if not skip_debug_prints:
+        if components.SETTINGS.get_debug_mode():
+            print(f"Попытка загрузить файл {path}")
     try:
         with open(path, 'r', encoding="utf-8") as file:
             loaded_json: dict = json.load(file)
             file.close()
-            if components.SETTINGS.get_debug_mode():
-                print(f"Файл {path} успешно загружен")
-                print(loaded_json)
+            if not skip_debug_prints:
+                if components.SETTINGS.get_debug_mode():
+                    print(f"Файл {path} успешно загружен")
+                    print(loaded_json)
             if path == SAVE_FILE_PATH:
                 from base.game.classes.ship import Ship
                 return {
@@ -27,8 +29,9 @@ def load_file(path: str) -> dict:
             else:
                 return loaded_json
     except FileNotFoundError:
-        if components.SETTINGS.get_debug_mode():
-            print(f"[E] Файл {SAVE_FILE_PATH} не найден.")
+        if not skip_debug_prints:
+            if components.SETTINGS.get_debug_mode():
+                print(f"[E] Файл {SAVE_FILE_PATH} не найден.")
 
     # Если загрузить не удалось, возвращаем стандартное значение.
     if path == SAVE_FILE_PATH:

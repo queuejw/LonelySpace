@@ -34,13 +34,6 @@ class Engine:
         # Циклы движка
         tick_task = asyncio.create_task(self.ui_loop())
         input_task = asyncio.create_task(self.input_loop())
-        # Загрузка настроек игры
-        from base.core.io import json_manager
-        from base.core.constants import SETTINGS_FILE_PATH
-        from base.core.settings import Settings
-        loaded_settings = json_manager.load_file(SETTINGS_FILE_PATH)
-        components.SETTINGS = Settings(loaded_settings['lang'], loaded_settings['sound'], loaded_settings['debug_mode'])
-        del loaded_settings
         # Цикл самой игры
         components.GAME = Game()
         game_task = asyncio.create_task(components.GAME.main_loop())
