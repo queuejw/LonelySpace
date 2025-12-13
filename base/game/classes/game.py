@@ -1,9 +1,9 @@
 import asyncio
 import datetime
 import random
-import playsound3
 
 import colorama
+import playsound3
 
 from base.core import components
 from base.game.classes.planet import Planet
@@ -166,7 +166,7 @@ class Game:
         self.planets: list[Planet] = []  # Список планет
         self.last_messages: list[str] = []  # Список последних действий
         self.timer = -1  # Простой таймер, который нужен для вывода времени ожидания какого-то действия. Если -1, значит он не работает
-        self.audio_queue: list[str] = [] # Очередь звуков, здесь хранится путь до файлов
+        self.audio_queue: list[str] = []  # Очередь звуков, здесь хранится путь до файлов
 
     # Генерирует текст информации о корабле в игре.
     # В чём суть:
@@ -341,13 +341,19 @@ class Game:
 
     # Добавляет путь к файлу со звуком в очередь.
     def add_audio_to_queue(self, path: str) -> bool:
+        # Нет смысла использовать очередь звуков, если звуки отключены.
+        if not components.SETTINGS.sound:
+            return False
         self.audio_queue.append(path)
         return True
 
     # Проигрывает звуки в очереди.
     async def audio_loop(self):
+        # Нет смысла запускать этот цикл, если звуки отключены
+        if not components.SETTINGS.sound:
+            return
         while components.ENGINE.running:
-            # Если движок был остановлен, то нужно остановить игру
+            # Если движок был остановлен, то нужно остановить
             if not components.ENGINE.running:
                 break
             if len(self.audio_queue) < 1:
@@ -433,6 +439,7 @@ class Game:
                 self.player.outside_temperature = clamp(self.player.outside_temperature + random.randint(-2, 2),
                                                         -273,
                                                         -180)
+
         c = 0  # Простой счетчик, который нужен для обновления количества дней.
         while components.ENGINE.running:
             # Если движок был остановлен, то нужно остановить игру

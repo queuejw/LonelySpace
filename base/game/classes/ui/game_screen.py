@@ -2,7 +2,6 @@ import asyncio
 import random
 
 import colorama
-import playsound3
 
 from base.core import components
 from base.core import constants
