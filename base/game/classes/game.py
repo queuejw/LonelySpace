@@ -389,6 +389,8 @@ class Game:
         module_computer_notification_enabled = True
         module_weapon_notification_enabled = True
 
+        all_modules_damaged_notification_enabled = True
+
         # Обновляет температуру
         def update_temperature():
             if self.player.on_planet:
@@ -644,6 +646,15 @@ class Game:
                 if not module_weapon_notification_enabled:
                     module_weapon_notification_enabled = True
                     self.update_last_messages(f"{colorama.Fore.GREEN}Орудие восстановлено.")
+            # Уведомление о том, что повреждены все системы
+            if self.player.are_all_system_damaged():
+                if all_modules_damaged_notification_enabled:
+                    all_modules_damaged_notification_enabled = False
+                    self.update_last_messages(f"{colorama.Fore.RED}Внимание! Повреждение всех систем.")
+                    self.add_audio_to_queue("base//game//res//audio//all_systems_damaged_warning.mp3")
+            else:
+                if not all_modules_damaged_notification_enabled:
+                    all_modules_damaged_notification_enabled = True
 
             # Генерируем случайное событие, если повезет
             if random.random() > 0.9:
