@@ -132,7 +132,102 @@ class MainMenu(ScreenBase):
         del text
 
     def handle_input(self, command: str):
+
         command = command.split()
+
+        # Эта функция отвечает за управление настройками
+        def handle_settings_command(user_command: list[str]):
+            if len(user_command) == 3:
+                match user_command[1]:
+                    case 'lang':
+                        new_lang = user_command[2]
+                        # Если язык есть в списке доступных.
+                        if new_lang in ['ru', 'en']:
+                            components.SETTINGS.lang = new_lang
+                            save_file(components.SETTINGS.export_as_dict(), constants.SETTINGS_FILE_PATH,
+                                      constants.USER_FOLDER_NAME)
+                            print(
+                                f"{colorama.Fore.GREEN}Язык успешно изменен. Перезапустите игру, чтобы полностью изменить его.")
+                        else:
+                            if components.SETTINGS.sound:
+                                playsound3.playsound("base//game//res//audio//invalid_argument.mp3", False)
+                            print(
+                                f"{colorama.Fore.RED}Этот язык не поддерживается игрой.")
+                        del new_lang
+                    case 'sound':
+                        new_sound_value = user_command[2]
+                        if new_sound_value == '1':
+                            components.SETTINGS.sound = True
+                            save_file(components.SETTINGS.export_as_dict(), constants.SETTINGS_FILE_PATH,
+                                      constants.USER_FOLDER_NAME)
+                            print(
+                                f"{colorama.Fore.GREEN}Звук включен. Перезапустите игру, чтобы полностью применить изменения.")
+                        elif new_sound_value == '0':
+                            components.SETTINGS.sound = False
+                            save_file(components.SETTINGS.export_as_dict(), constants.SETTINGS_FILE_PATH,
+                                      constants.USER_FOLDER_NAME)
+                            print(
+                                f"{colorama.Fore.GREEN}Звук отключен. Перезапустите игру, чтобы полностью применить изменения.")
+                        else:
+                            if components.SETTINGS.sound:
+                                playsound3.playsound("base//game//res//audio//invalid_argument.mp3", False)
+                            print(
+                                f"{colorama.Fore.RED}Недопустимое значение для аргумента sound.")
+                        del new_sound_value
+                    case 'debug':
+                        new_debug_value = user_command[2]
+                        if new_debug_value == '1':
+                            components.SETTINGS.debug_mode = True
+                            save_file(components.SETTINGS.export_as_dict(), constants.SETTINGS_FILE_PATH,
+                                      constants.USER_FOLDER_NAME)
+                            print(
+                                f"{colorama.Fore.GREEN}Режим отладки включен. Перезапустите игру, чтобы полностью применить изменения.")
+                        elif new_debug_value == '0':
+                            components.SETTINGS.debug_mode = False
+                            save_file(components.SETTINGS.export_as_dict(), constants.SETTINGS_FILE_PATH,
+                                      constants.USER_FOLDER_NAME)
+                            print(
+                                f"{colorama.Fore.GREEN}Режим отладки отключен. Перезапустите игру, чтобы полностью применить изменения.")
+                        else:
+                            if components.SETTINGS.sound:
+                                playsound3.playsound("base//game//res//audio//invalid_argument.mp3", False)
+                            print(
+                                f"{colorama.Fore.RED}Недопустимое значение для аргумента debug.")
+                        del new_debug_value
+            elif len(user_command) == 2:
+                match user_command[1]:
+                    case 'lang':
+                        t = (
+                            f"Доступные языки: {colorama.Fore.CYAN}ru{colorama.Fore.GREEN}\n"
+                            f"{colorama.Fore.CYAN}settings lang [код]{colorama.Fore.GREEN} - смена языка по коду, которые вы увидите выше.\n"
+                        )
+                        print(t)
+                        del t
+                    case 'sound':
+                        print(
+                            f"{colorama.Fore.CYAN}settings sound [0 / 1]{colorama.Fore.GREEN} - звук в игре. 0 - отключить, 1 - включить.\n")
+                    case 'debug':
+                        print(
+                            f"{colorama.Fore.CYAN}settings debug [0 / 1]{colorama.Fore.GREEN} - режим отладки (для разработчиков). 0 - отключить, 1 - включить.\n")
+                    case _:
+                        if components.SETTINGS.sound:
+                            playsound3.playsound("base//game//res//audio//invalid_argument.mp3", False)
+                        print(
+                            f"{colorama.Fore.RED}Неизвестный аргумент команды. Введите {colorama.Fore.CYAN}settings{colorama.Fore.RED}, если понадобится помощь.")
+            else:
+                t = (
+                    f"{colorama.Fore.GREEN}Настройки игры:\n"
+                    f"Язык: {colorama.Fore.CYAN}{get_lang_name(components.SETTINGS.get_lang())}{colorama.Fore.GREEN}\n"
+                    f"Звуки: {colorama.Fore.CYAN}{'включены' if components.SETTINGS.get_sound() else 'отключены'}{colorama.Fore.GREEN}\n\n"
+                    f"Отладка: {colorama.Fore.CYAN}{'включена' if components.SETTINGS.get_debug_mode() else 'отключена'}{colorama.Fore.GREEN}\n\n"
+                    f"Доступные языки: {colorama.Fore.CYAN}ru{colorama.Fore.GREEN}\n\n"
+                    "Изменение настроек:\n"
+                    f"{colorama.Fore.CYAN}settings lang [код]{colorama.Fore.GREEN} - смена языка по коду, которые вы увидите выше.\n"
+                    f"{colorama.Fore.CYAN}settings sound [0 / 1]{colorama.Fore.GREEN} - звук в игре. 0 - отключить, 1 - включить.\n"
+                    f"{colorama.Fore.CYAN}settings debug [0 / 1]{colorama.Fore.GREEN} - режим отладки (для разработчиков). 0 - отключить, 1 - включить.\n"
+                )
+                print(t)
+                del t
 
         # Если игрок ничего не ввёл, обрабатывать ввод не нужно.
         if len(command) < 1:
@@ -145,106 +240,17 @@ class MainMenu(ScreenBase):
                     print("Ожидается запуск игры")
                 return init_game_launch(components.SETTINGS.get_debug_mode())
             case "info":
-                t = (
+                a = (
                     f"{colorama.Fore.CYAN}{PRODUCT_NAME}{colorama.Fore.GREEN} - игра про космос на Python, которая разрабатывается в свободное время небольшой командой разработчиков.\n\n"
                     f"{colorama.Fore.CYAN}@pxffd{colorama.Fore.GREEN} - Автор идеи и главный разработчик\n"
                     f"{colorama.Fore.CYAN}неизвестный фанат{colorama.Fore.GREEN} - Автор обложки игры.\n\n"
                     f"{colorama.Fore.CYAN}{PRODUCT_GITHUB_LINK}{colorama.Fore.GREEN} - Исходный код игры и обратная связь.\n"
                     f"[РЕКЛАМА] {colorama.Fore.CYAN}https://t.me/mars_1323{colorama.Fore.GREEN} - мой тематический чат в Telegram про Марс"
                 )
-                print(t)
-                del t
+                print(a)
+                del a
             case "settings":
-                if len(command) == 3:
-                    match command[1]:
-                        case 'lang':
-                            new_lang = command[2]
-                            # Если язык есть в списке доступных.
-                            if new_lang in ['ru', 'en']:
-                                components.SETTINGS.lang = new_lang
-                                save_file(components.SETTINGS.export_as_dict(), constants.SETTINGS_FILE_PATH,
-                                          constants.USER_FOLDER_NAME)
-                                print(
-                                    f"{colorama.Fore.GREEN}Язык успешно изменен. Перезапустите игру, чтобы полностью изменить его.")
-                            else:
-                                if components.SETTINGS.sound:
-                                    playsound3.playsound("base//game//res//audio//invalid_argument.mp3", False)
-                                print(
-                                    f"{colorama.Fore.RED}Этот язык не поддерживается игрой.")
-                            del new_lang
-                        case 'sound':
-                            new_sound_value = command[2]
-                            if new_sound_value == '1':
-                                components.SETTINGS.sound = True
-                                save_file(components.SETTINGS.export_as_dict(), constants.SETTINGS_FILE_PATH,
-                                          constants.USER_FOLDER_NAME)
-                                print(
-                                    f"{colorama.Fore.GREEN}Звук включен. Перезапустите игру, чтобы полностью применить изменения.")
-                            elif new_sound_value == '0':
-                                components.SETTINGS.sound = False
-                                save_file(components.SETTINGS.export_as_dict(), constants.SETTINGS_FILE_PATH,
-                                          constants.USER_FOLDER_NAME)
-                                print(
-                                    f"{colorama.Fore.GREEN}Звук отключен. Перезапустите игру, чтобы полностью применить изменения.")
-                            else:
-                                if components.SETTINGS.sound:
-                                    playsound3.playsound("base//game//res//audio//invalid_argument.mp3", False)
-                                print(
-                                    f"{colorama.Fore.RED}Недопустимое значение для аргумента sound.")
-                            del new_sound_value
-                        case 'debug':
-                            new_debug_value = command[2]
-                            if new_debug_value == '1':
-                                components.SETTINGS.debug_mode = True
-                                save_file(components.SETTINGS.export_as_dict(), constants.SETTINGS_FILE_PATH,
-                                          constants.USER_FOLDER_NAME)
-                                print(
-                                    f"{colorama.Fore.GREEN}Режим отладки включен. Перезапустите игру, чтобы полностью применить изменения.")
-                            elif new_debug_value == '0':
-                                components.SETTINGS.debug_mode = False
-                                save_file(components.SETTINGS.export_as_dict(), constants.SETTINGS_FILE_PATH,
-                                          constants.USER_FOLDER_NAME)
-                                print(
-                                    f"{colorama.Fore.GREEN}Режим отладки отключен. Перезапустите игру, чтобы полностью применить изменения.")
-                            else:
-                                if components.SETTINGS.sound:
-                                    playsound3.playsound("base//game//res//audio//invalid_argument.mp3", False)
-                                print(
-                                    f"{colorama.Fore.RED}Недопустимое значение для аргумента debug.")
-                            del new_debug_value
-                elif len(command) == 2:
-                    match command[1]:
-                        case 'lang':
-                            t = (
-                                f"Доступные языки: {colorama.Fore.CYAN}ru{colorama.Fore.GREEN}\n"
-                                f"{colorama.Fore.CYAN}settings lang [код]{colorama.Fore.GREEN} - смена языка по коду, которые вы увидите выше.\n"
-                            )
-                            print(t)
-                            del t
-                        case 'sound':
-                            print(
-                                f"{colorama.Fore.CYAN}settings sound [0 / 1]{colorama.Fore.GREEN} - звук в игре. 0 - отключить, 1 - включить.\n")
-                        case 'debug':
-                            print(
-                                f"{colorama.Fore.CYAN}settings debug [0 / 1]{colorama.Fore.GREEN} - режим отладки (для разработчиков). 0 - отключить, 1 - включить.\n")
-                        case _:
-                            if components.SETTINGS.sound:
-                                playsound3.playsound("base//game//res//audio//invalid_argument.mp3", False)
-                            print(
-                                f"{colorama.Fore.RED}Неизвестный аргумент команды. Введите {colorama.Fore.CYAN}settings{colorama.Fore.RED}, если понадобится помощь.")
-                else:
-                    t = (
-                        f"{colorama.Fore.GREEN}Настройки игры:\n"
-                        f"Язык: {colorama.Fore.CYAN}{get_lang_name(components.SETTINGS.get_lang())}{colorama.Fore.GREEN}\n"
-                        f"Звуки: {colorama.Fore.CYAN}{'включены' if components.SETTINGS.get_sound() else 'отключены'}{colorama.Fore.GREEN}\n\n"
-                        f"Доступные языки: {colorama.Fore.CYAN}ru{colorama.Fore.GREEN}\n\n"
-                        "Изменение настроек:\n"
-                        f"{colorama.Fore.CYAN}settings lang [код]{colorama.Fore.GREEN} - смена языка по коду, которые вы увидите выше.\n"
-                        f"{colorama.Fore.CYAN}settings sound [0 / 1]{colorama.Fore.GREEN} - звук в игре. 0 - отключить, 1 - включить.\n"
-                        f"{colorama.Fore.CYAN}settings debug [0 / 1]{colorama.Fore.GREEN} - режим отладки (для разработчиков). 0 - отключить, 1 - включить.\n"
-                    )
-                    print(t)
-                    del t
+                handle_settings_command(command)
             case "exit":
                 if components.SETTINGS.get_debug_mode():
                     print("Ожидается выход из игры")

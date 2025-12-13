@@ -266,7 +266,7 @@ class Game:
         result = (
             f"{colorama.Fore.GREEN}Основные системы:\n"
             f"{colorama.Fore.CYAN}Системы жизнеобеспечения: {get_module_status_text(self.player.module_life_support_damaged)}\n"
-            f"{colorama.Fore.CYAN}Система охлаждения двигателей: {get_module_status_text(self.player.module_cooling_system_damaged)}\n"
+            f"{colorama.Fore.CYAN}Система охлаждения двигателя: {get_module_status_text(self.player.module_cooling_system_damaged)}\n"
             f"{colorama.Fore.CYAN}Бортовой компьютер: {get_module_status_text(self.player.module_computer_damaged)}\n"
             f"{colorama.Fore.GREEN}Корабль:\n"
             f"{colorama.Fore.CYAN}Двигатель: {get_module_status_text(self.player.module_main_engine_damaged)}\n"
@@ -609,11 +609,15 @@ class Game:
                 if module_cooling_system_notification_enabled:
                     module_cooling_system_notification_enabled = False
                     self.update_last_messages(
-                        f"{colorama.Fore.RED}Система охлаждения двигателей повреждена! Шанс пожара увеличен, максимальная скорость снижена.")
+                        f"{colorama.Fore.RED}Система охлаждения двигателя повреждена! Шанс пожара увеличен, максимальная скорость снижена.")
+                    if components.SETTINGS.get_sound():
+                        self.add_audio_to_queue("base//game//res//audio//engine_cooling_system_damaged.mp3")
             else:
                 if not module_cooling_system_notification_enabled:
                     module_cooling_system_notification_enabled = True
-                    self.update_last_messages(f"{colorama.Fore.GREEN}Система охлаждения двигателей восстановлена.")
+                    self.update_last_messages(f"{colorama.Fore.GREEN}Система охлаждения двигателя восстановлена.")
+                    if components.SETTINGS.get_sound():
+                        self.add_audio_to_queue("base//game//res//audio//engine_cooling_system_repaired.mp3")
 
             # Система жизнеобеспечения
             if self.player.module_life_support_damaged:
@@ -621,10 +625,14 @@ class Game:
                     module_life_support_notification_enabled = False
                     self.update_last_messages(
                         f"{colorama.Fore.RED}Система жизнеобеспечения повреждена! Стабилизация температуры недоступна, отключение подачи кислорода.")
+                    if components.SETTINGS.get_sound():
+                        self.add_audio_to_queue("base//game//res//audio//life_support_system_damaged.mp3")
             else:
                 if not module_life_support_notification_enabled:
                     module_life_support_notification_enabled = True
                     self.update_last_messages(f"{colorama.Fore.GREEN}Система жизнеобеспечения восстановлена.")
+                    if components.SETTINGS.get_sound():
+                        self.add_audio_to_queue("base//game//res//audio//life_support_system_repaired.mp3")
 
             # Компьютер
             if self.player.module_computer_damaged:
@@ -632,26 +640,35 @@ class Game:
                     module_computer_notification_enabled = False
                     self.update_last_messages(
                         f"{colorama.Fore.RED}Бортовой компьютер повреждён! Сбой систем навигаций, нарушение работы терминала.")
+                    if components.SETTINGS.get_sound():
+                        self.add_audio_to_queue("base//game//res//audio//computer_damaged.mp3")
             else:
                 if not module_computer_notification_enabled:
                     module_computer_notification_enabled = True
                     self.update_last_messages(f"{colorama.Fore.GREEN}Бортовой компьютер восстановлен.")
+                    if components.SETTINGS.get_sound():
+                        self.add_audio_to_queue("base//game//res//audio//computer_repaired.mp3")
             # todo: стрельба не реализована.
             # Орудие
             if self.player.module_weapon_damaged:
                 if module_weapon_notification_enabled:
                     module_weapon_notification_enabled = False
                     self.update_last_messages(f"{colorama.Fore.RED}Орудие повреждено! Точность стрельбы снижена.")
+                    if components.SETTINGS.get_sound():
+                        self.add_audio_to_queue("base//game//res//audio//cannon_damaged.mp3")
             else:
                 if not module_weapon_notification_enabled:
                     module_weapon_notification_enabled = True
                     self.update_last_messages(f"{colorama.Fore.GREEN}Орудие восстановлено.")
+                    if components.SETTINGS.get_sound():
+                        self.add_audio_to_queue("base//game//res//audio//cannon_repaired.mp3")
             # Уведомление о том, что повреждены все системы
             if self.player.are_all_system_damaged():
                 if all_modules_damaged_notification_enabled:
                     all_modules_damaged_notification_enabled = False
                     self.update_last_messages(f"{colorama.Fore.RED}Внимание! Повреждение всех систем.")
-                    self.add_audio_to_queue("base//game//res//audio//all_systems_damaged_warning.mp3")
+                    if components.SETTINGS.get_sound():
+                        self.add_audio_to_queue("base//game//res//audio//all_systems_damaged_warning.mp3")
             else:
                 if not all_modules_damaged_notification_enabled:
                     all_modules_damaged_notification_enabled = True
