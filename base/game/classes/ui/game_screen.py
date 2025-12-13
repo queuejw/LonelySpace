@@ -180,7 +180,7 @@ class GameScreen(ScreenBase):
         # Мы не можем выполнять команды, если игра была остановлена.
         if not components.GAME.running:
             if command[0].lower() == 'stop':
-                stop_game()
+                return stop_game()
             else:
                 print(
                     f"{colorama.Fore.YELLOW}Игра завершена, введите {colorama.Fore.CYAN}stop{colorama.Fore.YELLOW}, чтобы отключить бортовой компьютер.")
@@ -188,7 +188,7 @@ class GameScreen(ScreenBase):
 
         # Остановка игры
         if command[0].lower() == 'stop':
-            stop_game()
+            return stop_game()
         # Помощь
         elif command[0].lower() == 'help':
             if len(command) > 1:
