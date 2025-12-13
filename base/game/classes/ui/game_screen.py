@@ -34,6 +34,7 @@ class GameScreen(ScreenBase):
 
         command = command.split()
 
+        # Если игрок ничего не ввёл, обрабатывать ввод не нужно.
         if len(command) < 1:
             del command
             return self
@@ -73,7 +74,7 @@ class GameScreen(ScreenBase):
                     print_planets_help(len(components.GAME.planets) - 1)
                 else:
                     if components.SETTINGS.sound:
-                        playsound3.playsound("base//game//res//audio//invalid_argument.mp3", False)
+                        components.GAME.add_audio_to_queue("base//game//res//audio//invalid_argument.mp3")
                     print(
                         f"{colorama.Fore.RED}Неизвестный аргумент команды help. Введите {colorama.Fore.CYAN}help{colorama.Fore.RED},чтобы вывести общие инструкции.")
             else:
@@ -103,7 +104,7 @@ class GameScreen(ScreenBase):
                 del new_name
             else:
                 if components.SETTINGS.sound:
-                    playsound3.playsound("base//game//res//audio//invalid_argument.mp3", False)
+                    components.GAME.add_audio_to_queue("base//game//res//audio//invalid_argument.mp3")
                 print(
                     f"{colorama.Fore.RED}Вы не указали новое название для корабля. Введите {colorama.Fore.CYAN}help ship{colorama.Fore.RED}, если понадобится помощь.")
         # Ремонтировать корабль
@@ -135,7 +136,7 @@ class GameScreen(ScreenBase):
                                 planet = components.GAME.get_planet_by_id(planet_id)
                                 asyncio.create_task(components.GAME.fly_cycle(planet.planet_eta, False))
                                 if components.SETTINGS.sound:
-                                    playsound3.playsound("base//game//res//audio//route_updated.mp3", False)
+                                    components.GAME.add_audio_to_queue("base//game//res//audio//route_updated.mp3")
                                 if not planet_was_changed:
                                     t = f"{colorama.Fore.GREEN}Маршрут обновлён. Летим на планету {colorama.Fore.CYAN}{planet.planet_name}{colorama.Fore.GREEN}."
                                 else:
@@ -153,7 +154,7 @@ class GameScreen(ScreenBase):
                                     f"{colorama.Fore.RED}Корабль уже в пути. Если хотите изменить маршрут, отмените этот полёт. Введите {colorama.Fore.CYAN}help ship{colorama.Fore.RED}, если понадобится помощь.")
                         else:
                             if components.SETTINGS.sound:
-                                playsound3.playsound("base//game//res//audio//invalid_argument.mp3", False)
+                                components.GAME.add_audio_to_queue("base//game//res//audio//invalid_argument.mp3")
                             print(
                                 f"{colorama.Fore.RED}Неверный ID планеты. Убедитесь, что ID верный. Введите {colorama.Fore.CYAN}help ship{colorama.Fore.RED}, если понадобится помощь.")
                     # Игрок уже на планете, сначала нужно покинуть её.
@@ -166,7 +167,7 @@ class GameScreen(ScreenBase):
                         # Отмечаем, что полёт был завершен.
                         # Цикл прервется автоматически.
                         if components.SETTINGS.sound:
-                            playsound3.playsound("base//game//res//audio//route_updated.mp3", False)
+                            components.GAME.add_audio_to_queue("base//game//res//audio//route_updated.mp3")
                         components.GAME.planet_flying_active = False
                         print(f"{colorama.Fore.YELLOW}Маршрут обновлён. Полёт прерван.")
                     else:
@@ -179,7 +180,7 @@ class GameScreen(ScreenBase):
                             planet = components.GAME.get_planet_by_id(components.GAME.player.planet_id)
                             asyncio.create_task(components.GAME.fly_cycle(planet.planet_eta, True))
                             if components.SETTINGS.sound:
-                                playsound3.playsound("base//game//res//audio//route_updated.mp3", False)
+                                components.GAME.add_audio_to_queue("base//game//res//audio//route_updated.mp3")
                             t = f"{colorama.Fore.GREEN}Маршрут обновлён. Покидаем планету {colorama.Fore.CYAN}{planet.planet_name}{colorama.Fore.GREEN}."
                             print(t)
                             components.GAME.update_last_messages(t)
@@ -193,7 +194,7 @@ class GameScreen(ScreenBase):
                             f"{colorama.Fore.RED}В данный момент корабль не находится на поверхности какой-либо планеты.")
                 else:
                     if components.SETTINGS.sound:
-                        playsound3.playsound("base//game//res//audio//invalid_argument.mp3", False)
+                        components.GAME.add_audio_to_queue("base//game//res//audio//invalid_argument.mp3")
                     print(
                         f"{colorama.Fore.RED}Неверный аргумент команды. Введите {colorama.Fore.CYAN}help ship{colorama.Fore.RED}, если понадобится помощь.")
             else:
@@ -217,7 +218,7 @@ class GameScreen(ScreenBase):
 
         else:
             if components.SETTINGS.sound:
-                playsound3.playsound("base//game//res//audio//unknown_command.mp3", False)
+                components.GAME.add_audio_to_queue("base//game//res//audio//unknown_command.mp3")
             print(
                 f"{colorama.Fore.RED}Неизвестная команда. Если возникли трудности, введите команду {colorama.Fore.CYAN}help{colorama.Fore.GREEN}.")
         del command

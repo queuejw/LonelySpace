@@ -87,7 +87,7 @@ def init_game_launch(skip: bool = False):
             del sound5
             del sound6
         if components.SETTINGS.get_sound():
-            playsound("base//game//res//audio//welcome.mp3", False)
+            components.GAME.add_audio_to_queue("base//game//res//audio//welcome.mp3")
         clear_terminal()
 
     # Здесь по факту происходит запуск игры.
@@ -133,6 +133,12 @@ class MainMenu(ScreenBase):
 
     def handle_input(self, command: str):
         command = command.split()
+
+        # Если игрок ничего не ввёл, обрабатывать ввод не нужно.
+        if len(command) < 1:
+            del command
+            return self
+
         match command[0]:
             case "start":
                 if components.SETTINGS.get_debug_mode():

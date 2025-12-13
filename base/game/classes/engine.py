@@ -37,8 +37,10 @@ class Engine:
         # Цикл самой игры
         components.GAME = Game()
         game_task = asyncio.create_task(components.GAME.main_loop())
+        # Аудио
+        audio_task = asyncio.create_task(components.GAME.audio_loop())
         # Запуск
-        await asyncio.gather(tick_task, input_task, game_task)
+        await asyncio.gather(tick_task, input_task, game_task, audio_task)
 
     # Функция для остановки движка
     # По факту все циклы завершатся автоматически, если изменить переменную running на False.
