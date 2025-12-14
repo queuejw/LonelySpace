@@ -3,9 +3,9 @@ import datetime
 import random
 
 import colorama
+import playsound3
 
 from base.core import components
-from base.core.constants import DEBUG_MODE
 from base.game.classes.planet import Planet
 from base.game.classes.ship import Ship
 
@@ -166,6 +166,7 @@ class Game:
         self.planets: list[Planet] = []  # Список планет
         self.last_messages: list[str] = []  # Список последних действий
         self.timer = -1  # Простой таймер, который нужен для вывода времени ожидания какого-то действия. Если -1, значит он не работает
+        self.audio_queue: list[str] = []  # Очередь звуков, здесь хранится путь до файлов
 
     # Генерирует текст информации о корабле в игре.
     # В чём суть:
@@ -174,11 +175,11 @@ class Game:
     def generate_main_text(self) -> str:
         # Если компьютер повреждён, есть шанс, что вместо информации о корабле будет написано ошибка.
         def get_ship_state_value_text(value) -> str:
-            if self.player.module_computer_damaged and random.random() > 0.5:
-                return f"{colorama.Fore.RED}ошибка доступа"
+            if self.player.module_computer_damaged and random.random() > 0.7:
+                return f"{colorama.Fore.RED}ошибка "
             else:
                 return value
-                
+
         d = self.player_drawing.splitlines()
 
         computer_text = [
@@ -197,20 +198,20 @@ class Game:
             ]
 
         computer_text += [
-            colorama.Fore.GREEN + f"Температура внутри: {colorama.Fore.CYAN}{self.player.inside_temperature}°C" + colorama.Fore.GREEN,
-            colorama.Fore.GREEN + f"Температура за бортом: {colorama.Fore.CYAN}{self.player.outside_temperature}°C" + colorama.Fore.GREEN,
+            colorama.Fore.GREEN + f"Температура внутри: {colorama.Fore.CYAN}{get_ship_state_value_text(self.player.inside_temperature)}°C" + colorama.Fore.GREEN,
+            colorama.Fore.GREEN + f"Температура за бортом: {colorama.Fore.CYAN}{get_ship_state_value_text(self.player.outside_temperature)}°C" + colorama.Fore.GREEN,
             colorama.Fore.GREEN + f"Здоровье экипажа: " + get_percentage_value_color(
-                self.player.crew_health) + f"{self.player.crew_health}%" + colorama.Fore.GREEN,
+                self.player.crew_health) + f"{get_ship_state_value_text(self.player.crew_health)}%" + colorama.Fore.GREEN,
             colorama.Fore.GREEN + f"Прочность: " + get_percentage_value_color(
-                self.player.strength) + f"{self.player.strength}%" + colorama.Fore.GREEN,
-            colorama.Fore.GREEN + f"Ресурсы: " + colorama.Fore.CYAN + f"{self.player.resources}" + colorama.Fore.GREEN,
+                self.player.strength) + f"{get_ship_state_value_text(self.player.strength)}%" + colorama.Fore.GREEN,
+            colorama.Fore.GREEN + f"Ресурсы: " + colorama.Fore.CYAN + f"{get_ship_state_value_text(self.player.resources)}" + colorama.Fore.GREEN,
             colorama.Fore.GREEN + f"Кислород: " + get_percentage_value_color(
-                self.player.oxygen) + f"{self.player.oxygen}%" + colorama.Fore.GREEN,
+                self.player.oxygen) + f"{get_ship_state_value_text(self.player.oxygen)}%" + colorama.Fore.GREEN,
         ]
         if not self.player.on_planet:
             computer_text += [
                 colorama.Fore.GREEN + f"Топливо: " + get_percentage_value_color(
-                    self.player.fuel) + f"{self.player.fuel}%" + colorama.Fore.GREEN
+                    self.player.fuel) + f"{get_ship_state_value_text(self.player.fuel)}%" + colorama.Fore.GREEN
             ]
         computer_text += [
             colorama.Fore.GREEN + "=" * 15,
@@ -265,7 +266,7 @@ class Game:
         result = (
             f"{colorama.Fore.GREEN}Основные системы:\n"
             f"{colorama.Fore.CYAN}Системы жизнеобеспечения: {get_module_status_text(self.player.module_life_support_damaged)}\n"
-            f"{colorama.Fore.CYAN}Система охлаждения двигателей: {get_module_status_text(self.player.module_cooling_system_damaged)}\n"
+            f"{colorama.Fore.CYAN}Система охлаждения двигателя: {get_module_status_text(self.player.module_cooling_system_damaged)}\n"
             f"{colorama.Fore.CYAN}Бортовой компьютер: {get_module_status_text(self.player.module_computer_damaged)}\n"
             f"{colorama.Fore.GREEN}Корабль:\n"
             f"{colorama.Fore.CYAN}Двигатель: {get_module_status_text(self.player.module_main_engine_damaged)}\n"
@@ -277,13 +278,13 @@ class Game:
     # Возвращает планету по её ID
     def get_planet_by_id(self, m_id: int) -> Planet:
         if self.planets is None:
-            if DEBUG_MODE:
+            if components.SETTINGS.get_debug_mode():
                 print(colorama.Fore.RED + "Список планет не был загружен.")
             return Planet(0, "None", "None", 0, 0, 0, 0)
 
         l = [x for x in self.planets if x.planet_id == m_id]
         if len(l) < 1:
-            if DEBUG_MODE:
+            if components.SETTINGS.get_debug_mode():
                 print(colorama.Fore.YELLOW + "Планета не обнаружена, возвращаем случайную")
             return random.choice(self.planets)
         pl = l[0]
@@ -335,8 +336,39 @@ class Game:
             pass
         else:
             # События, которые происходят только в космосе
-            #todo: нужно наконец начать делать события
+            # todo: нужно наконец начать делать события
             pass
+
+    # Добавляет путь к файлу со звуком в очередь.
+    def add_audio_to_queue(self, path: str) -> bool:
+        # Нет смысла использовать очередь звуков, если звуки отключены.
+        if not components.SETTINGS.sound:
+            return False
+        self.audio_queue.append(path)
+        return True
+
+    # Проигрывает звуки в очереди.
+    async def audio_loop(self):
+        # Нет смысла запускать этот цикл, если звуки отключены
+        if not components.SETTINGS.sound:
+            return
+        while components.ENGINE.running:
+            # Если движок был остановлен, то нужно остановить
+            if not components.ENGINE.running:
+                break
+            if len(self.audio_queue) < 1:
+                await asyncio.sleep(0.1)
+                continue
+            path = self.audio_queue[0]
+            if components.SETTINGS.debug_mode:
+                print(f"Путь до звука: {path}")
+            sound = playsound3.playsound(path, False)
+            # Ждём, когда звук закончится
+            while sound.is_alive():
+                await asyncio.sleep(0.1)
+            # Избавляемся от него
+            del path
+            self.audio_queue.pop(0)
 
     # Основной цикл игры
     async def main_loop(self):
@@ -356,6 +388,8 @@ class Game:
         module_life_support_notification_enabled = True
         module_computer_notification_enabled = True
         module_weapon_notification_enabled = True
+
+        all_modules_damaged_notification_enabled = True
 
         # Обновляет температуру
         def update_temperature():
@@ -420,10 +454,13 @@ class Game:
 
             # Если экипаж погибает, игра завершается. Увы.
             if self.player.crew_health < 1:
-                if DEBUG_MODE:
+                if components.SETTINGS.get_debug_mode():
                     print("Игра закончилась, игрок погиб.")
                 print(
                     f"{colorama.Fore.BLACK}{colorama.Back.RED}ИГРА ЗАВЕРШЕНА: ВЫ ПОГИБЛИ{colorama.Back.RESET}{colorama.Fore.GREEN}")
+                if components.SETTINGS.sound:
+                    components.GAME.add_audio_to_queue("base//game//res//audio//basic_sys_damaged.mp3")
+                    components.GAME.add_audio_to_queue("base//game//res//audio//shutting_down.mp3")
                 for _ in range(3):
                     self.update_last_messages(
                         f"{colorama.Fore.BLACK}{colorama.Back.RED}ИГРА ЗАВЕРШЕНА: ВЫ ПОГИБЛИ{colorama.Back.RESET}{colorama.Fore.GREEN}")
@@ -434,7 +471,7 @@ class Game:
                 components.ENGINE.blocked = True
                 await asyncio.sleep(5)
                 components.ENGINE.blocked = False
-                if DEBUG_MODE:
+                if components.SETTINGS.get_debug_mode():
                     print("Игра была завершена")
                 # Костыль, чтобы цикл никогда не завершался.
                 self.player.ship_name = ""
@@ -457,12 +494,16 @@ class Game:
                 if temperature_notification_enabled:
                     temperature_notification_enabled = False
                     self.update_last_messages(f"{colorama.Fore.RED}Крайне высокая температура внутри корабля!")
+                    if components.SETTINGS.get_sound():
+                        self.add_audio_to_queue("base//game//res//audio//very_high_temp_warning.mp3")
             elif self.player.inside_temperature < -24:
                 if random.random() > 0.6:
                     self.player.crew_health = clamp(self.player.crew_health - 1, 0, 100)
                 if temperature_notification_enabled:
                     temperature_notification_enabled = False
                     self.update_last_messages(f"{colorama.Fore.RED}Крайне низкая температура внутри корабля!")
+                    if components.SETTINGS.get_sound():
+                        self.add_audio_to_queue("base//game//res//audio//very_low_temp_warning.mp3")
             else:
                 if not temperature_notification_enabled:
                     temperature_notification_enabled = True
@@ -476,11 +517,15 @@ class Game:
                 if low_fuel_notification_enabled:
                     low_fuel_notification_enabled = False
                     self.update_last_messages(f"{colorama.Fore.YELLOW}Низкий уровень топлива!")
+                    if components.SETTINGS.get_sound():
+                        self.add_audio_to_queue("base//game//res//audio//low_fuel_warning.mp3")
             if self.player.fuel < 1:
                 if no_fuel_notification_enabled:
                     no_fuel_notification_enabled = False
                     self.update_last_messages(
                         f"{colorama.Fore.BLACK}{colorama.Back.RED}Закончилось топливо!{colorama.Back.RESET}{colorama.Fore.GREEN}")
+                    if components.SETTINGS.get_sound():
+                        self.add_audio_to_queue("base//game//res//audio//no_fuel_warning.mp3")
             if self.player.fuel > 1:
                 if not no_fuel_notification_enabled:
                     no_fuel_notification_enabled = True
@@ -494,11 +539,15 @@ class Game:
                 if low_strength_notification_enabled:
                     low_strength_notification_enabled = False
                     self.update_last_messages(f"{colorama.Fore.YELLOW}Корпус критически повреждён!")
+                    if components.SETTINGS.get_sound():
+                        self.add_audio_to_queue("base//game//res//audio//low_strength_warning.mp3")
             if self.player.strength < 1:
                 if no_strength_notification_enabled:
                     no_strength_notification_enabled = False
                     self.update_last_messages(
                         f"{colorama.Fore.BLACK}{colorama.Back.RED}Корпус разрушен!{colorama.Back.RESET}{colorama.Fore.GREEN}")
+                    if components.SETTINGS.get_sound():
+                        self.add_audio_to_queue("base//game//res//audio//no_strength_warning.mp3")
             if self.player.strength > 1:
                 if not no_strength_notification_enabled:
                     no_strength_notification_enabled = True
@@ -512,6 +561,8 @@ class Game:
                 if low_oxygen_notification_enabled:
                     low_oxygen_notification_enabled = False
                     self.update_last_messages(f"{colorama.Fore.YELLOW}Критически низкий уровень кислорода!")
+                    if components.SETTINGS.get_sound():
+                        self.add_audio_to_queue("base//game//res//audio//low_oxygen_warning.mp3")
             if self.player.oxygen < 1:
                 # Если кислород на нуле, наносим урон экипажу с шансом 70%
                 if random.random() > 0.3:
@@ -520,6 +571,8 @@ class Game:
                     no_oxygen_notification_enabled = False
                     self.update_last_messages(
                         f"{colorama.Fore.BLACK}{colorama.Back.RED}Кислород закончился!{colorama.Back.RESET}{colorama.Fore.GREEN}")
+                    if components.SETTINGS.get_sound():
+                        self.add_audio_to_queue("base//game//res//audio//no_oxygen_warning.mp3")
             if self.player.oxygen > 1:
                 if not no_oxygen_notification_enabled:
                     no_oxygen_notification_enabled = True
@@ -531,31 +584,43 @@ class Game:
                 if module_main_engine_notification_enabled:
                     module_main_engine_notification_enabled = False
                     self.update_last_messages(f"{colorama.Fore.RED}Двигатель повреждён, максимальная скорость снижена!")
+                    if components.SETTINGS.get_sound():
+                        self.add_audio_to_queue("base//game//res//audio//engine_damaged.mp3")
             else:
                 if not module_main_engine_notification_enabled:
                     module_main_engine_notification_enabled = True
                     self.update_last_messages(f"{colorama.Fore.GREEN}Двигатель восстановлен, можно лететь!")
+                    if components.SETTINGS.get_sound():
+                        self.add_audio_to_queue("base//game//res//audio//engine_repaired.mp3")
 
             # Топливный бак
             if self.player.module_fuel_tank_damaged:
                 if module_fuel_tank_notification_enabled:
                     module_fuel_tank_notification_enabled = False
                     self.update_last_messages(f"{colorama.Fore.RED}Топливный бак повреждён!")
+                    if components.SETTINGS.get_sound():
+                        self.add_audio_to_queue("base//game//res//audio//fuel_tank_damaged.mp3")
             else:
                 if not module_fuel_tank_notification_enabled:
                     module_fuel_tank_notification_enabled = True
                     self.update_last_messages(f"{colorama.Fore.GREEN}Топливный бак восстановлен!")
+                    if components.SETTINGS.get_sound():
+                        self.add_audio_to_queue("base//game//res//audio//fuel_tank_repaired.mp3")
 
             # Система охлаждения
             if self.player.module_cooling_system_damaged:
                 if module_cooling_system_notification_enabled:
                     module_cooling_system_notification_enabled = False
                     self.update_last_messages(
-                        f"{colorama.Fore.RED}Система охлаждения двигателей повреждена! Шанс пожара увеличен, максимальная скорость снижена.")
+                        f"{colorama.Fore.RED}Система охлаждения двигателя повреждена! Шанс пожара увеличен, максимальная скорость снижена.")
+                    if components.SETTINGS.get_sound():
+                        self.add_audio_to_queue("base//game//res//audio//engine_cooling_system_damaged.mp3")
             else:
                 if not module_cooling_system_notification_enabled:
                     module_cooling_system_notification_enabled = True
-                    self.update_last_messages(f"{colorama.Fore.GREEN}Система охлаждения двигателей восстановлена.")
+                    self.update_last_messages(f"{colorama.Fore.GREEN}Система охлаждения двигателя восстановлена.")
+                    if components.SETTINGS.get_sound():
+                        self.add_audio_to_queue("base//game//res//audio//engine_cooling_system_repaired.mp3")
 
             # Система жизнеобеспечения
             if self.player.module_life_support_damaged:
@@ -563,10 +628,14 @@ class Game:
                     module_life_support_notification_enabled = False
                     self.update_last_messages(
                         f"{colorama.Fore.RED}Система жизнеобеспечения повреждена! Стабилизация температуры недоступна, отключение подачи кислорода.")
+                    if components.SETTINGS.get_sound():
+                        self.add_audio_to_queue("base//game//res//audio//life_support_system_damaged.mp3")
             else:
                 if not module_life_support_notification_enabled:
                     module_life_support_notification_enabled = True
                     self.update_last_messages(f"{colorama.Fore.GREEN}Система жизнеобеспечения восстановлена.")
+                    if components.SETTINGS.get_sound():
+                        self.add_audio_to_queue("base//game//res//audio//life_support_system_repaired.mp3")
 
             # Компьютер
             if self.player.module_computer_damaged:
@@ -574,20 +643,38 @@ class Game:
                     module_computer_notification_enabled = False
                     self.update_last_messages(
                         f"{colorama.Fore.RED}Бортовой компьютер повреждён! Сбой систем навигаций, нарушение работы терминала.")
+                    if components.SETTINGS.get_sound():
+                        self.add_audio_to_queue("base//game//res//audio//computer_damaged.mp3")
             else:
                 if not module_computer_notification_enabled:
                     module_computer_notification_enabled = True
                     self.update_last_messages(f"{colorama.Fore.GREEN}Бортовой компьютер восстановлен.")
+                    if components.SETTINGS.get_sound():
+                        self.add_audio_to_queue("base//game//res//audio//computer_repaired.mp3")
             # todo: стрельба не реализована.
             # Орудие
             if self.player.module_weapon_damaged:
                 if module_weapon_notification_enabled:
                     module_weapon_notification_enabled = False
                     self.update_last_messages(f"{colorama.Fore.RED}Орудие повреждено! Точность стрельбы снижена.")
+                    if components.SETTINGS.get_sound():
+                        self.add_audio_to_queue("base//game//res//audio//cannon_damaged.mp3")
             else:
                 if not module_weapon_notification_enabled:
                     module_weapon_notification_enabled = True
                     self.update_last_messages(f"{colorama.Fore.GREEN}Орудие восстановлено.")
+                    if components.SETTINGS.get_sound():
+                        self.add_audio_to_queue("base//game//res//audio//cannon_repaired.mp3")
+            # Уведомление о том, что повреждены все системы
+            if self.player.are_all_system_damaged():
+                if all_modules_damaged_notification_enabled:
+                    all_modules_damaged_notification_enabled = False
+                    self.update_last_messages(f"{colorama.Fore.RED}Внимание! Повреждение всех систем.")
+                    if components.SETTINGS.get_sound():
+                        self.add_audio_to_queue("base//game//res//audio//all_systems_damaged_warning.mp3")
+            else:
+                if not all_modules_damaged_notification_enabled:
+                    all_modules_damaged_notification_enabled = True
 
             # Генерируем случайное событие, если повезет
             if random.random() > 0.9:
@@ -643,7 +730,7 @@ class Game:
         if self.player.module_cooling_system_damaged:
             final_time += random.randint(5, 25)
         # В режиме отладки время полёта значительно меньше
-        if DEBUG_MODE:
+        if components.SETTINGS.get_debug_mode():
             final_time = 8
 
         planet = self.get_planet_by_id(self.player.planet_id)
@@ -701,7 +788,7 @@ class Game:
                         f"{colorama.Fore.RED}Двигатели заглохли, закончилось топливо. Невозможно продолжить полёт." if not leave_planet else f"{colorama.Fore.RED}Двигатели заглохли, закончилось топливо. Мы не смогли покинуть планету.")
                 break
 
-            if final_time % 4 == 0:
+            if final_time % 10 == 0:
                 self.update_last_messages(
                     f"{colorama.Fore.GREEN}Летим на планету {planet.planet_name}. Оставшееся время: {final_time} с" if not leave_planet else f"{colorama.Fore.GREEN}Покидаем планету {planet.planet_name}. Оставшееся время: {final_time} с")
 

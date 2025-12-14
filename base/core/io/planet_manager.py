@@ -1,18 +1,19 @@
 import json
 
-from base.core.constants import DEBUG_MODE, PLANETS_FILE_PATH
+from base.core import components
+from base.core.constants import PLANETS_FILE_PATH
 from base.game.classes.planet import Planet
 
 
 # Загружает список планет из json файла.
 def load_planets() -> list:
-    if DEBUG_MODE:
+    if components.SETTINGS.get_debug_mode():
         print(f"Попытка загрузить планеты из файла {PLANETS_FILE_PATH}")
     try:
         with open(PLANETS_FILE_PATH, 'r', encoding="utf-8") as planets_file:
             planets = json.load(planets_file)
             planets_file.close()
-            if DEBUG_MODE:
+            if components.SETTINGS.get_debug_mode():
                 print(f"Планеты успешно загружены, создание списка ...")
 
             generated_list = [
