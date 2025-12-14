@@ -1,0 +1,3 @@
+Озвучка бортового компьютера сгенерирована при помощи сервиса Weights AI (https://www.weights.com/)
+
+Используемая модель: https://www.weights.com/ru/models/clor7f4bk016nwszki6flj9ps
