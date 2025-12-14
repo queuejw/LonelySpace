@@ -347,17 +347,33 @@ class Game:
         self.audio_queue.append(path)
         return True
 
+    # Вернёт True, если очередь звуков в данный момент пустая.
+    def is_audio_queue_empty(self) -> bool:
+        return len(self.audio_queue) < 1
+
     # Проигрывает звуки в очереди.
+    # А также проигрывает звук "Терминал включен"
     async def audio_loop(self):
         # Нет смысла запускать этот цикл, если звуки отключены
-        if not components.SETTINGS.sound:
+        if not components.SETTINGS.get_sound():
             return
+
+        # звук Терминал включен
+        terminal_on_sound_enabled = True
+
         while components.ENGINE.running:
             # Если движок был остановлен, то нужно остановить
             if not components.ENGINE.running:
                 break
+
+            # Если ожидается ввод и игра не приостановлена, то проигрываем звук "Терминал включен"
+            if components.ENGINE.pending_input and not self.paused:
+                if components.SETTINGS.get_sound() and self.is_audio_queue_empty() and terminal_on_sound_enabled:
+                    terminal_on_sound_enabled = False
+                    components.GAME.add_audio_to_queue("base//game//res//audio//terminal_on.mp3")
+
             if len(self.audio_queue) < 1:
-                await asyncio.sleep(0.1)
+                await asyncio.sleep(0.06)
                 continue
             path = self.audio_queue[0]
             if components.SETTINGS.debug_mode:
@@ -365,10 +381,13 @@ class Game:
             sound = playsound3.playsound(path, False)
             # Ждём, когда звук закончится
             while sound.is_alive():
-                await asyncio.sleep(0.1)
+                await asyncio.sleep(0.06)
             # Избавляемся от него
             del path
             self.audio_queue.pop(0)
+            # Обновляем значение переменной, чтобы звук проигрывался при следующем открытии терминала
+            if not components.ENGINE.pending_input and not terminal_on_sound_enabled:
+                terminal_on_sound_enabled = True
 
     # Основной цикл игры
     async def main_loop(self):
