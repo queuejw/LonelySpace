@@ -458,6 +458,9 @@ class Game:
                     print("Игра закончилась, игрок погиб.")
                 print(
                     f"{colorama.Fore.BLACK}{colorama.Back.RED}ИГРА ЗАВЕРШЕНА: ВЫ ПОГИБЛИ{colorama.Back.RESET}{colorama.Fore.GREEN}")
+                if components.SETTINGS.sound:
+                    components.GAME.add_audio_to_queue("base//game//res//audio//basic_sys_damaged.mp3")
+                    components.GAME.add_audio_to_queue("base//game//res//audio//shutting_down.mp3")
                 for _ in range(3):
                     self.update_last_messages(
                         f"{colorama.Fore.BLACK}{colorama.Back.RED}ИГРА ЗАВЕРШЕНА: ВЫ ПОГИБЛИ{colorama.Back.RESET}{colorama.Fore.GREEN}")

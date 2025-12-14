@@ -54,6 +54,8 @@ class GameScreen(ScreenBase):
                     components.GAME.player.ship_name = new_name
                     print(
                         f"{colorama.Fore.GREEN}Название корабля изменено на {colorama.Fore.CYAN}{new_name}{colorama.Fore.GREEN}.")
+                    if components.SETTINGS.sound:
+                        components.GAME.add_audio_to_queue("base//game//res//audio//ship_renamed.mp3")
                 del new_name
             else:
                 if components.SETTINGS.sound:
