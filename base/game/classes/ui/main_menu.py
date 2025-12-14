@@ -251,9 +251,11 @@ class MainMenu(ScreenBase):
             case "settings":
                 handle_settings_command(command)
             case "exit":
+                if components.SETTINGS.get_sound():
+                    playsound3.playsound("base//game//res//audio//shutting_down_basic_systems.mp3", False)
                 if components.SETTINGS.get_debug_mode():
                     print("Ожидается выход из игры")
-                slow_print("Отключение базовых систем...", colorama.Fore.GREEN)
+                slow_print("Отключение базовых систем......", colorama.Fore.GREEN, 0.082)
                 components.ENGINE.stop()
             # Игрок ввёл неизвестную команду
             case _:

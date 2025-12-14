@@ -24,6 +24,7 @@ class Ship:
         self.module_computer_damaged = False  # Статус бортового компьютера.
         self.module_weapon_damaged = False  # Статус орудия.
 
+    # Вернёт True, если повреждены все модули корабля.
     def are_all_system_damaged(self) -> bool:
         return (self.module_main_engine_damaged and self.module_fuel_tank_damaged and self.module_cooling_system_damaged
                 and self.module_life_support_damaged and self.module_computer_damaged and self.module_weapon_damaged)

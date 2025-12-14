@@ -25,30 +25,13 @@ https://github.com/adang1345/PythonVista
 Более подробная информация по ссылке выше.
 
 
-## Подготовка к запуску игры.
+## Запуск игры
 
-1. Загрузите Python с официального сайта. Этот шаг нужен для Windows, поскольку Python обычно предустановлен на
-   дистрибутивах Linux.
-   - https://www.python.org/
-   - Если у вас Windows 8 или ниже, загрузите Python здесь: https://github.com/adang1345/PythonVista
-   - Если у вас Linux и у вас не установлен Python, установите его самостоятельно, пользуясь инструкциями из Интернета
-
-2. Установите необходимые библиотеки из <b>requirements.txt</b>
-    - <b>pip install -r requirements.txt</b>
-
-   или
-
-    - pip install <b>colorama</b>
-    - pip install <b>keyboard</b>
-    - pip install <b>playsound3</b>
-3. Запустите при помощи Python файл <b>main.py</b>
-    - python .\main.py
+Инструкция по загрузке и установке игры находится [здесь](database/HOW-TO-INSTALL.md#как-скачать-игру).
 
 # Обратная связь
 
-Если возникли трудности или вы хотите помочь сделать игру лучше, свяжитесь с нами через GitHub Issues
-
-- https://github.com/queuejw/LonelySpace/issues
+Если возникли трудности или вы хотите помочь сделать игру лучше, свяжитесь с нами через [GitHub Issues](https://github.com/queuejw/LonelySpace/issues)
 
 # В разработке
 
@@ -73,7 +56,7 @@ https://github.com/adang1345/PythonVista
         - [ ] Музыка
 -
     -
-        - [ ] Реплики бортового компьютера (В процессе)
+        - [x] Реплики бортового компьютера.
 -
     - [x] Температура
 -
@@ -113,13 +96,13 @@ https://github.com/adang1345/PythonVista
 
 ## Важная информация
 
-При создании этой игры использовался контент ИИ.
+Эта игра содержит контент, созданный при помощи ИИ.
 
 Реплики бортового компьютера:
 
-1. Генерация реплик от Weights AI (https://www.weights.com/)
-2. Модель - https://www.weights.com/ru/models/clor7f4bk016nwszki6flj9ps
-3. Оригинальная озвучка является голосом нанокостюма из компьютерной игры Crysis, разработанной немецкой компанией
+1. Генерация реплик от [Weights AI](https://www.weights.com/)
+2. [Модель](https://www.weights.com/ru/models/clor7f4bk016nwszki6flj9ps)
+3. Оригинальная озвучка является **голосом нанокостюма** из компьютерной игры **Crysis**, разработанной немецкой компанией
    Crytek и изданной Electronic Arts.
 
 Музыка в игре:

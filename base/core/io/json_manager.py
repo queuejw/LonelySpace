@@ -7,7 +7,7 @@ from base.core.io.utils.settings_utils import get_default_settings_file
 
 
 # Загружает содержимое json с диска.
-# Если это сохранение, возвращает словарь со значениями ship : Ship, default: bool
+# Если это сохранение игрока, возвращает словарь со значениями ship : Ship, default: bool
 def load_file(path: str, skip_debug_prints: bool = False) -> dict:
     if not skip_debug_prints:
         if components.SETTINGS.get_debug_mode():
@@ -36,15 +36,18 @@ def load_file(path: str, skip_debug_prints: bool = False) -> dict:
     # Если загрузить не удалось, возвращаем стандартное значение.
     if path == SAVE_FILE_PATH:
         from base.core.io.utils.ship_utils import get_default_ship
+        # Стандартный корабль
         return {
             'default': True,
             'ship': get_default_ship()
         }
     elif path == SETTINGS_FILE_PATH:
+        # Стандартные настройки
         return get_default_settings_file()
     else:
+        # А тут ничего.
         return {
-
+            # Здесь ничего нет
         }
 
 
@@ -53,8 +56,10 @@ def save_file(state: dict, path: str, folder: str) -> bool:
     if components.SETTINGS.get_debug_mode():
         print(f"Попытка сохранить на диск файл {path}")
     try:
+        # Создаём директорию {folder}, если её нет.
         os.makedirs(folder, exist_ok=True)
         with open(path, 'w', encoding="utf-8") as file:
+            # Сохраняем файл на диске
             file.write(json.dumps(state, indent=4, ensure_ascii=False))
             file.close()
         return True

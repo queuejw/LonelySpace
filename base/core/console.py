@@ -6,9 +6,9 @@ import time
 def clear_terminal():
     os.system('cls' if os.name == 'nt' else 'clear')
 
-
-def slow_print(text: str, color: str):
+# Посимвольно выводит текст на экран
+def slow_print(text: str, color: str, sleep_time: float = 0.04):
     for c in text:
         print(color + c, end='', flush=True)
-        time.sleep(0.04)
+        time.sleep(sleep_time)
     print()
