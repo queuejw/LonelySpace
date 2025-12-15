@@ -7,7 +7,7 @@ class Planet:
         3	Вулканическая
         4	Океаническая
         5	Пустынная
-        6	Токсическая
+        6	Токсичная
     """
 
     def __init__(self, m_id: int, m_name: str, m_description: str, m_type: int, m_danger: int, m_eta: int, m_temp: int):
@@ -17,7 +17,7 @@ class Planet:
         self.planet_type = m_type  # Тип планеты
         self.planet_danger = m_danger  # Уровень опасности (от 0 до 9)
         self.planet_eta = m_eta  # Примерное время полёта
-        self.planet_temp = m_temp
+        self.planet_temp = m_temp # Средняя температура на планете
 
     # Возвращает текст типа планеты
     def get_planet_type_name(self) -> str:
@@ -35,6 +35,6 @@ class Planet:
             case 5:
                 return 'Пустынная'
             case 6:
-                return 'Токсическая'
+                return 'Токсичная'
             case _:
                 return 'Неизвестно'

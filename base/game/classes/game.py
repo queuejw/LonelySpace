@@ -333,11 +333,66 @@ class Game:
     async def events_generator(self):
         if self.player.on_planet:
             # События, которые происходят только на планетах
-            pass
+
+            # Негативные события
+            if random.random() > 0.5:
+                # Пепел
+                if random.random() < 0.03 and self.get_planet_by_id(self.player.planet_id).planet_type == 3:
+                    self.update_last_messages(
+                        f"{colorama.Fore.YELLOW}Вулканический пепел попал в двигатель!")
+                    self.player.module_main_engine_damaged = True
+                    self.player.module_cooling_system_damaged = True
+                    return
+                # Токсичный газ
+                if random.random() < 0.01 and self.get_planet_by_id(self.player.planet_id).planet_type == 6:
+                    self.update_last_messages(
+                        f"{colorama.Fore.RED}Токсичный газ проник внутрь!")
+                    self.player.module_life_support_damaged = True
+                    return
+                # todo: ещё больше событий
+            # Позитивные события
+            else:
+                # Получение ресурсов
+                if random.random() < 0.09:
+
+                    danger_level = self.get_planet_by_id(self.player.planet_id).planet_danger
+
+                    if danger_level >= 7:
+                        r = random.randint(90, 225)
+                        self.update_last_messages(
+                            f"{colorama.Fore.GREEN}Найдены ресурсы! Добавлено {r} ресурсов в хранилище.")
+                        self.player.resources += r
+                    if 7 > danger_level > 3:
+                        r = random.randint(45, 150)
+                        self.update_last_messages(
+                            f"{colorama.Fore.GREEN}Найдены ресурсы! Добавлено {r} ресурсов в хранилище.")
+                        self.player.resources += r
+                    if danger_level < 4:
+                        r = random.randint(25, 80)
+                        self.update_last_messages(
+                            f"{colorama.Fore.GREEN}Найдены ресурсы! Добавлено {r} ресурсов в хранилище.")
+                        self.player.resources += r
+                # todo: ещё больше событий
+
         else:
             # События, которые происходят только в космосе
-            # todo: нужно наконец начать делать события
-            pass
+            # Негативные события
+            if random.random() > 0.5:
+                # Столкновение с космическим мусором
+                if random.random() < 0.025:
+                    self.update_last_messages(f"{colorama.Fore.YELLOW}Столкновение с космическим мусором! Корабль получил незначительные повреждения.")
+                    self.player.strength = clamp(self.player.strength - random.randint(1, 3), 0, 100)
+                    return
+                # Аномалия 1
+                if random.random() < 0.1:
+                    self.update_last_messages(f"{colorama.Fore.YELLOW}Космическая аномалия! Двигатель заглох, скорость уменьшена")
+                    self.player.speed = 125
+                    return
+            else:
+                # Позитивные события
+                pass
+
+            # todo: ещё больше событий
 
     # Добавляет путь к файлу со звуком в очередь.
     def add_audio_to_queue(self, path: str) -> bool:
@@ -770,6 +825,21 @@ class Game:
                 self.player.module_computer_damaged = True
             if random.random() > 0.5:
                 self.player.module_weapon_damaged = True
+        # Добавляет в очередь звук "Завершение полёта через..."
+        def queue_route_audio(value):
+            match value:
+                case 10:
+                    self.add_audio_to_queue("base//game//res//audio//flight_10.mp3")
+                case 30:
+                    self.add_audio_to_queue("base//game//res//audio//flight_30.mp3")
+                case 50:
+                    self.add_audio_to_queue("base//game//res//audio//flight_50.mp3")
+                case 70:
+                    self.add_audio_to_queue("base//game//res//audio//flight_70.mp3")
+                case 90:
+                    self.add_audio_to_queue("base//game//res//audio//flight_90.mp3")
+                case 110:
+                    self.add_audio_to_queue("base//game//res//audio//flight_110.mp3")
 
         while final_time > 0:
 
@@ -808,6 +878,7 @@ class Game:
                 break
 
             if final_time % 10 == 0:
+                queue_route_audio(final_time)
                 self.update_last_messages(
                     f"{colorama.Fore.GREEN}Летим на планету {planet.planet_name}. Оставшееся время: {final_time} с" if not leave_planet else f"{colorama.Fore.GREEN}Покидаем планету {planet.planet_name}. Оставшееся время: {final_time} с")
 

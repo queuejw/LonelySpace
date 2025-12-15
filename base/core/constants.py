@@ -5,4 +5,4 @@ PLANETS_FILE_PATH = 'base\\game\\res\\planets.json'  # Путь до списк�
 
 USER_FOLDER_NAME = 'USER'  # Папка с сохранениями
 SAVE_FILE_PATH = f'{USER_FOLDER_NAME}\\save.json'  # Путь до файла с сохранением
-SETTINGS_FILE_PATH = 'settings.json'  # Путь до файла с настройками игры
+SETTINGS_FILE_PATH = f'{USER_FOLDER_NAME}\\settings.json'  # Путь до файла с настройками игры
