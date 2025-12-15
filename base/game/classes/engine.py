@@ -1,9 +1,8 @@
 import asyncio
 
 import colorama
-import keyboard
 
-from base.core import components
+from base.core import components, constants
 from base.core.console import clear_terminal
 from base.game.classes.game import Game
 from base.game.classes.ui.base.screen import ScreenBase
@@ -66,7 +65,22 @@ class Engine:
 
     # Цикл, в котором происходит обработка ввода игрока.
     async def input_loop(self):
-        keyboard.add_hotkey('space', self.on_space)  # Если игрок нажал пробел, выполнится функция on_space
+        # Если не получается импортировать библиотеку keyboard (например, не были получены права суперпользователя на Linux)
+        try:
+            import keyboard
+            keyboard.add_hotkey('space', self.on_space)  # Если игрок нажал пробел, выполнится функция on_space
+        except ImportError:
+            print(
+                (
+                    f"{colorama.Fore.BLACK}{colorama.Back.RED}Не удалось подключить клавиатуру.{colorama.Fore.RED}{colorama.Back.RESET}\n\n"
+                    "Если у вас Linux, то для запуска требуются права суперпользователя. Попробуйте запустить через sudo:\n"
+                    "sudo python3 main.py\n\n"
+                    f"Если не помогло, свяжитесь с нами: {constants.PRODUCT_GITHUB_LINK}"
+                )
+            )
+            self.running = False
+            exit(2)
+
         while self.running:
             if not self.blocked and self.pending_input:
                 command = await asyncio.to_thread(input, f"{colorama.Fore.GREEN}> ")  # Получаем ввод
