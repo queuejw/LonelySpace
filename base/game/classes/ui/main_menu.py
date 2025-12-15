@@ -101,6 +101,10 @@ def init_game_launch(skip: bool = False):
     components.ENGINE.pending_input = False
     components.GAME.last_messages.clear()
     components.GAME.update_last_messages(f"Добро пожаловать в {constants.PRODUCT_NAME}!")
+
+    # НА ВРЕМЯ БЕТА ТЕСТА
+    components.GAME.update_last_messages(f"GitHub проекта: {constants.PRODUCT_GITHUB_LINK}")
+
     del loaded_data
 
     # Возвращаем экран игры.
