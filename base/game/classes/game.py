@@ -908,6 +908,9 @@ class Game:
             components.GAME.player.planet_id = self.player.planet_id
             components.GAME.player.on_planet = True
 
+        if components.SETTINGS.get_sound():
+            self.add_audio_to_queue("base//game//res//audio//flight_completed.mp3")
+
         del planet
         del final_time
         self.planet_flying_active = False
