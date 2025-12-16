@@ -10,16 +10,6 @@ from base.game.classes.ui.base.screen import ScreenBase
 from base.game.classes.ui.game_screen import GameScreen
 
 
-# Возвращает рисунок корабля в зависимости от уровня игрока
-def get_ship_drawing(level: int) -> str:
-    from base.core.io.txt_loader import load_txt_file
-    match level:
-        case 0:
-            return load_txt_file("base\\game\\res\\ship.txt")
-        case _:
-            return "error"
-
-
 # Симуляция запуска игры, возвращает экран игры.
 def init_game_launch(skip: bool = False):
     clear_terminal()
@@ -92,9 +82,14 @@ def init_game_launch(skip: bool = False):
 
     # Здесь по факту происходит запуск игры.
     components.GAME.player = loaded_data['ship']
-    components.GAME.player_drawing = get_ship_drawing(loaded_data['ship'].level)
+    from base.core.io.txt_loader import load_txt_file
+    components.GAME.player_in_space_drawing = load_txt_file("base//game//res//txt//ship_in_space.txt")
+    components.GAME.player_on_planet_drawing = load_txt_file("base//game//res//txt//ship_on_planet.txt")
     from base.core.io import planet_manager
-    components.GAME.planets = planet_manager.load_planets()
+    components.GAME.planets = planet_manager.load_planets(constants.PLANETS_FILE_PATH)
+    # Если планеты сообщества включены, добавляем их в общий список планет.
+    if components.SETTINGS.get_custom_planets_support():
+        components.GAME.planets += planet_manager.load_planets(constants.CUSTOM_PLANETS_FILE_PATH)
     # Помечаем игру как запущенную
     components.GAME.running = True
     # Блокируем ввод.
@@ -116,6 +111,8 @@ def get_lang_name(value: str) -> str:
     match value:
         case 'ru':
             return "Русский"
+        case 'en':
+            return "English"
         case _:
             return "Unknown"
 
@@ -150,11 +147,13 @@ class MainMenu(ScreenBase):
                             components.SETTINGS.lang = new_lang
                             save_file(components.SETTINGS.export_as_dict(), constants.SETTINGS_FILE_PATH,
                                       constants.USER_FOLDER_NAME)
+                            if components.SETTINGS.sound:
+                                playsound3.playsound("base//game//res//audio//command_executed.mp3", False)
                             print(
                                 f"{colorama.Fore.GREEN}Язык успешно изменен. Перезапустите игру, чтобы полностью изменить его.")
                         else:
                             if components.SETTINGS.sound:
-                                playsound3.playsound("base//game//res//audio//invalid_argument.mp3", False)
+                                playsound3.playsound("base//game//res//audio//command_handle_error.mp3", False)
                             print(
                                 f"{colorama.Fore.RED}Этот язык не поддерживается игрой.")
                         del new_lang
@@ -164,6 +163,8 @@ class MainMenu(ScreenBase):
                             components.SETTINGS.sound = True
                             save_file(components.SETTINGS.export_as_dict(), constants.SETTINGS_FILE_PATH,
                                       constants.USER_FOLDER_NAME)
+                            if components.SETTINGS.sound:
+                                playsound3.playsound("base//game//res//audio//command_executed.mp3", False)
                             print(
                                 f"{colorama.Fore.GREEN}Звук включен. Перезапустите игру, чтобы полностью применить изменения.")
                         elif new_sound_value == '0':
@@ -184,20 +185,48 @@ class MainMenu(ScreenBase):
                             components.SETTINGS.debug_mode = True
                             save_file(components.SETTINGS.export_as_dict(), constants.SETTINGS_FILE_PATH,
                                       constants.USER_FOLDER_NAME)
+                            if components.SETTINGS.sound:
+                                playsound3.playsound("base//game//res//audio//command_executed.mp3", False)
                             print(
-                                f"{colorama.Fore.GREEN}Режим отладки включен. Перезапустите игру, чтобы полностью применить изменения.")
+                                f"{colorama.Fore.GREEN}Режим отладки включен.")
                         elif new_debug_value == '0':
                             components.SETTINGS.debug_mode = False
                             save_file(components.SETTINGS.export_as_dict(), constants.SETTINGS_FILE_PATH,
                                       constants.USER_FOLDER_NAME)
+                            if components.SETTINGS.sound:
+                                playsound3.playsound("base//game//res//audio//command_executed.mp3", False)
                             print(
-                                f"{colorama.Fore.GREEN}Режим отладки отключен. Перезапустите игру, чтобы полностью применить изменения.")
+                                f"{colorama.Fore.GREEN}Режим отладки отключен.")
                         else:
                             if components.SETTINGS.sound:
                                 playsound3.playsound("base//game//res//audio//invalid_argument.mp3", False)
                             print(
                                 f"{colorama.Fore.RED}Недопустимое значение для аргумента debug.")
                         del new_debug_value
+                    case 'community':
+                        new_community_value = user_command[2]
+                        if new_community_value == '1':
+                            components.SETTINGS.custom_planets = True
+                            save_file(components.SETTINGS.export_as_dict(), constants.SETTINGS_FILE_PATH,
+                                      constants.USER_FOLDER_NAME)
+                            if components.SETTINGS.sound:
+                                playsound3.playsound("base//game//res//audio//command_executed.mp3", False)
+                            print(
+                                f"{colorama.Fore.GREEN}Включены планеты сообщества.")
+                        elif new_community_value == '0':
+                            components.SETTINGS.custom_planets = False
+                            save_file(components.SETTINGS.export_as_dict(), constants.SETTINGS_FILE_PATH,
+                                      constants.USER_FOLDER_NAME)
+                            if components.SETTINGS.sound:
+                                playsound3.playsound("base//game//res//audio//command_executed.mp3", False)
+                            print(
+                                f"{colorama.Fore.GREEN}Отключены планеты сообщества.")
+                        else:
+                            if components.SETTINGS.sound:
+                                playsound3.playsound("base//game//res//audio//invalid_argument.mp3", False)
+                            print(
+                                f"{colorama.Fore.RED}Недопустимое значение для аргумента debug.")
+                        del new_community_value
             elif len(user_command) == 2:
                 match user_command[1]:
                     case 'lang':
@@ -207,6 +236,9 @@ class MainMenu(ScreenBase):
                         )
                         print(t)
                         del t
+                    case 'community':
+                        print(
+                            f"{colorama.Fore.CYAN}settings community [0 / 1]{colorama.Fore.GREEN} - планеты сообщества. 0 - отключить, 1 - включить.\n")
                     case 'sound':
                         print(
                             f"{colorama.Fore.CYAN}settings sound [0 / 1]{colorama.Fore.GREEN} - звук в игре. 0 - отключить, 1 - включить.\n")
@@ -221,11 +253,13 @@ class MainMenu(ScreenBase):
             else:
                 t = (
                     f"{colorama.Fore.GREEN}Настройки игры:\n"
+                    f"Планеты сообщества: {colorama.Fore.CYAN}{'включены' if components.SETTINGS.get_custom_planets_support() else 'отключены'}{colorama.Fore.GREEN}\n\n"
                     f"Язык: {colorama.Fore.CYAN}{get_lang_name(components.SETTINGS.get_lang())}{colorama.Fore.GREEN}\n"
                     f"Звуки: {colorama.Fore.CYAN}{'включены' if components.SETTINGS.get_sound() else 'отключены'}{colorama.Fore.GREEN}\n\n"
                     f"Отладка: {colorama.Fore.CYAN}{'включена' if components.SETTINGS.get_debug_mode() else 'отключена'}{colorama.Fore.GREEN}\n\n"
                     f"Доступные языки: {colorama.Fore.CYAN}ru{colorama.Fore.GREEN}\n\n"
                     "Изменение настроек:\n"
+                    f"{colorama.Fore.CYAN}settings community [0 / 1]{colorama.Fore.GREEN} - планеты сообщества. 0 - отключить, 1 - включить.\n"
                     f"{colorama.Fore.CYAN}settings lang [код]{colorama.Fore.GREEN} - смена языка по коду, которые вы увидите выше.\n"
                     f"{colorama.Fore.CYAN}settings sound [0 / 1]{colorama.Fore.GREEN} - звук в игре. 0 - отключить, 1 - включить.\n"
                     f"{colorama.Fore.CYAN}settings debug [0 / 1]{colorama.Fore.GREEN} - режим отладки (для разработчиков). 0 - отключить, 1 - включить.\n"

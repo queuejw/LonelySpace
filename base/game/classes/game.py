@@ -162,7 +162,8 @@ class Game:
         self.pending_update = False  # Ожидается ли обновление экрана?
         self.planet_flying_active = False  # Летит ли игрок на планету?
         self.player: Ship = Ship("")  # Корабль игрока. При создании используется пустышка.
-        self.player_drawing: str = ''  # ASCII рисунок корабля
+        self.player_in_space_drawing: str = ''  # ASCII рисунок корабля в космосе
+        self.player_on_planet_drawing: str = ''  # ASCII рисунок корабля на планете
         self.planets: list[Planet] = []  # Список планет
         self.last_messages: list[str] = []  # Список последних действий
         self.timer = -1  # Простой таймер, который нужен для вывода времени ожидания какого-то действия. Если -1, значит он не работает
@@ -180,7 +181,7 @@ class Game:
             else:
                 return value
 
-        d = self.player_drawing.splitlines()
+        d = self.player_in_space_drawing.splitlines() if not self.player.on_planet else self.player_on_planet_drawing.splitlines()
 
         computer_text = [
             f"Корабль " + f"{colorama.Fore.CYAN}{get_ship_state_value_text(self.player.ship_name)}" + colorama.Fore.GREEN,
@@ -251,7 +252,7 @@ class Game:
                     result += f"\n{line.replace("p", "")}"
                     if len(d) - 1 == c:
                         result += f"\n{line.replace("p", "\n")}"
-                        result += "Для запуска терминала нажмите <ПРОБЕЛ>\nЕсли возникнут трудности, введите команду help."
+                        result += "Для запуска терминала нажмите <ПРОБЕЛ>\nДля отключения терминала, введите команду exit.\nЕсли возникнут трудности, введите команду help."
 
             c += 1
 
@@ -280,7 +281,7 @@ class Game:
         if self.planets is None:
             if components.SETTINGS.get_debug_mode():
                 print(colorama.Fore.RED + "Список планет не был загружен.")
-            return Planet(0, "None", "None", 0, 0, 0, 0)
+            return Planet(0, "None", "None", 0, 0, 0, 0, False, 'None')
 
         l = [x for x in self.planets if x.planet_id == m_id]
         if len(l) < 1:
@@ -311,7 +312,10 @@ class Game:
         if position < 0 or position > len(self.planets) - 1:
             return f'{colorama.Fore.RED}Укажите число в диапазоне от {colorama.Fore.CYAN}0{colorama.Fore.RED} до {colorama.Fore.CYAN}{len(self.planets) - 1}{colorama.Fore.RED}'
         planet: Planet = self.planets[position]
-        text = (
+        text = ''
+        if planet.custom_planet:
+            text += f"{colorama.Fore.CYAN}Планета сообщества от {planet.custom_author}{colorama.Fore.GREEN}\n"
+        text += (
             f"{colorama.Fore.GREEN}Планета: {colorama.Fore.CYAN}{planet.planet_name}{colorama.Fore.GREEN}\n"
             f"{colorama.Fore.GREEN}ID: {colorama.Fore.CYAN}{planet.planet_id}{colorama.Fore.GREEN}\n\n"
             f"{colorama.Fore.GREEN}Описание: {planet.planet_description}\n\n"
@@ -380,12 +384,14 @@ class Game:
             if random.random() > 0.5:
                 # Столкновение с космическим мусором
                 if random.random() < 0.025:
-                    self.update_last_messages(f"{colorama.Fore.YELLOW}Столкновение с космическим мусором! Корабль получил незначительные повреждения.")
+                    self.update_last_messages(
+                        f"{colorama.Fore.YELLOW}Столкновение с космическим мусором! Корабль получил незначительные повреждения.")
                     self.player.strength = clamp(self.player.strength - random.randint(1, 3), 0, 100)
                     return
                 # Аномалия 1
                 if random.random() < 0.1:
-                    self.update_last_messages(f"{colorama.Fore.YELLOW}Космическая аномалия! Двигатель заглох, скорость уменьшена")
+                    self.update_last_messages(
+                        f"{colorama.Fore.YELLOW}Космическая аномалия! Двигатель заглох, скорость уменьшена")
                     self.player.speed = 125
                     return
             else:
@@ -825,6 +831,7 @@ class Game:
                 self.player.module_computer_damaged = True
             if random.random() > 0.5:
                 self.player.module_weapon_damaged = True
+
         # Добавляет в очередь звук "Завершение полёта через..."
         def queue_route_audio(value):
             match value:
@@ -901,12 +908,13 @@ class Game:
         if leave_planet:
             self.update_last_messages(
                 f"{colorama.Fore.BLACK}{colorama.Back.GREEN}Мы покинули планету {planet.planet_name}!{colorama.Back.RESET}")
-            components.GAME.player.planet_id = -1
-            components.GAME.player.on_planet = False
+            self.player.planet_id = -1
+            self.player.on_planet = False
         else:
             self.update_last_messages(f"{colorama.Fore.GREEN}Добро пожаловать на планету {planet.planet_name}!")
-            components.GAME.player.planet_id = self.player.planet_id
-            components.GAME.player.on_planet = True
+            self.player.visited_planets.append(planet.planet_id)  # Добавляем ID в список посещённых планет.
+            self.player.planet_id = self.player.planet_id
+            self.player.on_planet = True
 
         if components.SETTINGS.get_sound():
             self.add_audio_to_queue("base//game//res//audio//flight_completed.mp3")

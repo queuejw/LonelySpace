@@ -10,14 +10,16 @@ class Planet:
         6	Токсичная
     """
 
-    def __init__(self, m_id: int, m_name: str, m_description: str, m_type: int, m_danger: int, m_eta: int, m_temp: int):
+    def __init__(self, m_id: int, m_name: str, m_description: str, m_type: int, m_danger: int, m_eta: int, m_temp: int, m_custom_planet: bool, m_custom_author: str):
         self.planet_id = m_id  # Id планеты
         self.planet_name = m_name  # Название планеты
         self.planet_description = m_description  # Описание планеты
         self.planet_type = m_type  # Тип планеты
         self.planet_danger = m_danger  # Уровень опасности (от 0 до 9)
         self.planet_eta = m_eta  # Примерное время полёта
-        self.planet_temp = m_temp # Средняя температура на планете
+        self.planet_temp = m_temp  # Средняя температура на планете
+        self.custom_planet = m_custom_planet # Это планета сообщества?
+        self.custom_author = m_custom_author  # Автор планеты сообщества
 
     # Возвращает текст типа планеты
     def get_planet_type_name(self) -> str:

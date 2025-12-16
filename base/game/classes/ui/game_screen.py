@@ -85,7 +85,30 @@ class GameScreen(ScreenBase):
                                 if components.GAME.player.module_computer_damaged and random.random() > 0.7:
                                     planet_was_changed = True
                                     planet_id = random.randint(0, len(components.GAME.planets) - 1)
-                                # Обновляем значений переменных и запускаем цикл полёта.
+                                # Проверяем, был ли игрок на этой планете.
+                                if planet_id in components.GAME.player.visited_planets:
+                                    if len(user_command) > 2:
+                                        if user_command[2] != "force":
+                                            if components.SETTINGS.get_sound():
+                                                components.GAME.add_audio_to_queue(
+                                                    "base//game//res//audio//command_handle_error.mp3")
+                                            print(
+                                                f"{colorama.Fore.YELLOW}Мы уже были на этой планете. Если хотите отправиться ещё раз, добавьте аргумент {colorama.Fore.CYAN}force{colorama.Fore.YELLOW} в конец команды.\n"
+                                                f"{colorama.Fore.GREEN}Пример: goto {planet_id} force"
+                                            )
+                                            del planet_id
+                                            return
+                                    else:
+                                        if components.SETTINGS.get_sound():
+                                            components.GAME.add_audio_to_queue(
+                                                "base//game//res//audio//command_handle_error.mp3")
+                                        print(
+                                            f"{colorama.Fore.YELLOW}Мы уже были на этой планете. Если хотите отправиться ещё раз, добавьте аргумент {colorama.Fore.CYAN}force{colorama.Fore.YELLOW} в конец команды.\n"
+                                            f"{colorama.Fore.GREEN}Пример: goto {planet_id} force"
+                                        )
+                                        del planet_id
+                                        return
+                                        # Обновляем значений переменных и запускаем цикл полёта.
                                 components.GAME.player.planet_id = planet_id
                                 planet = components.GAME.get_planet_by_id(planet_id)
                                 asyncio.create_task(components.GAME.fly_cycle(planet.planet_eta, False))
