@@ -840,6 +840,12 @@ class Game:
                     self.add_audio_to_queue("base//game//res//audio//flight_90.mp3")
                 case 110:
                     self.add_audio_to_queue("base//game//res//audio//flight_110.mp3")
+                case 130:
+                    self.add_audio_to_queue("base//game//res//audio//flight_130.mp3")
+                case 150:
+                    self.add_audio_to_queue("base//game//res//audio//flight_150.mp3")
+                case 170:
+                    self.add_audio_to_queue("base//game//res//audio//flight_170.mp3")
 
         while final_time > 0:
 
