@@ -76,29 +76,17 @@ class GameScreen(ScreenBase):
                     # Если игрок не на планете, то он может начать полёт
                     if not components.GAME.player.on_planet:
                         planet_id = int(user_command[1])
-                        # Если ID в диапазоне от 0 до кол-во планет - 1
-                        if 0 <= planet_id <= len(components.GAME.planets) - 1:
-                            # Если в данный момент корабль не в пути, можем начать полёт
-                            if not components.GAME.planet_flying_active:
-                                planet_was_changed = False
-                                # Если компьютер поврежден, есть шанс, что планета изменится на случайную.
-                                if components.GAME.player.module_computer_damaged and random.random() > 0.7:
-                                    planet_was_changed = True
-                                    planet_id = random.randint(0, len(components.GAME.planets) - 1)
-                                # Проверяем, был ли игрок на этой планете.
-                                if planet_id in components.GAME.player.visited_planets:
-                                    if len(user_command) > 2:
-                                        if user_command[2] != "force":
-                                            if components.SETTINGS.get_sound():
-                                                components.GAME.add_audio_to_queue(
-                                                    "base//game//res//audio//command_handle_error.mp3")
-                                            print(
-                                                f"{colorama.Fore.YELLOW}Мы уже были на этой планете. Если хотите отправиться ещё раз, добавьте аргумент {colorama.Fore.CYAN}force{colorama.Fore.YELLOW} в конец команды.\n"
-                                                f"{colorama.Fore.GREEN}Пример: goto {planet_id} force"
-                                            )
-                                            del planet_id
-                                            return
-                                    else:
+                        # Если в данный момент корабль не в пути, можем начать полёт
+                        if not components.GAME.planet_flying_active:
+                            planet_was_changed = False
+                            # Если компьютер поврежден, есть шанс, что планета изменится на случайную.
+                            if components.GAME.player.module_computer_damaged and random.random() > 0.7:
+                                planet_was_changed = True
+                                planet_id = random.choice([x.planet_id for x in components.GAME.planets])
+                            # Проверяем, был ли игрок на этой планете.
+                            if planet_id in components.GAME.player.visited_planets:
+                                if len(user_command) > 2:
+                                    if user_command[2] != "force":
                                         if components.SETTINGS.get_sound():
                                             components.GAME.add_audio_to_queue(
                                                 "base//game//res//audio//command_handle_error.mp3")
@@ -108,35 +96,47 @@ class GameScreen(ScreenBase):
                                         )
                                         del planet_id
                                         return
-                                        # Обновляем значений переменных и запускаем цикл полёта.
-                                components.GAME.player.planet_id = planet_id
-                                planet = components.GAME.get_planet_by_id(planet_id)
-                                asyncio.create_task(components.GAME.fly_cycle(planet.planet_eta, False))
-                                if components.SETTINGS.get_sound():
-                                    components.GAME.add_audio_to_queue("base//game//res//audio//route_updated.mp3")
-                                if not planet_was_changed:
-                                    t = f"{colorama.Fore.GREEN}Маршрут обновлён. Летим на планету {colorama.Fore.CYAN}{planet.planet_name}{colorama.Fore.GREEN}."
                                 else:
-                                    t = f"{colorama.Fore.RED}Маршрут обновлён. {colorama.Fore.GREEN}Летим на план{colorama.Fore.RED}ету {colorama.Fore.CYAN}{planet.planet_name}{colorama.Fore.RED}."
-                                print(t)
-                                components.GAME.update_last_messages(t)
-                                del planet_was_changed
-                                del t
-                                del planet
-                                del planet_id
-                            else:
-                                # Игрок уже в пути, мы не можем начать одновременно два и более полёта.
-                                del planet_id
+                                    if components.SETTINGS.get_sound():
+                                        components.GAME.add_audio_to_queue(
+                                            "base//game//res//audio//command_handle_error.mp3")
+                                    print(
+                                        f"{colorama.Fore.YELLOW}Мы уже были на этой планете. Если хотите отправиться ещё раз, добавьте аргумент {colorama.Fore.CYAN}force{colorama.Fore.YELLOW} в конец команды.\n"
+                                        f"{colorama.Fore.GREEN}Пример: goto {planet_id} force"
+                                    )
+                                    del planet_id
+                                    return
+                            if len([x.planet_id for x in components.GAME.planets if x.planet_id == planet_id]) < 1:
                                 if components.SETTINGS.get_sound():
-                                    components.GAME.add_audio_to_queue(
-                                        "base//game//res//audio//command_handle_error.mp3")
+                                    components.GAME.add_audio_to_queue("base//game//res//audio//invalid_argument.mp3")
                                 print(
-                                    f"{colorama.Fore.RED}Корабль уже в пути. Если хотите изменить маршрут, отмените этот полёт. Введите {colorama.Fore.CYAN}help ship{colorama.Fore.RED}, если понадобится помощь.")
-                        else:
+                                    f"{colorama.Fore.RED}Неверный ID планеты. Убедитесь, что ID верный. Введите {colorama.Fore.CYAN}help ship{colorama.Fore.RED}, если понадобится помощь.")
+                                del planet_id
+                                return
+                                # Обновляем значений переменных и запускаем цикл полёта.
+                            components.GAME.player.planet_id = planet_id
+                            planet = components.GAME.get_planet_by_id(planet_id)
+                            asyncio.create_task(components.GAME.fly_cycle(planet.planet_eta, False))
                             if components.SETTINGS.get_sound():
-                                components.GAME.add_audio_to_queue("base//game//res//audio//invalid_argument.mp3")
+                                components.GAME.add_audio_to_queue("base//game//res//audio//route_updated.mp3")
+                            if not planet_was_changed:
+                                t = f"{colorama.Fore.GREEN}Маршрут обновлён. Летим на планету {colorama.Fore.CYAN}{planet.planet_name}{colorama.Fore.GREEN}."
+                            else:
+                                t = f"{colorama.Fore.RED}Маршрут обновлён. {colorama.Fore.GREEN}Летим на план{colorama.Fore.RED}ету {colorama.Fore.CYAN}{planet.planet_name}{colorama.Fore.RED}."
+                            print(t)
+                            components.GAME.update_last_messages(t)
+                            del planet_was_changed
+                            del t
+                            del planet
+                            del planet_id
+                        else:
+                            # Игрок уже в пути, мы не можем начать одновременно два и более полёта.
+                            del planet_id
+                            if components.SETTINGS.get_sound():
+                                components.GAME.add_audio_to_queue(
+                                    "base//game//res//audio//command_handle_error.mp3")
                             print(
-                                f"{colorama.Fore.RED}Неверный ID планеты. Убедитесь, что ID верный. Введите {colorama.Fore.CYAN}help ship{colorama.Fore.RED}, если понадобится помощь.")
+                                f"{colorama.Fore.RED}Корабль уже в пути. Если хотите изменить маршрут, отмените этот полёт. Введите {colorama.Fore.CYAN}help ship{colorama.Fore.RED}, если понадобится помощь.")
                     # Игрок уже на планете, сначала нужно покинуть её.
                     else:
                         if components.SETTINGS.get_sound():
