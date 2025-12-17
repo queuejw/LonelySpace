@@ -585,12 +585,14 @@ class Game:
                 if temperature_damage_notification_enabled:
                     temperature_damage_notification_enabled = False
                     self.update_last_messages(
-                        f"{colorama.Fore.RED}Слишком высокая температура снаружи, корабль начинает плавиться!")
-                    if random.random() > 0.8:
-                        self.player.crew_health = clamp(self.player.crew_health - 1, 0, 100)
-                    if random.random() > 0.8:
-                        self.player.crew_health = clamp(self.player.strength - 1, 0, 100)
-                    self.damage_all_modules(0.95)
+                            f"{colorama.Fore.RED}Слишком высокая температура снаружи, корабль начинает плавиться!")
+                    if components.SETTINGS.get_sound():
+                        self.add_audio_to_queue("base//game//res//audio//ship_melting_warning.mp3")
+                if random.random() > 0.8:
+                    self.player.crew_health = clamp(self.player.crew_health - 1, 0, 100)
+                if random.random() > 0.8:
+                    self.player.crew_health = clamp(self.player.strength - 1, 0, 100)
+                self.damage_all_modules(0.95)
             else:
                 if not temperature_damage_notification_enabled:
                     temperature_damage_notification_enabled = True
