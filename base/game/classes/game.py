@@ -169,6 +169,21 @@ class Game:
         self.timer = -1  # Простой таймер, который нужен для вывода времени ожидания какого-то действия. Если -1, значит он не работает
         self.audio_queue: list[str] = []  # Очередь звуков, здесь хранится путь до файлов
 
+    # Повреждает все модули на корабле с шансом 50% на каждый
+    def damage_all_modules(self, chance: float):
+        if random.random() > chance:
+            self.player.module_main_engine_damaged = True
+        if random.random() > chance:
+            self.player.module_fuel_tank_damaged = True
+        if random.random() > chance:
+            self.player.module_cooling_system_damaged = True
+        if random.random() > chance:
+            self.player.module_life_support_damaged = True
+        if random.random() > chance:
+            self.player.module_computer_damaged = True
+        if random.random() > chance:
+            self.player.module_weapon_damaged = True
+
     # Генерирует текст информации о корабле в игре.
     # В чём суть:
     # Берём рисунок корабля, затем заменяем p на данные о корабле. Если осталось свободное место, заменяем p на пустоту.
@@ -460,6 +475,7 @@ class Game:
         low_oxygen_notification_enabled = True
         no_oxygen_notification_enabled = True
         temperature_notification_enabled = True
+        temperature_damage_notification_enabled = True
 
         # Уведомления для модулей
         module_main_engine_notification_enabled = True
@@ -475,7 +491,6 @@ class Game:
         def update_temperature():
             if self.player.on_planet:
                 pl = self.get_planet_by_id(self.player.planet_id)
-
                 # Если температура на планете выше 100 C
                 if pl.planet_temp > 100:
                     if pl.planet_type in [3, 5]:
@@ -566,7 +581,19 @@ class Game:
                 self.player.fuel = update_fuel(self.player)
 
             self.player.oxygen = update_oxygen(self.player)
-
+            if self.player.outside_temperature > 666:
+                if temperature_damage_notification_enabled:
+                    temperature_damage_notification_enabled = False
+                    self.update_last_messages(
+                        f"{colorama.Fore.RED}Слишком высокая температура снаружи, корабль начинает плавиться!")
+                    if random.random() > 0.8:
+                        self.player.crew_health = clamp(self.player.crew_health - 1, 0, 100)
+                    if random.random() > 0.8:
+                        self.player.crew_health = clamp(self.player.strength - 1, 0, 100)
+                    self.damage_all_modules(0.95)
+            else:
+                if not temperature_damage_notification_enabled:
+                    temperature_damage_notification_enabled = True
             # ТЕМПЕРАТУРА
             if self.player.inside_temperature > 39:
                 if random.random() > 0.6:
@@ -817,21 +844,6 @@ class Game:
 
         successful = True
 
-        # Повреждает все модули на корабле с шансом 50% на каждый
-        def damage_all_modules():
-            if random.random() > 0.5:
-                self.player.module_main_engine_damaged = True
-            if random.random() > 0.5:
-                self.player.module_fuel_tank_damaged = True
-            if random.random() > 0.5:
-                self.player.module_cooling_system_damaged = True
-            if random.random() > 0.5:
-                self.player.module_life_support_damaged = True
-            if random.random() > 0.5:
-                self.player.module_computer_damaged = True
-            if random.random() > 0.5:
-                self.player.module_weapon_damaged = True
-
         # Добавляет в очередь звук "Завершение полёта через..."
         def queue_route_audio(value):
             match value:
@@ -884,7 +896,7 @@ class Game:
                         f"{colorama.Fore.YELLOW}Жёсткая посадка! Причина: {colorama.Fore.RED}Недостаточно топлива для завершения полёта")
                     components.GAME.player.planet_id = self.player.planet_id
                     components.GAME.player.on_planet = True
-                    damage_all_modules()
+                    self.damage_all_modules(0.5)
                 else:
                     self.update_last_messages(
                         f"{colorama.Fore.RED}Двигатели заглохли, закончилось топливо. Невозможно продолжить полёт." if not leave_planet else f"{colorama.Fore.RED}Двигатели заглохли, закончилось топливо. Мы не смогли покинуть планету.")
