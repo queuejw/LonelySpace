@@ -31,7 +31,7 @@ https://github.com/adang1345/PythonVista
 
 ## Запуск игры
 
-Инструкция по загрузке и установке игры находится [здесь](database/HOW-TO-INSTALL.md#как-скачать-игру).
+Инструкция по загрузке и установке игры находится [здесь](github/database/HOW-TO-INSTALL.md#как-скачать-игру).
 
 # Обратная связь
 
@@ -110,8 +110,8 @@ https://github.com/adang1345/PythonVista
 
 Быстрые ссылки:
 - [Создание своих планет](database/CREATING_PLANETS.md#создание-планет)
-- [Запуск игры](database/HOW-TO-INSTALL.md#как-скачать-игру)
-- [Модификация игры](database/HOW-TO-MODIFY.md#внести-свой-вклад-в-проект)
+- [Запуск игры](github/database/HOW-TO-INSTALL.md#как-скачать-игру)
+- [Модификация игры](github/database/HOW-TO-MODIFY.md#внести-свой-вклад-в-проект)
 
 ## Важная информация
 

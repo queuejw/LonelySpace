@@ -1,3 +1,4 @@
 /.venv/
+/.idea
 /USER
 test.py
