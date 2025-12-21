@@ -169,7 +169,7 @@ class Game:
         self.timer = -1  # Простой таймер, который нужен для вывода времени ожидания какого-то действия. Если -1, значит он не работает
         self.audio_queue: list[str] = []  # Очередь звуков, здесь хранится путь до файлов
 
-    # Повреждает все модули на корабле с шансом 50% на каждый
+    # Повреждает все модули на корабле с шансом x% на каждый
     def damage_all_modules(self, chance: float):
         if random.random() > chance:
             self.player.module_main_engine_damaged = True
@@ -183,6 +183,28 @@ class Game:
             self.player.module_computer_damaged = True
         if random.random() > chance:
             self.player.module_weapon_damaged = True
+
+    # Повреждает случайный модуль
+    def damage_random_modules(self):
+        while True:
+            if random.random() > 0.6:
+                self.player.module_main_engine_damaged = True
+                break
+            if random.random() > 0.6:
+                self.player.module_fuel_tank_damaged = True
+                break
+            if random.random() > 0.6:
+                self.player.module_cooling_system_damaged = True
+                break
+            if random.random() > 0.6:
+                self.player.module_life_support_damaged = True
+                break
+            if random.random() > 0.6:
+                self.player.module_computer_damaged = True
+                break
+            if random.random() > 0.6:
+                self.player.module_weapon_damaged = True
+                break
 
     # Генерирует текст информации о корабле в игре.
     # В чём суть:
@@ -355,22 +377,141 @@ class Game:
 
             # Негативные события
             if random.random() > 0.5:
-                # Пепел
-                if random.random() < 0.03 and self.get_planet_by_id(self.player.planet_id).planet_type == 3:
-                    self.update_last_messages(
-                        f"{colorama.Fore.YELLOW}Вулканический пепел попал в двигатель!")
-                    self.player.module_main_engine_damaged = True
-                    self.player.module_cooling_system_damaged = True
-                    return
-                # Токсичный газ
-                if random.random() < 0.01 and self.get_planet_by_id(self.player.planet_id).planet_type == 6:
-                    self.update_last_messages(
-                        f"{colorama.Fore.RED}Токсичный газ проник внутрь!")
-                    self.player.module_life_support_damaged = True
-                    return
-                # todo: ещё больше событий
+                # Генерация негативного события в зависимости от планеты
+                match self.get_planet_by_id(self.player.planet_id).planet_type:
+                    case 0:
+                        # Атмосферный вихрь
+                        if random.random() < 0.03:
+                            self.update_last_messages(
+                                f"{colorama.Fore.YELLOW}Атмосферный вихрь затянул корабль!")
+                            if random.random() > 0.6:
+                                self.player.module_cooling_system_damaged = True
+                            self.player.strength = clamp(self.player.strength - random.randint(1, 3), 0, 100)
+                            return
+                        # Плазменный разряд
+                        if random.random() < 0.02:
+                            self.update_last_messages(
+                                f"{colorama.Fore.YELLOW}Плазменный разряд ударил по корпусу!")
+                            if random.random() > 0.5:
+                                self.player.module_computer_damaged = True
+                            self.player.strength = clamp(self.player.strength - random.randint(1, 5), 0, 100)
+                            return
+                    case 1:
+                        # Обвал породы
+                        if random.random() < 0.03:
+                            self.update_last_messages(
+                                f"{colorama.Fore.YELLOW}Обвал породы повредил корпус корабля!")
+                            self.player.strength = clamp(self.player.strength - random.randint(1, 5), 0, 100)
+                            return
+                    case 2:
+                        # Корабль покрылся льдом
+                        if random.random() < 0.03:
+                            self.update_last_messages(
+                                f"{colorama.Fore.YELLOW}Корабль покрылся льдом!")
+                            self.player.strength = clamp(self.player.strength - random.randint(1, 5), 0, 100)
+                            self.damage_random_modules()
+                        return
+                    case 3:
+                        # Пепел
+                        if random.random() < 0.03:
+                            self.update_last_messages(
+                                f"{colorama.Fore.RED}Вулканический пепел попал в двигатель!")
+                            self.player.module_main_engine_damaged = True
+                            self.player.module_cooling_system_damaged = True
+                            return
+                        # Лавовый выброс
+                        if random.random() < 0.02:
+                            self.update_last_messages(
+                                f"{colorama.Fore.RED}Лавовый выброс задел корабль!")
+                            self.player.module_main_engine_damaged = True
+                            self.player.module_cooling_system_damaged = True
+                            self.player.strength = clamp(self.player.strength - random.randint(1, 7), 0, 100)
+                            return
+                        # Подземный взрыв
+                        if random.random() < 0.01:
+                            self.update_last_messages(
+                                f"{colorama.Fore.RED}Под кораблём произошёл подземный взрыв!")
+                            self.damage_all_modules(0.64)
+                            self.player.strength = clamp(self.player.strength - random.randint(5, 15), 0, 100)
+                            return
+                    case 4:
+                        # Гигантская волна
+                        if random.random() < 0.02:
+                            self.update_last_messages(
+                                f"{colorama.Fore.YELLOW}Гигантская волна накрыла корабль!")
+                            self.player.strength = clamp(self.player.strength - random.randint(2, 4), 0, 100)
+                            return
+                        # Коррозия солёной воды
+                        if random.random() < 0.02:
+                            self.update_last_messages(
+                                f"{colorama.Fore.YELLOW}Солёная вода вызвала коррозию систем!")
+                            self.player.strength = clamp(self.player.strength - random.randint(1, 2), 0, 100)
+                            self.damage_random_modules()
+                            return
+                    case 5:
+                        # Пылевая буря
+                        if random.random() < 0.03:
+                            self.update_last_messages(
+                                f"{colorama.Fore.YELLOW}Пылевая буря забила систему охлаждения!")
+                            self.player.module_cooling_system_damaged = True
+                            return
+                    case 6:
+                        # Токсичный газ
+                        if random.random() < 0.01:
+                            self.update_last_messages(
+                                f"{colorama.Fore.RED}Токсичный газ проник внутрь!")
+                            self.player.module_life_support_damaged = True
+                            return
+                        # Кислотный дождь
+                        if random.random() < 0.01:
+                            self.update_last_messages(
+                                f"{colorama.Fore.RED}Кислотный дождь разъедает обшивку!")
+                            self.player.strength = clamp(self.player.strength - random.randint(10, 25), 0, 100)
+                            return
             # Позитивные события
             else:
+                # Генерация позитивного события в зависимости от планеты
+                match self.get_planet_by_id(self.player.planet_id).planet_type:
+                    case 0:
+                        # Сбор редких газов
+                        if random.random() < 0.05:
+                            self.update_last_messages(
+                                f"{colorama.Fore.GREEN}Собраны редкие газы из атмосферы.")
+                            self.player.resources += random.randint(25, 50)
+                            return
+                    case 1:
+                        # Рудные жилы.
+                        if random.random() < 0.04:
+                            self.update_last_messages(f"{colorama.Fore.GREEN}Обнаружены богатые рудные жилы.")
+                            self.player.resources += random.randint(10, 40)
+                            return
+                    case 2:
+                        # Подлёдные ресурсы
+                        if random.random() < 0.03:
+                            self.update_last_messages(f"{colorama.Fore.GREEN}Под льдом обнаружены полезные элементы.")
+                            self.player.resources += random.randint(5, 30)
+                            return
+                    case 3:
+                        # Термоминералы
+                        if random.random() < 0.06:
+                            self.update_last_messages(f"{colorama.Fore.GREEN}Обнаружены редкие термоминералы!")
+                            self.player.resources += random.randint(30, 75)
+                            return
+                    case 4:
+                        # Биоресурсы океана
+                        if random.random() < 0.04:
+                            self.update_last_messages(f"{colorama.Fore.GREEN}Собраны ценные биоресурсы океана.")
+                            self.player.resources += random.randint(15, 45)
+                            return
+                    case 5:
+                        pass
+                    case 6:
+                        # Токсичные реагенты
+                        if random.random() < 0.04:
+                            self.update_last_messages(f"{colorama.Fore.GREEN}Собраны редкие токсичные реагенты.")
+                            self.player.resources += random.randint(45, 120)
+                            return
+
                 # Получение ресурсов
                 if random.random() < 0.09:
 
@@ -400,18 +541,28 @@ class Game:
                 # Столкновение с космическим мусором
                 if random.random() < 0.025:
                     self.update_last_messages(
-                        f"{colorama.Fore.YELLOW}Столкновение с космическим мусором! Корабль получил незначительные повреждения.")
+                        f"{colorama.Fore.YELLOW}Столкновение с космическим мусором!")
                     self.player.strength = clamp(self.player.strength - random.randint(1, 3), 0, 100)
                     return
-                # Аномалия 1
-                if random.random() < 0.1:
+                # Электромагнитный импульс
+                if random.random() < 0.04:
                     self.update_last_messages(
-                        f"{colorama.Fore.YELLOW}Космическая аномалия! Двигатель заглох, скорость уменьшена")
-                    self.player.speed = 125
+                        f"{colorama.Fore.YELLOW}Электромагнитный импульс вывел системы из строя!")
+                    self.damage_random_modules()
                     return
+                # Поток космической пыли
+                if random.random() < 0.03:
+                    self.update_last_messages(
+                        f"{colorama.Fore.YELLOW}Поток космической пыли истирает обшивку.")
+                    self.player.strength = clamp(self.player.strength - random.randint(2, 6), 0, 100)
             else:
                 # Позитивные события
-                pass
+                # Поток космической энергии
+                if random.random() < 0.05:
+                    self.update_last_messages(
+                        f"{colorama.Fore.GREEN}Корабль попал в поток безопасной космической энергии.")
+                    self.player.strength = clamp(self.player.strength + random.randint(1, 3), 0, 100)
+                    return
 
             # todo: ещё больше событий
 
@@ -585,7 +736,7 @@ class Game:
                 if temperature_damage_notification_enabled:
                     temperature_damage_notification_enabled = False
                     self.update_last_messages(
-                            f"{colorama.Fore.RED}Слишком высокая температура снаружи, корабль начинает плавиться!")
+                        f"{colorama.Fore.RED}Слишком высокая температура снаружи, корабль начинает плавиться!")
                     if components.SETTINGS.get_sound():
                         self.add_audio_to_queue("base//game//res//audio//ship_melting_warning.mp3")
                 if random.random() > 0.75:
@@ -925,7 +1076,11 @@ class Game:
             self.player.planet_id = -1
             self.player.on_planet = False
         else:
-            self.update_last_messages(f"{colorama.Fore.GREEN}Добро пожаловать на планету {planet.planet_name}!")
+            if planet.planet_type == 0:
+                self.update_last_messages(
+                    f"{colorama.Fore.GREEN}Добро пожаловать в нижний слой атмосферы планеты {planet.planet_name}!")
+            else:
+                self.update_last_messages(f"{colorama.Fore.GREEN}Добро пожаловать на планету {planet.planet_name}!")
             self.player.visited_planets.append(planet.planet_id)  # Добавляем ID в список посещённых планет.
             self.player.planet_id = self.player.planet_id
             self.player.on_planet = True
