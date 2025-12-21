@@ -24,7 +24,7 @@ def create_game_settings():
             if components.SETTINGS.get_debug_mode():
                 print(f"{colorama.Fore.RED}Не удалось загрузить значение настройки custom_planets")
         try:
-            if not check_sound_support():
+            if check_sound_support():
                 components.SETTINGS.sound = loaded_settings['sound']
             else:
                 components.SETTINGS.sound = False
