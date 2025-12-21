@@ -1,1 +1,3 @@
-/.idea
+/.venv/
+/USER
+test.py
