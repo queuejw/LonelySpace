@@ -446,7 +446,7 @@ class Game:
             if components.ENGINE.pending_input and not self.paused:
                 if components.SETTINGS.get_sound() and self.is_audio_queue_empty() and terminal_on_sound_enabled:
                     terminal_on_sound_enabled = False
-                    components.GAME.add_audio_to_queue("base//game//res//audio//terminal_on.mp3")
+                    self.add_audio_to_queue("base//game//res//audio//terminal_on.mp3")
 
             if len(self.audio_queue) < 1:
                 await asyncio.sleep(0.06)

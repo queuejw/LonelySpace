@@ -33,7 +33,7 @@ def create_game_settings():
             if components.SETTINGS.get_debug_mode():
                 print(f"{colorama.Fore.RED}Не удалось загрузить значение настройки sound")
         try:
-            components.SETTINGS.sound = loaded_settings['lang']
+            components.SETTINGS.lang = loaded_settings['lang']
         except KeyError:
             if components.SETTINGS.get_debug_mode():
                 print(f"{colorama.Fore.RED}Не удалось загрузить значение настройки lang")
