@@ -51,14 +51,27 @@ async def init_game():
     create_game_settings()
     await components.ENGINE.start()
 
+# Запускает новую версию игры
+# Старя версия будет поддерживаться до тех пор, пока не будет готова версия 2.0.
+# Но, стоит учитывать, что по умолчанию запускается старая версия, а не новая. Вот так.
+# Файлы новой версии находятся в директории res (не base)
+def init_game_v2():
+    print("запус")
+
 # Здесь происходит запуск программы 
 if __name__ == "__main__":
     import asyncio
     import colorama
-
+    import sys
+    args = sys.argv
     colorama.init(autoreset=True)
     try:
-        asyncio.run(init_game())
+        if len(args) > 1:
+            # Если есть аргумент new, запускаем новую версию игры (которая на pygame будет)
+            if args[1] == "new":
+                init_game_v2()
+        else:
+            asyncio.run(init_game())
     except KeyboardInterrupt:
         print(f"{colorama.Back.RED}{colorama.Fore.BLACK}Экстренное завершение работы системы ...")
     except Exception as e:
