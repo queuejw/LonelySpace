@@ -61,11 +61,11 @@ class Engine:
         if self.blocked:
             return False
         if not self.pending_input:
-            self.pending_input = True
             if self.screen.name == "game":
                 clear_terminal()
                 print(
                     f"{colorama.Fore.GREEN}Терминал бортового компьютера.\n\nДля отключения терминала, введите команду exit.\nЕсли возникнут трудности, введите команду help.\n")
+            self.pending_input = True
         return True
 
     # Цикл, в котором происходит обработка ввода игрока.
