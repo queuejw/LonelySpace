@@ -289,7 +289,7 @@ class Game:
                     result += f"\n{line.replace("p", "")}"
                     if len(d) - 1 == c:
                         result += f"\n{line.replace("p", "\n")}"
-                        result += "Для запуска терминала нажмите <ПРОБЕЛ>\nДля отключения терминала, введите команду exit.\nЕсли возникнут трудности, введите команду help."
+                        result += "Для запуска терминала нажмите <ПРОБЕЛ>\n"
 
             c += 1
 
@@ -396,6 +396,12 @@ class Game:
                                 self.player.module_computer_damaged = True
                             self.player.strength = clamp(self.player.strength - random.randint(1, 5), 0, 100)
                             return
+                        # Давление
+                        if random.random() < 0.03:
+                            self.update_last_messages(
+                                f"{colorama.Fore.YELLOW}Высокое давление!")
+                            self.player.strength = clamp(self.player.strength - random.randint(1, 3), 0, 100)
+                            return
                     case 1:
                         # Обвал породы
                         if random.random() < 0.03:
@@ -408,7 +414,13 @@ class Game:
                         if random.random() < 0.03:
                             self.update_last_messages(
                                 f"{colorama.Fore.YELLOW}Корабль покрылся льдом!")
-                            self.player.strength = clamp(self.player.strength - random.randint(1, 5), 0, 100)
+                            self.player.strength = clamp(self.player.strength - random.randint(1, 3), 0, 100)
+                            self.damage_random_modules()
+                            return
+                        # Низкие температуры
+                        if random.random() < 0.02:
+                            self.update_last_messages(
+                                f"{colorama.Fore.YELLOW}Из-за экстремально низкой температуры системы дали сбой!")
                             self.damage_random_modules()
                         return
                     case 3:
@@ -448,12 +460,29 @@ class Game:
                             self.player.strength = clamp(self.player.strength - random.randint(1, 2), 0, 100)
                             self.damage_random_modules()
                             return
+                        # Повышенная влажность
+                        if random.random() < 0.02:
+                            self.update_last_messages(
+                                f"{colorama.Fore.YELLOW}Повышенная влажность вызвала сбои в системах!")
+                            self.player.strength = clamp(self.player.strength - random.randint(1, 2), 0, 100)
+                            self.damage_random_modules()
+                            return
                     case 5:
                         # Пылевая буря
                         if random.random() < 0.03:
                             self.update_last_messages(
                                 f"{colorama.Fore.YELLOW}Пылевая буря забила систему охлаждения!")
                             self.player.module_cooling_system_damaged = True
+                            return
+                        # Грунт под кораблём
+                        if random.random() < 0.02:
+                            self.update_last_messages(
+                                f"{colorama.Fore.YELLOW}Грунт под кораблём провалился!")
+                            self.player.strength = clamp(self.player.strength - random.randint(1, 4), 0, 100)
+                            if random.random() > 0.4:
+                                self.player.module_cooling_system_damaged = True
+                            else:
+                                self.player.module_main_engine_damaged = True
                             return
                     case 6:
                         # Токсичный газ
@@ -468,6 +497,13 @@ class Game:
                                 f"{colorama.Fore.RED}Кислотный дождь разъедает обшивку!")
                             self.player.strength = clamp(self.player.strength - random.randint(10, 25), 0, 100)
                             return
+                # Универсальные события
+                # Локальный катаклизм
+                if random.random() < 0.01:
+                    self.update_last_messages(
+                        f"{colorama.Fore.YELLOW}Локальный катаклизм повредил корабль!")
+                    self.player.strength = clamp(self.player.strength - random.randint(1, 4), 0, 100)
+                    return
             # Позитивные события
             else:
                 # Генерация позитивного события в зависимости от планеты
@@ -484,6 +520,11 @@ class Game:
                         if random.random() < 0.04:
                             self.update_last_messages(f"{colorama.Fore.GREEN}Обнаружены богатые рудные жилы.")
                             self.player.resources += random.randint(10, 40)
+                            return
+                        # Ценные минералы
+                        if random.random() < 0.04:
+                            self.update_last_messages(f"{colorama.Fore.GREEN}Обнаружены залежи ценных минералов!")
+                            self.player.resources += random.randint(25, 40)
                             return
                     case 2:
                         # Подлёдные ресурсы
@@ -504,7 +545,11 @@ class Game:
                             self.player.resources += random.randint(15, 45)
                             return
                     case 5:
-                        pass
+                        # Заброшенные комплексы
+                        if random.random() < 0.02:
+                            self.update_last_messages(f"{colorama.Fore.GREEN}Найден заброшенный пустынный комплекс.")
+                            self.player.resources += random.randint(35, 80)
+                            return
                     case 6:
                         # Токсичные реагенты
                         if random.random() < 0.04:
@@ -532,14 +577,18 @@ class Game:
                         self.update_last_messages(
                             f"{colorama.Fore.GREEN}Найдены ресурсы! Добавлено {r} ресурсов в хранилище.")
                         self.player.resources += r
-                # todo: ещё больше событий
 
         else:
             # События, которые происходят только в космосе
             # Негативные события
             if random.random() > 0.5:
+                # Сбой ИИ навигации
+                if random.random() < 0.008 and self.planet_flying_active:
+                    self.update_last_messages(
+                        f"{colorama.Fore.YELLOW}Сбой навигационного ИИ привёл к ошибке курса! Полёт отменён.")
+                    self.planet_flying_active = False
                 # Столкновение с космическим мусором
-                if random.random() < 0.025:
+                if random.random() < 0.02:
                     self.update_last_messages(
                         f"{colorama.Fore.YELLOW}Столкновение с космическим мусором!")
                     self.player.strength = clamp(self.player.strength - random.randint(1, 3), 0, 100)
@@ -551,14 +600,20 @@ class Game:
                     self.damage_random_modules()
                     return
                 # Поток космической пыли
-                if random.random() < 0.03:
+                if random.random() < 0.05:
                     self.update_last_messages(
                         f"{colorama.Fore.YELLOW}Поток космической пыли истирает обшивку.")
+                    self.player.strength = clamp(self.player.strength - random.randint(2, 6), 0, 100)
+                # Электрическая дуга
+                if random.random() < 0.03:
+                    self.update_last_messages(
+                        f"{colorama.Fore.YELLOW}Электрическая дуга прошла по корпусу!.")
+                    self.damage_random_modules()
                     self.player.strength = clamp(self.player.strength - random.randint(2, 6), 0, 100)
             else:
                 # Позитивные события
                 # Поток космической энергии
-                if random.random() < 0.05:
+                if random.random() < 0.07:
                     self.update_last_messages(
                         f"{colorama.Fore.GREEN}Корабль попал в поток безопасной космической энергии.")
                     self.player.strength = clamp(self.player.strength + random.randint(1, 3), 0, 100)
@@ -937,7 +992,7 @@ class Game:
                     all_modules_damaged_notification_enabled = True
 
             # Генерируем случайное событие, если повезет
-            if random.random() > 0.9:
+            if random.random() > 0.6:
                 await self.events_generator()
 
             # Обновление счётчика дней.
@@ -1076,6 +1131,12 @@ class Game:
             self.player.planet_id = -1
             self.player.on_planet = False
         else:
+            match planet.planet_type:
+                case 1:
+                    if random.random() > 0.8:
+                        self.update_last_messages(f"{colorama.Fore.YELLOW}Корабль приземлился на неровную поверхность!")
+                        self.player.strength = clamp(self.player.strength - random.randint(1, 4), 0, 100)
+
             if planet.planet_type == 0:
                 self.update_last_messages(
                     f"{colorama.Fore.GREEN}Добро пожаловать в нижний слой атмосферы планеты {planet.planet_name}!")

@@ -22,6 +22,10 @@ def is_int(value) -> bool:
 
 class GameScreen(ScreenBase):
 
+    def __init__(self):
+        super().__init__()
+        self.name = "game"
+
     def render(self):
         if not components.ENGINE.pending_input:
             text = components.GAME.generate_main_text()

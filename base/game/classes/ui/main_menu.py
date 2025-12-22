@@ -119,6 +119,10 @@ def get_lang_name(value: str) -> str:
 
 class MainMenu(ScreenBase):
 
+    def __init__(self):
+        super().__init__()
+        self.name = "menu"
+
     def render(self):
         clear_terminal()
         text = (

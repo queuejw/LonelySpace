@@ -2,6 +2,10 @@ import colorama
 
 
 class ScreenBase:
+
+    def __init__(self):
+        self.name = "placeholder"
+
     def render(self):
         print(colorama.Fore.RED + "This screen not implemented")
 
