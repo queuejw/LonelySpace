@@ -7,9 +7,10 @@ from base.game.classes.planet.planet import Planet
 from base.game.classes.planet.planet_event import PlanetEvent
 
 
-# Загружает список планет из json файла.
+# Загружает список планет из json файла и возвращает его.
 def load_planets(path: str) -> list[Planet]:
 
+    # Возвращает список с событиями на планете.
     def load_events_list(d: list[dict]) -> list[PlanetEvent]:
         return [PlanetEvent(item['name'], item['description'], list(item['commands']), float(item['prob'])) for item in d]
 

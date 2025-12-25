@@ -6,13 +6,14 @@
     "type": 1,
     "danger": 6,
     "eta": 114,
+    "temperature": -68,
     "events": [
       {
         "name": "Тестовое событие",
         "description": "Что-то случилось",
         "commands": [
-          "resources add 50 10",
-          "crew add 10 50"
+          "resources add 10 10",
+          "crew add 10 5"
         ],
         "prob": 0.5
       },
@@ -20,13 +21,12 @@
         "name": "Тестовое событие 2",
         "description": "Что-то случилось 2",
         "commands": [
-          "resources add 100 10",
-          "crew add 200 50"
+          "resources remove 15 25",
+          "crew remove 2 4"
         ],
-        "prob": 0.5
+        "prob": 0.25
       }
-    ],
-    "temperature": -68
+    ]
   },
   {
     "id": 2,
