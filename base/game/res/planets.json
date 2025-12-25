@@ -6,6 +6,26 @@
     "type": 1,
     "danger": 6,
     "eta": 114,
+    "events": [
+      {
+        "name": "Тестовое событие",
+        "description": "Что-то случилось",
+        "commands": [
+          "resources add 50 10",
+          "crew add 10 50"
+        ],
+        "prob": 0.5
+      },
+      {
+        "name": "Тестовое событие 2",
+        "description": "Что-то случилось 2",
+        "commands": [
+          "resources add 100 10",
+          "crew add 200 50"
+        ],
+        "prob": 0.5
+      }
+    ],
     "temperature": -68
   },
   {

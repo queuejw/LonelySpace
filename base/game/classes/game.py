@@ -6,6 +6,7 @@ import colorama
 import playsound3
 
 from base.core import components
+from base.core.clamp import clamp
 from base.game.classes.planet.planet import Planet
 from base.game.classes.ship.ship import Ship
 
@@ -74,16 +75,6 @@ def print_planets_help(planets_count: int):
         f"{colorama.Fore.CYAN}planet [ЧИСЛО]{colorama.Fore.GREEN} - Информация о планете. При помощи {colorama.Fore.CYAN}[ЧИСЛО]{colorama.Fore.GREEN} вы можете указать номер планеты. {colorama.Fore.CYAN}[ЧИСЛО]{colorama.Fore.GREEN} должно находиться в пределах от 0 до {planets_count}. Если не указать, будет выбрана случайная планета.\n"
     )
     print(text)
-
-
-# Возвращает новое значение в пределах от min_value до max_value
-def clamp(value, min_value, max_value):
-    if value > max_value:
-        return max_value
-    if value < min_value:
-        return min_value
-    return value
-
 
 # Вычисляет время до завершения полёта, в секундах
 def calculate_time(ship_speed: int, planet_distance: int) -> int:

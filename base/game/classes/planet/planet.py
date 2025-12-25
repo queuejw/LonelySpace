@@ -3,6 +3,8 @@ from base.game.classes.planet.planet_event import PlanetEvent
 
 class Planet:
     """
+    Класс планеты
+
     Записка от пришельцев, типы планет:
         0	Газовый гигант
         1	Каменистая
