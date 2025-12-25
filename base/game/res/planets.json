@@ -9,22 +9,32 @@
     "temperature": -68,
     "events": [
       {
-        "name": "Тестовое событие",
-        "description": "Что-то случилось",
+        "name": "Солнечный выброс",
+        "description": "Мощный солнечный выброс перегружает системы корабля на орбите Меркурия.",
         "commands": [
-          "resources add 10 10",
-          "crew add 10 5"
+          "module_computer 0",
+          "oxygen remove 10 5"
         ],
-        "prob": 0.5
+        "prob": 0.10,
+        "color": "red"
       },
       {
-        "name": "Тестовое событие 2",
-        "description": "Что-то случилось 2",
+        "name": "Температурный шок",
+        "description": "Резкий переход между дневной и ночной сторонами вызывает деформацию корпуса.",
         "commands": [
-          "resources remove 15 25",
-          "crew remove 2 4"
+          "strength remove 15 5"
         ],
-        "prob": 0.25
+        "prob": 0.12,
+        "color": "red"
+      },
+      {
+        "name": "Кратерные залежи",
+        "description": "В глубоких кратерах обнаружены редкие минеральные образования.",
+        "commands": [
+          "resources add 30 10"
+        ],
+        "prob": 0.08,
+        "color": "green"
       }
     ]
   },
@@ -35,7 +45,57 @@
     "type": 6,
     "danger": 9,
     "eta": 149,
-    "temperature": 446
+    "temperature": 446,
+    "events": [
+      {
+        "name": "Перегрев оборудования",
+        "description": "Экстремальная жара выводит системы из строя.",
+        "commands": [
+          "module_cooling_system 0",
+          "strength remove 5 2"
+        ],
+        "prob": 0.1,
+        "color": "red"
+      },
+      {
+        "name": "Ядовитый туман",
+        "description": "Токсичные газы проникают в корабль.",
+        "commands": [
+          "crew remove 20 10",
+          "oxygen remove 15 5"
+        ],
+        "prob": 0.30,
+        "color": "red"
+      },
+      {
+        "name": "Химические ресурсы",
+        "description": "Собраны редкие токсичные соединения.",
+        "commands": [
+          "resources add 45 15"
+        ],
+        "prob": 0.25,
+        "color": "green"
+      },
+      {
+        "name": "Отказ жизнеобеспечения",
+        "description": "Фильтры не выдержали нагрузки.",
+        "commands": [
+          "module_life_support 0"
+        ],
+        "prob": 0.20,
+        "color": "red"
+      },
+      {
+        "name": "Краткая стабилизация",
+        "description": "Удалось временно стабилизировать системы.",
+        "commands": [
+          "module_life_support 1",
+          "crew add 5 2"
+        ],
+        "prob": 0.15,
+        "color": "red"
+      }
+    ]
   },
   {
     "id": 3,
@@ -44,7 +104,27 @@
     "type": 4,
     "danger": 3,
     "eta": 60,
-    "temperature": -10
+    "temperature": -10,
+    "events": [
+      {
+        "name": "Руины мегаполиса",
+        "description": "Обнаружены остатки древнего мегаполиса с уцелевшими хранилищами.",
+        "commands": [
+          "resources add 35 15"
+        ],
+        "prob": 0.08,
+        "color": "green"
+      },
+      {
+        "name": "Нестабильная биосфера",
+        "description": "Мутанты атаковали наш корабль!",
+        "commands": [
+          "crew remove 15 5"
+        ],
+        "prob": 0.04,
+        "color": "red"
+      }
+    ]
   },
   {
     "id": 4,
@@ -53,7 +133,47 @@
     "type": 5,
     "danger": 4,
     "eta": 73,
-    "temperature": 30
+    "temperature": 30,
+    "events": [
+      {
+        "name": "Атака демонов",
+        "description": "Демоны атаковали наш корабль!",
+        "commands": [
+          "strength remove 7 3",
+          "crew remove 2 1"
+        ],
+        "prob": 0.04,
+        "color": "red"
+      },
+      {
+        "name": "Демоны ликвидированы",
+        "description": "Мы отразили атаку демонов! Собраны ресурсы.",
+        "commands": [
+          "resources add 40 10"
+        ],
+        "prob": 0.07,
+        "color": "green"
+      },
+      {
+        "name": "Глобальная пылевая буря",
+        "description": "Плотная пылевая буря охватывает планету, нарушая работу корабля.",
+        "commands": [
+          "module_cooling_system 0",
+          "strength remove 8 5"
+        ],
+        "prob": 0.12,
+        "color": "red"
+      },
+      {
+        "name": "Древние русла рек",
+        "description": "Сканеры фиксируют высохшие каналы, где сохранились полезные минералы.",
+        "commands": [
+          "resources add 25 10"
+        ],
+        "prob": 0.10,
+        "color": "green"
+      }
+    ]
   },
   {
     "id": 5,
@@ -62,7 +182,47 @@
     "type": 0,
     "danger": 7,
     "eta": 140,
-    "temperature": -122
+    "temperature": -122,
+    "event": [
+      {
+        "name": "Радиационный пояс",
+        "description": "Корабль входит в мощный радиационный пояс Юпитера, перегружая электронику.",
+        "commands": [
+          "module_computer 0",
+          "crew remove 10 5"
+        ],
+        "prob": 0.10
+      },
+      {
+        "name": "Турбулентные слои атмосферы",
+        "description": "Резкие потоки в верхних слоях атмосферы дестабилизируют корабль.",
+        "commands": [
+          "strength remove 10 5",
+          "module_engine 0"
+        ],
+        "prob": 0.05,
+        "color": "yellow"
+      },
+      {
+        "name": "Анализ Большого Красного Пятна",
+        "description": "Уникальная возможность изучить древний шторм приносит ценные данные.",
+        "commands": [
+          "resources add 35 15"
+        ],
+        "prob": 0.06,
+        "color": "green"
+      },
+      {
+        "name": "Электромагнитная аномалия",
+        "description": "Мощное магнитное поле вызывает сбои в жизнеобеспечении.",
+        "commands": [
+          "module_life_support 0",
+          "oxygen remove 10 5"
+        ],
+        "prob": 0.05,
+        "color": "red"
+      }
+    ]
   },
   {
     "id": 6,
@@ -71,7 +231,56 @@
     "type": 0,
     "danger": 6,
     "eta": 145,
-    "temperature": -113
+    "temperature": -113,
+    "events": [
+      {
+        "name": "Обломки колец",
+        "description": "Корабль проходит слишком близко к кольцам и получает повреждения от ледяных обломков.",
+        "commands": [
+          "strength remove 15 5"
+        ],
+        "prob": 0.10,
+        "color": "red"
+      },
+      {
+        "name": "Электрический шторм",
+        "description": "В атмосфере Сатурна бушует мощный электрический шторм, влияющий на системы корабля.",
+        "commands": [
+          "module_computer 0",
+          "oxygen remove 8 4"
+        ],
+        "prob": 0.08,
+        "color": "red"
+      },
+      {
+        "name": "Исследование колец",
+        "description": "Анализ структуры колец Сатурна приносит ценные научные данные.",
+        "commands": [
+          "resources add 25 10"
+        ],
+        "prob": 0.07,
+        "color": "cyan"
+      },
+      {
+        "name": "Гравитационная стабилизация",
+        "description": "Стабильная орбита вокруг Сатурна позволяет провести ремонтные работы.",
+        "commands": [
+          "module_engine 1",
+          "module_cooling_system 1"
+        ],
+        "prob": 0.06,
+        "color": "green"
+      },
+      {
+        "name": "Магнитное возмущение",
+        "description": "Колебания магнитосферы вызывают кратковременные сбои оборудования.",
+        "commands": [
+          "strength remove 10 4"
+        ],
+        "prob": 0.05,
+        "color": "yellow"
+      }
+    ]
   },
   {
     "id": 7,
@@ -80,7 +289,56 @@
     "type": 2,
     "danger": 5,
     "eta": 110,
-    "temperature": -179
+    "temperature": -179,
+    "events": [
+      {
+        "name": "Смещённая магнитосфера",
+        "description": "Аномальное магнитное поле Урана вызывает нестабильную работу бортовых систем.",
+        "commands": [
+          "module_computer 0",
+          "oxygen remove 10 5"
+        ],
+        "prob": 0.09,
+        "color": "red"
+      },
+      {
+        "name": "Экстремальная смена сезонов",
+        "description": "Резкие температурные контрасты влияют на прочность корпуса.",
+        "commands": [
+          "strength remove 12 4"
+        ],
+        "prob": 0.08,
+        "color": "yellow"
+      },
+      {
+        "name": "Метановые облака",
+        "description": "Анализ плотных метановых облаков приносит полезные научные данные.",
+        "commands": [
+          "resources add 25 10"
+        ],
+        "prob": 0.07,
+        "color": "cyan"
+      },
+      {
+        "name": "Спокойный полярный регион",
+        "description": "Необычно стабильная зона позволяет провести обслуживание корабля.",
+        "commands": [
+          "module_engine 1",
+          "module_life_support 1"
+        ],
+        "prob": 0.06,
+        "color": "green"
+      },
+      {
+        "name": "Ледяные ветра",
+        "description": "Сверххолодные ветра пронизывают верхние слои атмосферы.",
+        "commands": [
+          "crew remove 8 4"
+        ],
+        "prob": 0.05,
+        "color": "yellow"
+      }
+    ]
   },
   {
     "id": 8,
@@ -89,7 +347,56 @@
     "type": 2,
     "danger": 6,
     "eta": 115,
-    "temperature": -152
+    "temperature": -152,
+    "events": [
+      {
+        "name": "Сверхзвуковые ветра",
+        "description": "Ветры Нептуна достигают экстремальных скоростей и срывают стабилизацию корабля.",
+        "commands": [
+          "strength remove 18 6",
+          "module_engine 0"
+        ],
+        "prob": 0.09,
+        "color": "red"
+      },
+      {
+        "name": "Глубинный шторм",
+        "description": "Мощный вихрь формируется в атмосфере и затягивает корабль.",
+        "commands": [
+          "crew remove 10 5"
+        ],
+        "prob": 0.08,
+        "color": "red"
+      },
+      {
+        "name": "Тепловой выброс",
+        "description": "Внутреннее тепло планеты создаёт нестабильные потоки энергии.",
+        "commands": [
+          "oxygen remove 10 5"
+        ],
+        "prob": 0.07,
+        "color": "yellow"
+      },
+      {
+        "name": "Исчезающий вихрь",
+        "description": "Редкий шторм распадается прямо во время наблюдения.",
+        "commands": [
+          "resources add 30 15"
+        ],
+        "prob": 0.06,
+        "color": "cyan"
+      },
+      {
+        "name": "Стабильная атмосфера",
+        "description": "Необычно спокойный период позволяет провести ремонт.",
+        "commands": [
+          "module_engine 1",
+          "module_cooling_system 1"
+        ],
+        "prob": 0.05,
+        "color": "green"
+      }
+    ]
   },
   {
     "id": 9,
@@ -332,7 +639,19 @@
     "type": 3,
     "danger": 9,
     "eta": 81,
-    "temperature": 822
+    "temperature": 822,
+    "events": [
+      {
+        "name": "Перегрев оборудования",
+        "description": "Экстремальная жара выводит системы из строя.",
+        "commands": [
+          "module_cooling_system 0",
+          "strength remove 5 2"
+        ],
+        "prob": 0.06,
+        "color": "red"
+      }
+    ]
   },
   {
     "id": 36,
@@ -476,6 +795,18 @@
     "type": 3,
     "danger": 9,
     "eta": 90,
-    "temperature": 1400
+    "temperature": 1400,
+    "events": [
+      {
+        "name": "Перегрев оборудования",
+        "description": "Экстремальная жара выводит системы из строя.",
+        "commands": [
+          "module_cooling_system 0",
+          "strength remove 5 2"
+        ],
+        "prob": 0.06,
+        "color": "red"
+      }
+    ]
   }
 ]

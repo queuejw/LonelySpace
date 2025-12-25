@@ -12,7 +12,7 @@ def load_planets(path: str) -> list[Planet]:
 
     # Возвращает список с событиями на планете.
     def load_events_list(d: list[dict]) -> list[PlanetEvent]:
-        return [PlanetEvent(item['name'], item['description'], list(item['commands']), float(item['prob'])) for item in d]
+        return [PlanetEvent(item['name'], item['description'], list(item['commands']), float(item['prob']), item['color']) for item in d]
 
     if components.SETTINGS.get_debug_mode():
         print(f"Попытка загрузить планеты из файла {path}")

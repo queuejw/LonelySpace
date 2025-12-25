@@ -1,16 +1,36 @@
 import random
 
+import colorama
+
 from base.core import components
 from base.core.clamp import clamp
 
 
 # Класс события на планете
 class PlanetEvent:
-    def __init__(self, m_event_name: str, m_event_description: str, m_event_commands: list[str], m_prob: float):
+
+    # Возвращает цвет текста
+    @staticmethod
+    def get_text_color(value: str) -> str:
+        match value:
+            case "red":
+                return colorama.Fore.RED
+            case "cyan":
+                return colorama.Fore.CYAN
+            case "yellow":
+                return colorama.Fore.YELLOW
+
+            # Зеленый - цвет по умолчанию
+            case _:
+                return colorama.Fore.GREEN
+
+
+    def __init__(self, m_event_name: str, m_event_description: str, m_event_commands: list[str], m_prob: float, m_color: str):
         self.event_name: str = m_event_name  # Название события, в игре пока что не используется, но это удобно создателям.
         self.event_description: str = m_event_description  # Описание события (то, что увидит игрок в Последних действиях)
         self.event_commands: list[str] = m_event_commands  # Команда(-ы) для генерации события(-ий).
         self.event_prob: float = m_prob  # Вероятность события (от 0.000 до 1.000)
+        self.event_text_color: str = self.get_text_color(m_color) # Цвет текста события.
 
     # Запуск события (или событий)
     def run_event(self) -> bool:
@@ -21,8 +41,8 @@ class PlanetEvent:
             return False
         if len(self.event_commands) < 1:
             if components.SETTINGS.get_debug_mode():
-                print(f"События не найдены.")
-            return False
+                print(f"События не найдены. Возможно, планета без событий.")
+            return True
 
         def handle_event_command(command: list[str]):
             # Первый аргумент
