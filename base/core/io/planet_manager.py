@@ -3,7 +3,7 @@ import json
 import colorama
 
 from base.core import components, constants
-from base.game.classes.planet import Planet
+from base.game.classes.planet.planet import Planet
 
 
 # Загружает список планет из json файла.

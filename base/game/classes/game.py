@@ -6,8 +6,8 @@ import colorama
 import playsound3
 
 from base.core import components
-from base.game.classes.planet import Planet
-from base.game.classes.ship import Ship
+from base.game.classes.planet.planet import Planet
+from base.game.classes.ship.ship import Ship
 
 
 # Выводит на экран текст помощи (основной)
@@ -318,7 +318,7 @@ class Game:
         if self.planets is None:
             if components.SETTINGS.get_debug_mode():
                 print(colorama.Fore.RED + "Список планет не был загружен.")
-            return Planet(0, "None", "None", 0, 0, 0, 0, False, 'None')
+            return Planet(0, "None", "None", 0, 0, 0, 0, [], False, 'None')
 
         l = [x for x in self.planets if x.planet_id == m_id]
         if len(l) < 1:
@@ -351,7 +351,7 @@ class Game:
         planet: Planet = self.planets[position]
         text = ''
         if planet.custom_planet:
-            text += f"{colorama.Fore.CYAN}Планета сообщества от {planet.custom_author}{colorama.Fore.GREEN}\n"
+            text += f"{colorama.Fore.CYAN}Планета сообщества от {planet.planet_author}{colorama.Fore.GREEN}\n"
         text += (
             f"{colorama.Fore.GREEN}Планета: {colorama.Fore.CYAN}{planet.planet_name}{colorama.Fore.GREEN}\n"
             f"{colorama.Fore.GREEN}ID: {colorama.Fore.CYAN}{planet.planet_id}{colorama.Fore.GREEN}\n\n"

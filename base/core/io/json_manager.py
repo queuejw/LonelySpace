@@ -21,7 +21,7 @@ def load_file(path: str, skip_debug_prints: bool = False) -> dict:
                     print(f"Файл {path} успешно загружен")
                     print(loaded_json)
             if path == SAVE_FILE_PATH:
-                from base.game.classes.ship import Ship
+                from base.game.classes.ship.ship import Ship
                 return {
                     'default': False,
                     'ship': Ship('loaded').import_from_dict(loaded_json)
