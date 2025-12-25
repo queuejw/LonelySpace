@@ -371,6 +371,8 @@ class Game:
             # Проходим по списку событий на планете, если они есть.
             if len(planet.planet_events) > 0:
                 for i in planet.planet_events:
+                    if random.random() < 0.7:
+                        continue
                     if i.run_event():
                         self.update_last_messages(i.event_description)
 
@@ -811,7 +813,7 @@ class Game:
                     all_modules_damaged_notification_enabled = True
 
             # Генерируем случайное событие, если повезет
-            if random.random() > 0.4:
+            if random.random() < 0.4:
                 await self.events_generator()
 
             # Обновление счётчика дней.
