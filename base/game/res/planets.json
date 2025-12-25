@@ -15,7 +15,7 @@
           "module_computer 0",
           "oxygen remove 10 5"
         ],
-        "prob": 0.10,
+        "prob": 0.04,
         "color": "red"
       },
       {
@@ -24,7 +24,7 @@
         "commands": [
           "strength remove 15 5"
         ],
-        "prob": 0.12,
+        "prob": 0.03,
         "color": "red"
       },
       {
@@ -33,7 +33,7 @@
         "commands": [
           "resources add 30 10"
         ],
-        "prob": 0.08,
+        "prob": 0.04,
         "color": "green"
       }
     ]
@@ -54,7 +54,7 @@
           "module_cooling_system 0",
           "strength remove 5 2"
         ],
-        "prob": 0.1,
+        "prob": 0.02,
         "color": "red"
       },
       {
@@ -64,7 +64,7 @@
           "crew remove 20 10",
           "oxygen remove 15 5"
         ],
-        "prob": 0.30,
+        "prob": 0.02,
         "color": "red"
       },
       {
@@ -73,7 +73,7 @@
         "commands": [
           "resources add 45 15"
         ],
-        "prob": 0.25,
+        "prob": 0.04,
         "color": "green"
       },
       {
@@ -82,17 +82,7 @@
         "commands": [
           "module_life_support 0"
         ],
-        "prob": 0.20,
-        "color": "red"
-      },
-      {
-        "name": "Краткая стабилизация",
-        "description": "Удалось временно стабилизировать системы.",
-        "commands": [
-          "module_life_support 1",
-          "crew add 5 2"
-        ],
-        "prob": 0.15,
+        "prob": 0.02,
         "color": "red"
       }
     ]
@@ -191,7 +181,7 @@
           "module_computer 0",
           "crew remove 10 5"
         ],
-        "prob": 0.10
+        "prob": 0.06
       },
       {
         "name": "Турбулентные слои атмосферы",
@@ -298,7 +288,7 @@
           "module_computer 0",
           "oxygen remove 10 5"
         ],
-        "prob": 0.09,
+        "prob": 0.07,
         "color": "red"
       },
       {
