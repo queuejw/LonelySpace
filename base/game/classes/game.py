@@ -53,6 +53,7 @@ def print_ship_help():
         f"{colorama.Fore.GREEN}Основные команды:\n"
         f"{colorama.Fore.CYAN}rename [НАЗВАНИЕ]{colorama.Fore.GREEN} - Изменяет название корабля на [НАЗВАНИЕ]. Это бесплатно и ни на что не влияет.\n"
         f"{colorama.Fore.CYAN}status{colorama.Fore.GREEN} - Выводит информацию о статусе систем корабля.\n"
+        f"{colorama.Fore.CYAN}goto{colorama.Fore.GREEN} - Отправиться на случайную планету\n"
         f"{colorama.Fore.CYAN}goto [ID]{colorama.Fore.GREEN} - Отправиться на планету с выбранным ID\n"
         f"{colorama.Fore.CYAN}goto leave{colorama.Fore.GREEN} - Покинуть планету\n"
         f"{colorama.Fore.CYAN}goto cancel{colorama.Fore.GREEN} - Отменить полёт\n"
