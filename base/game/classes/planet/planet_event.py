@@ -264,10 +264,11 @@ class PlanetEvent:
     # Запуск события (или событий)
     def run_event(self) -> bool:
         r = random.random()
-        if self.event_prob > r:
+        print(f"{self.event_name} -> {r} > {self.event_prob}")
+        if r > self.event_prob:
             # Не повезло в этот раз
             if components.SETTINGS.get_debug_mode():
-                print(f"Ожидалось событие {self.event_name} на планете, но в этот раз не повезло, т.к. не выполнилось условие {self.event_prob} > {r}")
+                print(f"Ожидалось событие {self.event_name} на планете, но в этот раз не повезло, т.к. выполнилось условие {r} > {self.event_prob}")
             return False
         if len(self.event_commands) < 1:
             if components.SETTINGS.get_debug_mode():
