@@ -264,7 +264,8 @@ class PlanetEvent:
     # Запуск события (или событий)
     def run_event(self) -> bool:
         r = random.random()
-        print(f"{self.event_name} -> {r} > {self.event_prob}")
+        if components.SETTINGS.get_debug_mode():
+            print(f"{self.event_name} -> {r} > {self.event_prob}")
         if r > self.event_prob:
             # Не повезло в этот раз
             if components.SETTINGS.get_debug_mode():
