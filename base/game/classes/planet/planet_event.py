@@ -34,7 +34,6 @@ class PlanetEvent:
 
     # Обработка команды
     def handle_event_command(self, command: list[str]):
-        print(command)
         # Первый аргумент
         match command[0]:
             # Изменение ресурсов
@@ -264,10 +263,11 @@ class PlanetEvent:
 
     # Запуск события (или событий)
     def run_event(self) -> bool:
-        if random.random() < self.event_prob / 4:
+        r = random.random()
+        if self.event_prob > r:
             # Не повезло в этот раз
             if components.SETTINGS.get_debug_mode():
-                print(f"Ожидалось событие {self.event_name} на планете, но в этот раз не повезло.")
+                print(f"Ожидалось событие {self.event_name} на планете, но в этот раз не повезло, т.к. не выполнилось условие {self.event_prob} > {r}")
             return False
         if len(self.event_commands) < 1:
             if components.SETTINGS.get_debug_mode():

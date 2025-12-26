@@ -371,13 +371,13 @@ class Game:
             # Проходим по списку событий на планете, если они есть.
             if len(planet.planet_events) > 0:
                 for i in planet.planet_events:
-                    if random.random() < 0.7:
+                    if random.random() < 0.1:
                         continue
                     if i.run_event():
                         self.update_last_messages(i.event_description)
 
             # Получение ресурсов (независимо от планеты)
-            if random.random() < 0.09:
+            if random.random() < 0.05:
 
                 danger_level = planet.planet_danger
 

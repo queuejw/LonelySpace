@@ -15,7 +15,7 @@
           "module_computer 0",
           "oxygen remove 10 5"
         ],
-        "prob": 0.04,
+        "prob": 0.004,
         "color": "red"
       },
       {
@@ -24,7 +24,7 @@
         "commands": [
           "strength remove 15 5"
         ],
-        "prob": 0.03,
+        "prob": 0.005,
         "color": "red"
       },
       {
@@ -33,7 +33,7 @@
         "commands": [
           "resources add 30 10"
         ],
-        "prob": 0.04,
+        "prob": 0.008,
         "color": "green"
       }
     ]
@@ -54,17 +54,17 @@
           "module_cooling_system 0",
           "strength remove 5 2"
         ],
-        "prob": 0.02,
+        "prob": 0.004,
         "color": "red"
       },
       {
         "name": "Ядовитый туман",
         "description": "Токсичные газы проникают в корабль.",
         "commands": [
-          "crew remove 20 10",
+          "crew remove 15 10",
           "oxygen remove 15 5"
         ],
-        "prob": 0.02,
+        "prob": 0.002,
         "color": "red"
       },
       {
@@ -73,16 +73,18 @@
         "commands": [
           "resources add 45 15"
         ],
-        "prob": 0.04,
+        "prob": 0.004,
         "color": "green"
       },
       {
         "name": "Отказ жизнеобеспечения",
         "description": "Фильтры не выдержали нагрузки.",
         "commands": [
-          "module_life_support 0"
+          "module_life_support 0",
+          "strength remove 5 2",
+          "crew remove 5 2"
         ],
-        "prob": 0.02,
+        "prob": 0.001,
         "color": "red"
       }
     ]
@@ -102,14 +104,14 @@
         "commands": [
           "resources add 35 15"
         ],
-        "prob": 0.08,
+        "prob": 0.008,
         "color": "green"
       },
       {
         "name": "Нестабильная биосфера",
         "description": "Мутанты атаковали наш корабль!",
         "commands": [
-          "crew remove 15 5"
+          "crew remove 7 5"
         ],
         "prob": 0.04,
         "color": "red"
