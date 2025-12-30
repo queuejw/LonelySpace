@@ -961,9 +961,9 @@ class Game:
 
             if planet.planet_type == 0:
                 self.update_last_messages(
-                    f"{colorama.Fore.GREEN}Добро пожаловать в нижний слой атмосферы планеты {planet.planet_name}!")
+                    f"{colorama.Fore.BLACK}{colorama.Back.GREEN}Добро пожаловать в нижний слой атмосферы планеты {planet.planet_name}!{colorama.Back.RESET}")
             else:
-                self.update_last_messages(f"{colorama.Fore.GREEN}Добро пожаловать на планету {planet.planet_name}!")
+                self.update_last_messages(f"{colorama.Fore.BLACK}{colorama.Back.GREEN}Добро пожаловать на планету {planet.planet_name}!{colorama.Back.RESET}")
             self.player.visited_planets.append(planet.planet_id)  # Добавляем ID в список посещённых планет.
             self.player.planet_id = self.player.planet_id
             self.player.on_planet = True
