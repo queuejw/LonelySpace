@@ -18,7 +18,7 @@ def load_planets(path: str) -> list[Planet]:
     if components.SETTINGS.get_debug_mode():
         print(f"Попытка загрузить планеты из файла {path}")
     try:
-        path = path.replace("\\","/") #линукс совместимость
+        path = path.replace("\\", "/")  # линукс совместимость
         with open(path, 'r', encoding="utf-8") as planets_file:
             planets = json.load(planets_file)
             planets_file.close()

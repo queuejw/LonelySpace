@@ -269,7 +269,8 @@ class PlanetEvent:
         if r > self.event_prob:
             # Не повезло в этот раз
             if components.SETTINGS.get_debug_mode():
-                print(f"Ожидалось событие {self.event_name} на планете, но в этот раз не повезло, т.к. выполнилось условие {r} > {self.event_prob}")
+                print(
+                    f"Ожидалось событие {self.event_name} на планете, но в этот раз не повезло, т.к. выполнилось условие {r} > {self.event_prob}")
             return False
         if len(self.event_commands) < 1:
             if components.SETTINGS.get_debug_mode():

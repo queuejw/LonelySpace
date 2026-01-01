@@ -15,7 +15,8 @@ class Planet:
         6	Токсичная
     """
 
-    def __init__(self, m_id: int, m_name: str, m_description: str, m_type: int, m_danger: int, m_eta: int, m_temp: int, m_events: list[PlanetEvent], m_custom_planet: bool, m_author: str):
+    def __init__(self, m_id: int, m_name: str, m_description: str, m_type: int, m_danger: int, m_eta: int, m_temp: int,
+                 m_events: list[PlanetEvent], m_custom_planet: bool, m_author: str):
         self.planet_id: int = m_id  # Id планеты
         self.planet_name: str = m_name  # Название планеты
         self.planet_description: str = m_description  # Описание планеты
@@ -23,8 +24,9 @@ class Planet:
         self.planet_danger: int = m_danger  # Уровень опасности (от 0 до 9)
         self.planet_eta: int = m_eta  # Примерное время полёта
         self.planet_temp: int = m_temp  # Средняя температура на планете
-        self.planet_events: list[PlanetEvent] = m_events  # События, которые могут произойти на планете. Подробнее в database/CREATING-PLANETS.md
-        self.custom_planet: bool = m_custom_planet # Это планета сообщества?
+        self.planet_events: list[
+            PlanetEvent] = m_events  # События, которые могут произойти на планете. Подробнее в database/CREATING-PLANETS.md
+        self.custom_planet: bool = m_custom_planet  # Это планета сообщества?
         self.planet_author: str = m_author  # Автор планеты
 
     # Возвращает текст типа планеты

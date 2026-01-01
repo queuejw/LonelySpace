@@ -77,19 +77,19 @@ class Engine:
             keyboard.add_hotkey('space', self.on_space)  # Если игрок нажал пробел, выполнится функция on_space
         except ImportError:
             try:
-            	import tkeyboard
-            	tkeyboard.add_hotkey("space", self.on_space)
-            	input = tkeyboard.get_user_input
+                from base.core import tkeyboard
+                tkeyboard.add_hotkey("space", self.on_space)
+                input = tkeyboard.get_user_input
             except:
-            	print(
-                (
-                    f"{colorama.Fore.BLACK}{colorama.Back.RED}Не удалось подключить клавиатуру.{colorama.Fore.RED}{colorama.Back.RESET}\n\n"
-                    "Если у вас Linux, то для запуска требуются права суперпользователя. Попробуйте запустить через sudo:\n"
-                    "sudo python3 main.py\n\n"
-                    f"Если не помогло, свяжитесь с нами: {constants.PRODUCT_GITHUB_LINK}"
+                print(
+                    (
+                        f"{colorama.Fore.BLACK}{colorama.Back.RED}Не удалось подключить клавиатуру.{colorama.Fore.RED}{colorama.Back.RESET}\n\n"
+                        "Если у вас Linux, то для запуска требуются права суперпользователя. Попробуйте запустить через sudo:\n"
+                        "sudo python3 main.py\n\n"
+                        f"Если не помогло, свяжитесь с нами: {constants.PRODUCT_GITHUB_LINK}"
+                    )
                 )
-            )
-            	self.running = False
+                self.running = False
 
         while self.running:
             if not self.blocked and self.pending_input:

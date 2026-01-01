@@ -375,10 +375,10 @@ class Game:
                     if random.random() < 0.1:
                         continue
                     if i.run_event():
-                        self.update_last_messages(i.event_description)
+                        self.update_last_messages(f"{i.event_text_color}{i.event_description}")
 
             # Получение ресурсов (независимо от планеты)
-            if random.random() < 0.05:
+            if random.random() < 0.1:
 
                 danger_level = planet.planet_danger
 
@@ -402,6 +402,7 @@ class Game:
 
         else:
             # События, которые происходят только в космосе
+            # todo в будущем перенести их в json и разрешить игроку создавать свои
             # Негативные события
             if random.random() > 0.5:
                 # Сбой ИИ навигации
@@ -963,7 +964,8 @@ class Game:
                 self.update_last_messages(
                     f"{colorama.Fore.BLACK}{colorama.Back.GREEN}Добро пожаловать в нижний слой атмосферы планеты {planet.planet_name}!{colorama.Back.RESET}")
             else:
-                self.update_last_messages(f"{colorama.Fore.BLACK}{colorama.Back.GREEN}Добро пожаловать на планету {planet.planet_name}!{colorama.Back.RESET}")
+                self.update_last_messages(
+                    f"{colorama.Fore.BLACK}{colorama.Back.GREEN}Добро пожаловать на планету {planet.planet_name}!{colorama.Back.RESET}")
             self.player.visited_planets.append(planet.planet_id)  # Добавляем ID в список посещённых планет.
             self.player.planet_id = self.player.planet_id
             self.player.on_planet = True
