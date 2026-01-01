@@ -6,7 +6,37 @@
     "type": 1,
     "danger": 6,
     "eta": 114,
-    "temperature": -68
+    "temperature": -68,
+    "events": [
+      {
+        "name": "Солнечный выброс",
+        "description": "Мощный солнечный выброс перегружает системы корабля на орбите Меркурия.",
+        "commands": [
+          "module_computer 0",
+          "oxygen remove 10 5"
+        ],
+        "prob": 0.04,
+        "color": "red"
+      },
+      {
+        "name": "Температурный шок",
+        "description": "Резкий переход между дневной и ночной сторонами вызывает деформацию корпуса.",
+        "commands": [
+          "strength remove 15 5"
+        ],
+        "prob": 0.05,
+        "color": "red"
+      },
+      {
+        "name": "Кратерные залежи",
+        "description": "В глубоких кратерах обнаружены редкие минеральные образования.",
+        "commands": [
+          "resources add 30 10"
+        ],
+        "prob": 0.08,
+        "color": "green"
+      }
+    ]
   },
   {
     "id": 2,
@@ -15,7 +45,49 @@
     "type": 6,
     "danger": 9,
     "eta": 149,
-    "temperature": 446
+    "temperature": 446,
+    "events": [
+      {
+        "name": "Перегрев оборудования",
+        "description": "Экстремальная жара выводит системы из строя.",
+        "commands": [
+          "module_cooling_system 0",
+          "strength remove 5 2"
+        ],
+        "prob": 0.03,
+        "color": "red"
+      },
+      {
+        "name": "Ядовитый туман",
+        "description": "Токсичные газы проникают в корабль.",
+        "commands": [
+          "crew remove 15 10",
+          "oxygen remove 15 5"
+        ],
+        "prob": 0.02,
+        "color": "red"
+      },
+      {
+        "name": "Химические ресурсы",
+        "description": "Собраны редкие токсичные соединения.",
+        "commands": [
+          "resources add 45 15"
+        ],
+        "prob": 0.04,
+        "color": "green"
+      },
+      {
+        "name": "Отказ жизнеобеспечения",
+        "description": "Фильтры не выдержали нагрузки.",
+        "commands": [
+          "module_life_support 0",
+          "strength remove 5 2",
+          "crew remove 5 2"
+        ],
+        "prob": 0.01,
+        "color": "red"
+      }
+    ]
   },
   {
     "id": 3,
@@ -24,7 +96,27 @@
     "type": 4,
     "danger": 3,
     "eta": 60,
-    "temperature": -10
+    "temperature": -10,
+    "events": [
+      {
+        "name": "Руины мегаполиса",
+        "description": "Обнаружены остатки древнего мегаполиса с уцелевшими хранилищами.",
+        "commands": [
+          "resources add 35 15"
+        ],
+        "prob": 0.08,
+        "color": "green"
+      },
+      {
+        "name": "Нестабильная биосфера",
+        "description": "Мутанты атаковали наш корабль!",
+        "commands": [
+          "crew remove 7 5"
+        ],
+        "prob": 0.04,
+        "color": "red"
+      }
+    ]
   },
   {
     "id": 4,
@@ -33,7 +125,47 @@
     "type": 5,
     "danger": 4,
     "eta": 73,
-    "temperature": 30
+    "temperature": 30,
+    "events": [
+      {
+        "name": "Атака демонов",
+        "description": "Демоны атаковали наш корабль!",
+        "commands": [
+          "strength remove 7 3",
+          "crew remove 2 1"
+        ],
+        "prob": 0.04,
+        "color": "red"
+      },
+      {
+        "name": "Демоны ликвидированы",
+        "description": "Мы отразили атаку демонов! Собраны ресурсы.",
+        "commands": [
+          "resources add 40 10"
+        ],
+        "prob": 0.07,
+        "color": "green"
+      },
+      {
+        "name": "Глобальная пылевая буря",
+        "description": "Плотная пылевая буря охватывает планету, нарушая работу корабля.",
+        "commands": [
+          "module_cooling_system 0",
+          "strength remove 8 5"
+        ],
+        "prob": 0.12,
+        "color": "red"
+      },
+      {
+        "name": "Древние русла рек",
+        "description": "Сканеры фиксируют высохшие каналы, где сохранились полезные минералы.",
+        "commands": [
+          "resources add 25 10"
+        ],
+        "prob": 0.10,
+        "color": "green"
+      }
+    ]
   },
   {
     "id": 5,
@@ -42,7 +174,47 @@
     "type": 0,
     "danger": 7,
     "eta": 140,
-    "temperature": -122
+    "temperature": -122,
+    "event": [
+      {
+        "name": "Радиационный пояс",
+        "description": "Корабль входит в мощный радиационный пояс Юпитера, перегружая электронику.",
+        "commands": [
+          "module_computer 0",
+          "crew remove 10 5"
+        ],
+        "prob": 0.06
+      },
+      {
+        "name": "Турбулентные слои атмосферы",
+        "description": "Резкие потоки в верхних слоях атмосферы дестабилизируют корабль.",
+        "commands": [
+          "strength remove 10 5",
+          "module_engine 0"
+        ],
+        "prob": 0.05,
+        "color": "yellow"
+      },
+      {
+        "name": "Анализ Большого Красного Пятна",
+        "description": "Уникальная возможность изучить древний шторм приносит ценные данные.",
+        "commands": [
+          "resources add 35 15"
+        ],
+        "prob": 0.06,
+        "color": "green"
+      },
+      {
+        "name": "Электромагнитная аномалия",
+        "description": "Мощное магнитное поле вызывает сбои в жизнеобеспечении.",
+        "commands": [
+          "module_life_support 0",
+          "oxygen remove 10 5"
+        ],
+        "prob": 0.05,
+        "color": "red"
+      }
+    ]
   },
   {
     "id": 6,
@@ -51,7 +223,56 @@
     "type": 0,
     "danger": 6,
     "eta": 145,
-    "temperature": -113
+    "temperature": -113,
+    "events": [
+      {
+        "name": "Обломки колец",
+        "description": "Корабль проходит слишком близко к кольцам и получает повреждения от ледяных обломков.",
+        "commands": [
+          "strength remove 15 5"
+        ],
+        "prob": 0.10,
+        "color": "red"
+      },
+      {
+        "name": "Электрический шторм",
+        "description": "В атмосфере Сатурна бушует мощный электрический шторм, влияющий на системы корабля.",
+        "commands": [
+          "module_computer 0",
+          "oxygen remove 8 4"
+        ],
+        "prob": 0.08,
+        "color": "red"
+      },
+      {
+        "name": "Исследование колец",
+        "description": "Анализ структуры колец Сатурна приносит ценные научные данные.",
+        "commands": [
+          "resources add 25 10"
+        ],
+        "prob": 0.07,
+        "color": "cyan"
+      },
+      {
+        "name": "Гравитационная стабилизация",
+        "description": "Стабильная орбита вокруг Сатурна позволяет провести ремонтные работы.",
+        "commands": [
+          "module_engine 1",
+          "module_cooling_system 1"
+        ],
+        "prob": 0.06,
+        "color": "green"
+      },
+      {
+        "name": "Магнитное возмущение",
+        "description": "Колебания магнитосферы вызывают кратковременные сбои оборудования.",
+        "commands": [
+          "strength remove 10 4"
+        ],
+        "prob": 0.05,
+        "color": "yellow"
+      }
+    ]
   },
   {
     "id": 7,
@@ -60,7 +281,56 @@
     "type": 2,
     "danger": 5,
     "eta": 110,
-    "temperature": -179
+    "temperature": -179,
+    "events": [
+      {
+        "name": "Смещённая магнитосфера",
+        "description": "Аномальное магнитное поле Урана вызывает нестабильную работу бортовых систем.",
+        "commands": [
+          "module_computer 0",
+          "oxygen remove 10 5"
+        ],
+        "prob": 0.07,
+        "color": "red"
+      },
+      {
+        "name": "Экстремальная смена сезонов",
+        "description": "Резкие температурные контрасты влияют на прочность корпуса.",
+        "commands": [
+          "strength remove 12 4"
+        ],
+        "prob": 0.08,
+        "color": "yellow"
+      },
+      {
+        "name": "Метановые облака",
+        "description": "Анализ плотных метановых облаков приносит полезные научные данные.",
+        "commands": [
+          "resources add 25 10"
+        ],
+        "prob": 0.07,
+        "color": "cyan"
+      },
+      {
+        "name": "Спокойный полярный регион",
+        "description": "Необычно стабильная зона позволяет провести обслуживание корабля.",
+        "commands": [
+          "module_engine 1",
+          "module_life_support 1"
+        ],
+        "prob": 0.06,
+        "color": "green"
+      },
+      {
+        "name": "Ледяные ветра",
+        "description": "Сверххолодные ветра пронизывают верхние слои атмосферы.",
+        "commands": [
+          "crew remove 8 4"
+        ],
+        "prob": 0.05,
+        "color": "yellow"
+      }
+    ]
   },
   {
     "id": 8,
@@ -69,7 +339,56 @@
     "type": 2,
     "danger": 6,
     "eta": 115,
-    "temperature": -152
+    "temperature": -152,
+    "events": [
+      {
+        "name": "Сверхзвуковые ветра",
+        "description": "Ветры Нептуна достигают экстремальных скоростей и срывают стабилизацию корабля.",
+        "commands": [
+          "strength remove 18 6",
+          "module_engine 0"
+        ],
+        "prob": 0.09,
+        "color": "red"
+      },
+      {
+        "name": "Глубинный шторм",
+        "description": "Мощный вихрь формируется в атмосфере и затягивает корабль.",
+        "commands": [
+          "crew remove 10 5"
+        ],
+        "prob": 0.08,
+        "color": "red"
+      },
+      {
+        "name": "Тепловой выброс",
+        "description": "Внутреннее тепло планеты создаёт нестабильные потоки энергии.",
+        "commands": [
+          "oxygen remove 10 5"
+        ],
+        "prob": 0.07,
+        "color": "yellow"
+      },
+      {
+        "name": "Исчезающий вихрь",
+        "description": "Редкий шторм распадается прямо во время наблюдения.",
+        "commands": [
+          "resources add 30 15"
+        ],
+        "prob": 0.06,
+        "color": "cyan"
+      },
+      {
+        "name": "Стабильная атмосфера",
+        "description": "Необычно спокойный период позволяет провести ремонт.",
+        "commands": [
+          "module_engine 1",
+          "module_cooling_system 1"
+        ],
+        "prob": 0.05,
+        "color": "green"
+      }
+    ]
   },
   {
     "id": 9,
@@ -78,7 +397,55 @@
     "type": 2,
     "danger": 4,
     "eta": 107,
-    "temperature": -198
+    "temperature": -198,
+    "events": [
+      {
+        "name": "Замерзающая атмосфера",
+        "description": "Атмосфера Плутона начинает оседать на поверхность, вызывая резкое похолодание.",
+        "commands": [
+          "oxygen remove 10 5",
+          "crew remove 5 2"
+        ],
+        "prob": 0.09,
+        "color": "yellow"
+      },
+      {
+        "name": "Азотные ледяные равнины",
+        "description": "Обширные равнины азотного льда содержат ценные летучие соединения.",
+        "commands": [
+          "resources add 25 10"
+        ],
+        "prob": 0.08,
+        "color": "cyan"
+      },
+      {
+        "name": "Криогейзер",
+        "description": "Неожиданный выброс замёрзших газов повреждает корпус корабля.",
+        "commands": [
+          "strength remove 12 4"
+        ],
+        "prob": 0.07,
+        "color": "red"
+      },
+      {
+        "name": "Подповерхностная активность",
+        "description": "Датчики фиксируют слабую, но устойчивую геологическую активность под льдом.",
+        "commands": [
+          "module_computer 1"
+        ],
+        "prob": 0.06,
+        "color": "green"
+      },
+      {
+        "name": "Древний ледяной разлом",
+        "description": "В глубоком разломе найдены следы необычных кристаллических структур.",
+        "commands": [
+          "resources add 15 5"
+        ],
+        "prob": 0.05,
+        "color": "cyan"
+      }
+    ]
   },
   {
     "id": 10,
@@ -87,7 +454,56 @@
     "type": 2,
     "danger": 5,
     "eta": 60,
-    "temperature": -174
+    "temperature": -174,
+    "events": [
+      {
+        "name": "Метановый иней",
+        "description": "Поверхность покрыта плотным слоем замёрзшего метана, нарушающего работу внешних сенсоров.",
+        "commands": [
+          "module_computer 0"
+        ],
+        "prob": 0.08,
+        "color": "yellow"
+      },
+      {
+        "name": "Экстремальный холод",
+        "description": "Температура падает до критических значений, влияя на состояние экипажа.",
+        "commands": [
+          "crew remove 8 4",
+          "oxygen remove 5 2"
+        ],
+        "prob": 0.09,
+        "color": "red"
+      },
+      {
+        "name": "Аномальное отражение",
+        "description": "Поверхность Эрида необычно эффективно отражает свет, улучшая сбор данных.",
+        "commands": [
+          "resources add 20 10"
+        ],
+        "prob": 0.07,
+        "color": "cyan"
+      },
+      {
+        "name": "Орбитальная стабильность",
+        "description": "Редкий период спокойствия позволяет провести техническое обслуживание.",
+        "commands": [
+          "module_engine 1",
+          "module_life_support 1"
+        ],
+        "prob": 0.06,
+        "color": "green"
+      },
+      {
+        "name": "Медленные климатические изменения",
+        "description": "Долговременные колебания климата создают нагрузку на корпус.",
+        "commands": [
+          "strength remove 10 4"
+        ],
+        "prob": 0.05,
+        "color": "yellow"
+      }
+    ]
   },
   {
     "id": 11,
@@ -96,7 +512,55 @@
     "type": 2,
     "danger": 3,
     "eta": 112,
-    "temperature": -221
+    "temperature": -221,
+    "events": [
+      {
+        "name": "Экстремальное вращение",
+        "description": "Быстрое вращение Хаумеа создаёт нестабильное гравитационное поле.",
+        "commands": [
+          "strength remove 12 4",
+          "module_engine 0"
+        ],
+        "prob": 0.09,
+        "color": "red"
+      },
+      {
+        "name": "Центробежное растяжение",
+        "description": "Необычная форма планеты вызывает деформацию корпуса корабля.",
+        "commands": [
+          "strength remove 10 4"
+        ],
+        "prob": 0.08,
+        "color": "yellow"
+      },
+      {
+        "name": "Кристаллический лёд",
+        "description": "Поверхность покрыта чистым кристаллическим водяным льдом.",
+        "commands": [
+          "resources add 25 10"
+        ],
+        "prob": 0.07,
+        "color": "cyan"
+      },
+      {
+        "name": "Кольцо Хаумеа",
+        "description": "Наблюдение за кольцом позволяет точно откалибровать системы навигации.",
+        "commands": [
+          "module_computer 1"
+        ],
+        "prob": 0.06,
+        "color": "green"
+      },
+      {
+        "name": "Орбитальная нестабильность",
+        "description": "Сложная гравитация нарушает стабильность экипажа.",
+        "commands": [
+          "crew remove 6 3"
+        ],
+        "prob": 0.05,
+        "color": "yellow"
+      }
+    ]
   },
   {
     "id": 12,
@@ -105,7 +569,55 @@
     "type": 2,
     "danger": 3,
     "eta": 103,
-    "temperature": -215
+    "temperature": -215,
+    "events": [
+      {
+        "name": "Почти отсутствующая атмосфера",
+        "description": "Разреженная атмосфера не удерживает тепло, вызывая сбои в системах жизнеобеспечения.",
+        "commands": [
+          "oxygen remove 8 4",
+          "crew remove 4 2"
+        ],
+        "prob": 0.09,
+        "color": "yellow"
+      },
+      {
+        "name": "Метаново-этановый лёд",
+        "description": "Поверхность покрыта редкими смесями метанового и этанового льда.",
+        "commands": [
+          "resources add 25 10"
+        ],
+        "prob": 0.08,
+        "color": "cyan"
+      },
+      {
+        "name": "Хрупкая поверхность",
+        "description": "Лёд трескается под действием температурных перепадов.",
+        "commands": [
+          "strength remove 10 4"
+        ],
+        "prob": 0.07,
+        "color": "red"
+      },
+      {
+        "name": "Отражающие ледяные поля",
+        "description": "Высокая отражательная способность поверхности облегчает калибровку датчиков.",
+        "commands": [
+          "module_computer 1"
+        ],
+        "prob": 0.06,
+        "color": "green"
+      },
+      {
+        "name": "Криогенные отложения",
+        "description": "В глубинных слоях льда найдены редкие замёрзшие соединения.",
+        "commands": [
+          "resources add 15 5"
+        ],
+        "prob": 0.05,
+        "color": "cyan"
+      }
+    ]
   },
   {
     "id": 13,
@@ -114,7 +626,55 @@
     "type": 1,
     "danger": 3,
     "eta": 67,
-    "temperature": 9
+    "temperature": 9,
+    "events": [
+      {
+        "name": "Криовулканический выброс",
+        "description": "Криовулкан выбрасывает воду и соли, повреждая корпус корабля.",
+        "commands": [
+          "strength remove 12 4"
+        ],
+        "prob": 0.09,
+        "color": "red"
+      },
+      {
+        "name": "Солевые пятна",
+        "description": "Яркие солевые отложения содержат редкие химические соединения.",
+        "commands": [
+          "resources add 30 10"
+        ],
+        "prob": 0.08,
+        "color": "cyan"
+      },
+      {
+        "name": "Подповерхностный лёд",
+        "description": "Датчики подтверждают наличие значительных запасов льда под поверхностью.",
+        "commands": [
+          "oxygen add 10 5",
+          "resources add 10 5"
+        ],
+        "prob": 0.07,
+        "color": "green"
+      },
+      {
+        "name": "Нестабильная кора",
+        "description": "Поверхностные трещины создают угрозу для экипажа.",
+        "commands": [
+          "crew remove 8 4"
+        ],
+        "prob": 0.06,
+        "color": "yellow"
+      },
+      {
+        "name": "Древний океан",
+        "description": "Геологические данные указывают на существование древнего океана.",
+        "commands": [
+          "module_computer 1"
+        ],
+        "prob": 0.05,
+        "color": "cyan"
+      }
+    ]
   },
   {
     "id": 14,
@@ -123,7 +683,55 @@
     "type": 1,
     "danger": 7,
     "eta": 70,
-    "temperature": -3
+    "temperature": -3,
+    "events": [
+      {
+        "name": "Вспышка красного карлика",
+        "description": "Мощная вспышка звезды обрушивает поток радиации на поверхность планеты.",
+        "commands": [
+          "crew remove 15 5",
+          "oxygen remove 10 5"
+        ],
+        "prob": 0.10,
+        "color": "red"
+      },
+      {
+        "name": "Радиационные помехи",
+        "description": "Высокий уровень излучения вызывает сбои в навигации и сенсорах.",
+        "commands": [
+          "module_computer 0"
+        ],
+        "prob": 0.08,
+        "color": "yellow"
+      },
+      {
+        "name": "Плотная атмосфера",
+        "description": "Атмосфера частично экранирует излучение, облегчая условия для экипажа.",
+        "commands": [
+          "crew add 8 4"
+        ],
+        "prob": 0.07,
+        "color": "green"
+      },
+      {
+        "name": "Потенциальная биосфера",
+        "description": "Обнаружены химические маркеры, указывающие на возможную жизнь.",
+        "commands": [
+          "resources add 25 10"
+        ],
+        "prob": 0.06,
+        "color": "cyan"
+      },
+      {
+        "name": "Контрастный климат",
+        "description": "Резкий перепад температур между освещённой и тёмной стороной планеты.",
+        "commands": [
+          "strength remove 10 4"
+        ],
+        "prob": 0.05,
+        "color": "yellow"
+      }
+    ]
   },
   {
     "id": 15,
@@ -132,7 +740,55 @@
     "type": 4,
     "danger": 5,
     "eta": 144,
-    "temperature": 8
+    "temperature": 8,
+    "events": [
+      {
+        "name": "Гидротермальные источники",
+        "description": "Подводные разломы выбрасывают горячие минерализованные потоки.",
+        "commands": [
+          "resources add 30 10"
+        ],
+        "prob": 0.09,
+        "color": "cyan"
+      },
+      {
+        "name": "Повышенное давление",
+        "description": "Океаническое давление превышает расчётные пределы.",
+        "commands": [
+          "strength remove 12 4"
+        ],
+        "prob": 0.08,
+        "color": "yellow"
+      },
+      {
+        "name": "Глубинная форма жизни",
+        "description": "Обнаружены устойчивые к давлению формы жизни.",
+        "commands": [
+          "resources add 20 10",
+          "crew add 5 2"
+        ],
+        "prob": 0.07,
+        "color": "green"
+      },
+      {
+        "name": "Штормы в верхней атмосфере",
+        "description": "Плотные облачные слои создают сильные турбулентности.",
+        "commands": [
+          "module_engine 0"
+        ],
+        "prob": 0.06,
+        "color": "red"
+      },
+      {
+        "name": "Нестабильные глубины",
+        "description": "Сейсмическая активность океанического дна угрожает оборудованию.",
+        "commands": [
+          "crew remove 8 4"
+        ],
+        "prob": 0.05,
+        "color": "yellow"
+      }
+    ]
   },
   {
     "id": 16,
@@ -141,7 +797,55 @@
     "type": 2,
     "danger": 4,
     "eta": 99,
-    "temperature": -159
+    "temperature": -159,
+    "events": [
+      {
+        "name": "Ледяные океаны",
+        "description": "Под толстыми слоями льда скрываются обширные океаны.",
+        "commands": [
+          "resources add 20 10"
+        ],
+        "prob": 0.09,
+        "color": "cyan"
+      },
+      {
+        "name": "Криогеологическая активность",
+        "description": "Подповерхностные разломы создают опасные вибрации.",
+        "commands": [
+          "strength remove 10 4"
+        ],
+        "prob": 0.08,
+        "color": "yellow"
+      },
+      {
+        "name": "Низкий уровень освещённости",
+        "description": "Недостаток света негативно влияет на мораль и здоровье экипажа.",
+        "commands": [
+          "crew remove 6 3"
+        ],
+        "prob": 0.07,
+        "color": "yellow"
+      },
+      {
+        "name": "Толстый ледяной покров",
+        "description": "Плотный лёд снижает эффективность систем жизнеобеспечения.",
+        "commands": [
+          "oxygen remove 8 4"
+        ],
+        "prob": 0.06,
+        "color": "red"
+      },
+      {
+        "name": "Редкий период стабильности",
+        "description": "Отсутствие внешних факторов позволяет провести обслуживание корабля.",
+        "commands": [
+          "module_life_support 1",
+          "module_cooling_system 1"
+        ],
+        "prob": 0.05,
+        "color": "green"
+      }
+    ]
   },
   {
     "id": 17,
@@ -150,7 +854,54 @@
     "type": 4,
     "danger": 4,
     "eta": 121,
-    "temperature": 37
+    "temperature": 37,
+    "events": [
+      {
+        "name": "Глобальный океан",
+        "description": "Собраны образцы поверхности планеты.",
+        "commands": [
+          "resources add 30 10"
+        ],
+        "prob": 0.07,
+        "color": "cyan"
+      },
+      {
+        "name": "Плотная облачность",
+        "description": "Многослойные облака затрудняют навигацию и посадку.",
+        "commands": [
+          "module_engine 0"
+        ],
+        "prob": 0.08,
+        "color": "yellow"
+      },
+      {
+        "name": "Подводные течения",
+        "description": "Мощные глубинные течения создают нагрузку на корпус корабля.",
+        "commands": [
+          "strength remove 12 4"
+        ],
+        "prob": 0.07,
+        "color": "red"
+      },
+      {
+        "name": "Органические соединения",
+        "description": "В воде обнаружены сложные органические молекулы.",
+        "commands": [
+          "resources add 20 10"
+        ],
+        "prob": 0.06,
+        "color": "green"
+      },
+      {
+        "name": "Постоянный туман",
+        "description": "Высокая влажность и туман ухудшают самочувствие экипажа.",
+        "commands": [
+          "crew remove 6 3"
+        ],
+        "prob": 0.05,
+        "color": "yellow"
+      }
+    ]
   },
   {
     "id": 18,
@@ -159,7 +910,57 @@
     "type": 1,
     "danger": 5,
     "eta": 160,
-    "temperature": -6
+    "temperature": -6,
+    "events": [
+      {
+        "name": "Усиленное излучение звезды",
+        "description": "Старая звезда излучает больше энергии, вызывая перегрев систем.",
+        "commands": [
+          "module_cooling_system 0",
+          "crew remove 8 4"
+        ],
+        "prob": 0.09,
+        "color": "red"
+      },
+      {
+        "name": "Активная тектоника",
+        "description": "Частые тектонические процессы делают поверхность нестабильной.",
+        "commands": [
+          "strength remove 10 4"
+        ],
+        "prob": 0.08,
+        "color": "yellow"
+      },
+      {
+        "name": "Развитая биосфера",
+        "description": "Собраны образцы биосферы планеты.",
+        "commands": [
+          "resources add 30 10",
+          "crew add 5 2"
+        ],
+        "prob": 0.07,
+        "color": "green"
+      },
+      {
+        "name": "Плотная атмосфера",
+        "description": "Атмосфера эффективно удерживает тепло и экранирует радиацию.",
+        "commands": [
+          "oxygen add 10 5"
+        ],
+        "prob": 0.06,
+        "color": "cyan"
+      },
+      {
+        "name": "Начало парникового эффекта",
+        "description": "Климат планеты становится нестабильным.",
+        "commands": [
+          "crew remove 6 3",
+          "oxygen remove 5 2"
+        ],
+        "prob": 0.05,
+        "color": "yellow"
+      }
+    ]
   },
   {
     "id": 19,
@@ -168,7 +969,57 @@
     "type": 1,
     "danger": 4,
     "eta": 146,
-    "temperature": -42
+    "temperature": -42,
+    "events": [
+      {
+        "name": "Усиленное излучение звезды",
+        "description": "Старая звезда излучает больше энергии, вызывая перегрев систем.",
+        "commands": [
+          "module_cooling_system 0",
+          "crew remove 8 4"
+        ],
+        "prob": 0.09,
+        "color": "red"
+      },
+      {
+        "name": "Активная тектоника",
+        "description": "Частые тектонические процессы делают поверхность нестабильной.",
+        "commands": [
+          "strength remove 10 4"
+        ],
+        "prob": 0.08,
+        "color": "yellow"
+      },
+      {
+        "name": "Развитая биосфера",
+        "description": "Экосистемы планеты богаты органикой и пригодны для исследований.",
+        "commands": [
+          "resources add 30 10",
+          "crew add 5 2"
+        ],
+        "prob": 0.07,
+        "color": "green"
+      },
+      {
+        "name": "Плотная атмосфера",
+        "description": "Атмосфера эффективно удерживает тепло и экранирует радиацию.",
+        "commands": [
+          "oxygen add 10 5"
+        ],
+        "prob": 0.06,
+        "color": "cyan"
+      },
+      {
+        "name": "Начало парникового эффекта",
+        "description": "Климат планеты постепенно становится нестабильным.",
+        "commands": [
+          "crew remove 6 3",
+          "oxygen remove 5 2"
+        ],
+        "prob": 0.05,
+        "color": "yellow"
+      }
+    ]
   },
   {
     "id": 20,
@@ -177,7 +1028,55 @@
     "type": 4,
     "danger": 4,
     "eta": 133,
-    "temperature": 2
+    "temperature": 2,
+    "events": [
+      {
+        "name": "Тёплый океан",
+        "description": "Океан планеты стабилен и богат растворёнными минералами.",
+        "commands": [
+          "resources add 30 10"
+        ],
+        "prob": 0.09,
+        "color": "cyan"
+      },
+      {
+        "name": "Высокая влажность",
+        "description": "Постоянная влажность негативно влияет на состояние экипажа.",
+        "commands": [
+          "crew remove 6 3"
+        ],
+        "prob": 0.08,
+        "color": "yellow"
+      },
+      {
+        "name": "Глубинные биомаркеры",
+        "description": "В океане обнаружены химические признаки возможной жизни.",
+        "commands": [
+          "resources add 20 10",
+          "crew add 5 2"
+        ],
+        "prob": 0.07,
+        "color": "green"
+      },
+      {
+        "name": "Подводные штормы",
+        "description": "Мощные океанические потоки создают нагрузку на корпус корабля.",
+        "commands": [
+          "strength remove 10 4"
+        ],
+        "prob": 0.06,
+        "color": "red"
+      },
+      {
+        "name": "Плотная атмосфера",
+        "description": "Атмосфера эффективно удерживает тепло и защищает от радиации.",
+        "commands": [
+          "oxygen add 10 5"
+        ],
+        "prob": 0.05,
+        "color": "cyan"
+      }
+    ]
   },
   {
     "id": 21,
@@ -186,7 +1085,55 @@
     "type": 2,
     "danger": 5,
     "eta": 121,
-    "temperature": -216
+    "temperature": -216,
+    "events": [
+      {
+        "name": "Ледяной океан",
+        "description": "Под толстым слоем льда скрывается глобальный океан.",
+        "commands": [
+          "resources add 20 10"
+        ],
+        "prob": 0.09,
+        "color": "cyan"
+      },
+      {
+        "name": "Экстремальный холод",
+        "description": "Температуры опускаются до предельно низких значений.",
+        "commands": [
+          "crew remove 8 4",
+          "oxygen remove 5 2"
+        ],
+        "prob": 0.08,
+        "color": "red"
+      },
+      {
+        "name": "Криовулканическая активность",
+        "description": "Выбросы замёрзших газов повреждают корпус корабля.",
+        "commands": [
+          "strength remove 10 4"
+        ],
+        "prob": 0.07,
+        "color": "yellow"
+      },
+      {
+        "name": "Редкие тёплые периоды",
+        "description": "Кратковременное повышение температуры облегчает условия.",
+        "commands": [
+          "crew add 6 3"
+        ],
+        "prob": 0.06,
+        "color": "green"
+      },
+      {
+        "name": "Плотная атмосфера",
+        "description": "Атмосфера частично удерживает тепло и стабилизирует климат.",
+        "commands": [
+          "oxygen add 10 5"
+        ],
+        "prob": 0.05,
+        "color": "cyan"
+      }
+    ]
   },
   {
     "id": 22,
@@ -195,7 +1142,56 @@
     "type": 1,
     "danger": 4,
     "eta": 103,
-    "temperature": -5
+    "temperature": -5,
+    "events": [
+      {
+        "name": "Вечные сумерки",
+        "description": "Планета получает мало света, поверхность погружена в постоянные сумерки.",
+        "commands": [
+          "crew remove 6 3"
+        ],
+        "prob": 0.09,
+        "color": "yellow"
+      },
+      {
+        "name": "Холодная атмосфера",
+        "description": "Разреженная и холодная атмосфера слабо удерживает тепло.",
+        "commands": [
+          "oxygen remove 6 3",
+          "crew remove 4 2"
+        ],
+        "prob": 0.08,
+        "color": "red"
+      },
+      {
+        "name": "Стабильная орбита",
+        "description": "Отсутствие экстремальных факторов позволяет провести диагностику систем.",
+        "commands": [
+          "module_computer 1",
+          "module_life_support 1"
+        ],
+        "prob": 0.07,
+        "color": "green"
+      },
+      {
+        "name": "Подповерхностный лёд",
+        "description": "Обнаружены значительные запасы льда под поверхностью.",
+        "commands": [
+          "resources add 20 10"
+        ],
+        "prob": 0.06,
+        "color": "cyan"
+      },
+      {
+        "name": "Пограничные условия",
+        "description": "Климат планеты балансирует между обитаемым и замёрзшим состоянием.",
+        "commands": [
+          "strength remove 8 4"
+        ],
+        "prob": 0.05,
+        "color": "yellow"
+      }
+    ]
   },
   {
     "id": 23,
@@ -204,16 +1200,112 @@
     "type": 1,
     "danger": 7,
     "eta": 70,
-    "temperature": 11
+    "temperature": 11,
+    "events": [
+      {
+        "name": "Экстремальная звездная вспышка",
+        "description": "Мощная вспышка красного карлика обрушивает поток радиации на корабль.",
+        "commands": [
+          "crew remove 15 5",
+          "oxygen remove 10 5"
+        ],
+        "prob": 0.08,
+        "color": "red"
+      },
+      {
+        "name": "Радиационный удар по электронике",
+        "description": "Излучение выводит из строя бортовые электронные системы.",
+        "commands": [
+          "module_computer 0"
+        ],
+        "prob": 0.08,
+        "color": "red"
+      },
+      {
+        "name": "Перегрев корпуса",
+        "description": "Поверхность планеты настолько горяча, что корпус начинает деформироваться.",
+        "commands": [
+          "strength remove 12 4"
+        ],
+        "prob": 0.08,
+        "color": "yellow"
+      },
+      {
+        "name": "Почти отсутствующая атмосфера",
+        "description": "Планета не удерживает атмосферу — кислород расходуется критически быстро.",
+        "commands": [
+          "oxygen remove 12 6"
+        ],
+        "prob": 0.07,
+        "color": "red"
+      },
+      {
+        "name": "Радиационные помехи навигации",
+        "description": "Постоянное излучение нарушает работу двигательных систем.",
+        "commands": [
+          "module_engine 0"
+        ],
+        "prob": 0.06,
+        "color": "yellow"
+      }
+    ]
   },
   {
     "id": 24,
     "name": "TRAPPIST-1c",
-    "description": "Более прохладная, но всё ещё горячая каменистая планета. Возможно, имеет плотную атмосферу, смягчающую условия.\nТипичная температура может позволять жидкой воде существовать лишь в терминаторной зоне. Поверхность пересечена древними лавовыми потоками.",
+    "description": "Горячая каменистая планета. Возможно, имеет плотную атмосферу, смягчающую условия.\nТипичная температура может позволять жидкой воде существовать лишь в терминаторной зоне. Поверхность пересечена древними лавовыми потоками.",
     "type": 1,
     "danger": 6,
     "eta": 122,
-    "temperature": -23
+    "temperature": -23,
+    "events": [
+      {
+        "name": "Постоянные звездные вспышки",
+        "description": "Частые вспышки красного карлика облучают корабль и экипаж.",
+        "commands": [
+          "crew remove 12 4",
+          "oxygen remove 8 4"
+        ],
+        "prob": 0.07,
+        "color": "red"
+      },
+      {
+        "name": "Радиационное повреждение навигации",
+        "description": "Ионизирующее излучение выводит из строя двигательные системы.",
+        "commands": [
+          "module_engine 0"
+        ],
+        "prob": 0.06,
+        "color": "red"
+      },
+      {
+        "name": "Парниковый перегрев",
+        "description": "Атмосфера удерживает тепло, создавая критическую нагрузку на корпус.",
+        "commands": [
+          "strength remove 10 4"
+        ],
+        "prob": 0.08,
+        "color": "yellow"
+      },
+      {
+        "name": "Нестабильная атмосфера",
+        "description": "Атмосферные потоки вызывают утечки и перерасход кислорода.",
+        "commands": [
+          "oxygen remove 10 5"
+        ],
+        "prob": 0.06,
+        "color": "yellow"
+      },
+      {
+        "name": "Радиационные сбои электроники",
+        "description": "Системы управления периодически выходят из строя.",
+        "commands": [
+          "module_computer 0"
+        ],
+        "prob": 0.06,
+        "color": "yellow"
+      }
+    ]
   },
   {
     "id": 25,
@@ -222,7 +1314,55 @@
     "type": 2,
     "danger": 5,
     "eta": 173,
-    "temperature": -206
+    "temperature": -206,
+    "events": [
+      {
+        "name": "Вулканическая активность",
+        "description": "Поверхностные извержения выбрасывают горячие газы и пепел.",
+        "commands": [
+          "strength remove 10 4",
+          "oxygen remove 6 3"
+        ],
+        "prob": 0.04,
+        "color": "red"
+      },
+      {
+        "name": "Атмосферные выбросы",
+        "description": "Нестабильные газовые потоки нарушают работу систем.",
+        "commands": [
+          "module_life_support 0"
+        ],
+        "prob": 0.03,
+        "color": "red"
+      },
+      {
+        "name": "Звёздные помехи",
+        "description": "Излучение красного карлика вызывает сбои электроники.",
+        "commands": [
+          "module_computer 0"
+        ],
+        "prob": 0.07,
+        "color": "yellow"
+      },
+      {
+        "name": "Резкие температурные перепады",
+        "description": "Контраст климата влияет на состояние экипажа.",
+        "commands": [
+          "crew remove 6 3"
+        ],
+        "prob": 0.06,
+        "color": "yellow"
+      },
+      {
+        "name": "Тонкая атмосфера",
+        "description": "Планета частично удерживает атмосферу, но кислород расходуется быстрее нормы.",
+        "commands": [
+          "oxygen remove 8 4"
+        ],
+        "prob": 0.05,
+        "color": "yellow"
+      }
+    ]
   },
   {
     "id": 26,
@@ -231,7 +1371,54 @@
     "type": 1,
     "danger": 4,
     "eta": 67,
-    "temperature": 8
+    "temperature": 8,
+    "events": [
+      {
+        "name": "Стабильная атмосфера",
+        "description": "Атмосфера эффективно удерживает тепло и кислород.",
+        "commands": [
+          "oxygen add 10 5"
+        ],
+        "prob": 0.09,
+        "color": "green"
+      },
+      {
+        "name": "Поверхностные водоёмы",
+        "description": "Обнаружены жидкие водоёмы на поверхности планеты.",
+        "commands": [
+          "resources add 25 10"
+        ],
+        "prob": 0.08,
+        "color": "cyan"
+      },
+      {
+        "name": "Мягкий климат",
+        "description": "Условия благоприятно влияют на состояние экипажа.",
+        "commands": [
+          "crew add 6 3"
+        ],
+        "prob": 0.07,
+        "color": "green"
+      },
+      {
+        "name": "Геомагнитные помехи",
+        "description": "Колебания магнитного поля вызывают сбои в системах.",
+        "commands": [
+          "module_computer 0"
+        ],
+        "prob": 0.06,
+        "color": "yellow"
+      },
+      {
+        "name": "Локальные штормы",
+        "description": "Атмосферные возмущения создают нагрузку на корпус.",
+        "commands": [
+          "strength remove 8 4"
+        ],
+        "prob": 0.05,
+        "color": "yellow"
+      }
+    ]
   },
   {
     "id": 27,
@@ -240,7 +1427,54 @@
     "type": 2,
     "danger": 5,
     "eta": 96,
-    "temperature": -225
+    "temperature": -225,
+    "events": [
+      {
+        "name": "Ледяная поверхность",
+        "description": "Поверхность покрыта льдом, отражающим слабый свет звезды.",
+        "commands": [
+          "resources add 15 5"
+        ],
+        "prob": 0.09,
+        "color": "cyan"
+      },
+      {
+        "name": "Экстремальный холод",
+        "description": "Низкие температуры негативно сказываются на экипаже.",
+        "commands": [
+          "crew remove 8 4"
+        ],
+        "prob": 0.08,
+        "color": "yellow"
+      },
+      {
+        "name": "Замёрзшая атмосфера",
+        "description": "Часть атмосферы оседает на поверхность, снижая уровень кислорода.",
+        "commands": [
+          "oxygen remove 8 4"
+        ],
+        "prob": 0.07,
+        "color": "red"
+      },
+      {
+        "name": "Криогенные повреждения",
+        "description": "Холод приводит к микротрещинам в корпусе.",
+        "commands": [
+          "strength remove 10 4"
+        ],
+        "prob": 0.06,
+        "color": "yellow"
+      },
+      {
+        "name": "Сбой охлаждающей системы",
+        "description": "Резкий температурный перепад выводит систему из строя.",
+        "commands": [
+          "module_cooling_system 0"
+        ],
+        "prob": 0.05,
+        "color": "red"
+      }
+    ]
   },
   {
     "id": 28,
@@ -249,7 +1483,54 @@
     "type": 1,
     "danger": 5,
     "eta": 148,
-    "temperature": -30
+    "temperature": -30,
+    "events": [
+      {
+        "name": "Холодная плотная атмосфера",
+        "description": "Плотная атмосфера удерживает холод, создавая нагрузку на системы жизнеобеспечения.",
+        "commands": [
+          "oxygen remove 8 4"
+        ],
+        "prob": 0.09,
+        "color": "yellow"
+      },
+      {
+        "name": "Глобальное похолодание",
+        "description": "Температура поверхности резко падает, ухудшая состояние экипажа.",
+        "commands": [
+          "crew remove 8 4"
+        ],
+        "prob": 0.08,
+        "color": "yellow"
+      },
+      {
+        "name": "Ледяные штормы",
+        "description": "Мощные атмосферные вихри из кристаллов льда повреждают корпус корабля.",
+        "commands": [
+          "strength remove 12 4"
+        ],
+        "prob": 0.07,
+        "color": "red"
+      },
+      {
+        "name": "Радиационные отголоски звезды",
+        "description": "Даже на таком расстоянии вспышки звезды вызывают сбои в электронике.",
+        "commands": [
+          "module_computer 0"
+        ],
+        "prob": 0.06,
+        "color": "yellow"
+      },
+      {
+        "name": "Подлёдный океан",
+        "description": "Датчики фиксируют наличие жидкой воды под толщей льда.",
+        "commands": [
+          "resources add 25 10"
+        ],
+        "prob": 0.05,
+        "color": "cyan"
+      }
+    ]
   },
   {
     "id": 29,
@@ -258,7 +1539,55 @@
     "type": 2,
     "danger": 6,
     "eta": 116,
-    "temperature": -182
+    "temperature": -182,
+    "events": [
+      {
+        "name": "Абсолютный холод",
+        "description": "Температуры на планете опускаются до экстремальных значений, системы работают на пределе.",
+        "commands": [
+          "crew remove 8 4",
+          "oxygen remove 6 3"
+        ],
+        "prob": 0.09,
+        "color": "red"
+      },
+      {
+        "name": "Замёрзшие механизмы",
+        "description": "Критическое обледенение приводит к отказу части оборудования.",
+        "commands": [
+          "module_engine 0"
+        ],
+        "prob": 0.07,
+        "color": "yellow"
+      },
+      {
+        "name": "Ледяная корка",
+        "description": "Твёрдый ледяной покров создаёт дополнительную нагрузку на корпус корабля.",
+        "commands": [
+          "strength remove 10 4"
+        ],
+        "prob": 0.08,
+        "color": "yellow"
+      },
+      {
+        "name": "Разреженная атмосфера",
+        "description": "Планета почти не удерживает атмосферу, кислород расходуется быстрее обычного.",
+        "commands": [
+          "oxygen remove 10 5"
+        ],
+        "prob": 0.07,
+        "color": "red"
+      },
+      {
+        "name": "Долгие периоды тьмы",
+        "description": "Отсутствие света негативно сказывается на состоянии экипажа.",
+        "commands": [
+          "crew remove 6 3"
+        ],
+        "prob": 0.06,
+        "color": "yellow"
+      }
+    ]
   },
   {
     "id": 30,
@@ -267,7 +1596,56 @@
     "type": 0,
     "danger": 9,
     "eta": 161,
-    "temperature": -120
+    "temperature": -120,
+    "events": [
+      {
+        "name": "Испаряющаяся атмосфера",
+        "description": "Раскалённая атмосфера планеты уносится в космос, создавая экстремальные условия.",
+        "commands": [
+          "oxygen remove 15 5",
+          "crew remove 10 4"
+        ],
+        "prob": 0.10,
+        "color": "red"
+      },
+      {
+        "name": "Приливное растяжение",
+        "description": "Гравитация звезды растягивает планету и создаёт опасные деформации.",
+        "commands": [
+          "strength remove 15 5"
+        ],
+        "prob": 0.08,
+        "color": "red"
+      },
+      {
+        "name": "Адский перегрев",
+        "description": "Температуры превышают допустимые пределы для корабельных систем.",
+        "commands": [
+          "module_cooling_system 0",
+          "crew remove 6 3"
+        ],
+        "prob": 0.08,
+        "color": "red"
+      },
+      {
+        "name": "Металлические облака",
+        "description": "В атмосфере обнаружены пары металлов, повреждающие внешние системы.",
+        "commands": [
+          "module_engine 0"
+        ],
+        "prob": 0.06,
+        "color": "yellow"
+      },
+      {
+        "name": "Ионизационные помехи",
+        "description": "Ионизированная атмосфера нарушает работу электроники.",
+        "commands": [
+          "module_computer 0"
+        ],
+        "prob": 0.05,
+        "color": "yellow"
+      }
+    ]
   },
   {
     "id": 31,
@@ -276,7 +1654,55 @@
     "type": 0,
     "danger": 9,
     "eta": 68,
-    "temperature": -81
+    "temperature": 2500,
+    "events": [
+      {
+        "name": "Испаряющаяся атмосфера",
+        "description": "Атмосфера планеты уносится в космос под действием звёздного излучения.",
+        "commands": [
+          "oxygen remove 15 5"
+        ],
+        "prob": 0.10,
+        "color": "red"
+      },
+      {
+        "name": "Металлические пары",
+        "description": "В атмосфере обнаружены испарённые металлы, разъедающие корпус корабля.",
+        "commands": [
+          "strength remove 15 5"
+        ],
+        "prob": 0.09,
+        "color": "red"
+      },
+      {
+        "name": "Экстремальный перегрев систем",
+        "description": "Температура превышает расчётные пределы, системы начинают отказывать.",
+        "commands": [
+          "module_cooling_system 0"
+        ],
+        "prob": 0.08,
+        "color": "red"
+      },
+      {
+        "name": "Ураганы сверхгорячих газов",
+        "description": "Скорости ветров достигают тысяч километров в час.",
+        "commands": [
+          "module_engine 0",
+          "strength remove 8 4"
+        ],
+        "prob": 0.07,
+        "color": "yellow"
+      },
+      {
+        "name": "Термический шок экипажа",
+        "description": "Даже экранированные отсеки не справляются с тепловой нагрузкой.",
+        "commands": [
+          "crew remove 10 4"
+        ],
+        "prob": 0.06,
+        "color": "red"
+      }
+    ]
   },
   {
     "id": 32,
@@ -285,7 +1711,54 @@
     "type": 0,
     "danger": 7,
     "eta": 144,
-    "temperature": -109
+    "temperature": -109,
+    "events": [
+      {
+        "name": "Раздутый атмосферный слой",
+        "description": "Атмосфера планеты сильно расширена и создаёт дополнительное давление на корпус.",
+        "commands": [
+          "strength remove 10 4"
+        ],
+        "prob": 0.09,
+        "color": "yellow"
+      },
+      {
+        "name": "Водяной пар в атмосфере",
+        "description": "Анализ атмосферы выявляет значительное содержание водяного пара.",
+        "commands": [
+          "resources add 25 10"
+        ],
+        "prob": 0.08,
+        "color": "cyan"
+      },
+      {
+        "name": "Химическая коррозия",
+        "description": "Агрессивные химические соединения разъедают внешние системы корабля.",
+        "commands": [
+          "module_engine 0"
+        ],
+        "prob": 0.07,
+        "color": "red"
+      },
+      {
+        "name": "Турбулентные слои атмосферы",
+        "description": "Сильные потоки газа вызывают перегрузки у экипажа.",
+        "commands": [
+          "crew remove 8 4"
+        ],
+        "prob": 0.07,
+        "color": "yellow"
+      },
+      {
+        "name": "Спектральная аномалия",
+        "description": "Необычные спектральные линии позволяют собрать ценные научные данные.",
+        "commands": [
+          "resources add 15 5"
+        ],
+        "prob": 0.05,
+        "color": "cyan"
+      }
+    ]
   },
   {
     "id": 33,
@@ -294,7 +1767,55 @@
     "type": 4,
     "danger": 6,
     "eta": 150,
-    "temperature": -8
+    "temperature": 20,
+    "events": [
+      {
+        "name": "Сверхплотная атмосфера",
+        "description": "Давление атмосферы значительно превышает расчётные пределы.",
+        "commands": [
+          "strength remove 12 4"
+        ],
+        "prob": 0.09,
+        "color": "red"
+      },
+      {
+        "name": "Водяной пар и аэрозоли",
+        "description": "Агрессивная влажная среда ускоряет износ оборудования.",
+        "commands": [
+          "module_engine 0"
+        ],
+        "prob": 0.08,
+        "color": "yellow"
+      },
+      {
+        "name": "Коррозионные осадки",
+        "description": "Химически активные осадки повреждают внешние системы корабля.",
+        "commands": [
+          "module_computer 0"
+        ],
+        "prob": 0.07,
+        "color": "yellow"
+      },
+      {
+        "name": "Удушающая среда",
+        "description": "Атмосфера непригодна для дыхания, кислород расходуется быстрее нормы.",
+        "commands": [
+          "oxygen remove 10 5",
+          "crew remove 6 3"
+        ],
+        "prob": 0.07,
+        "color": "red"
+      },
+      {
+        "name": "Химические аномалии",
+        "description": "В атмосфере обнаружены редкие химические соединения.",
+        "commands": [
+          "resources add 25 10"
+        ],
+        "prob": 0.05,
+        "color": "cyan"
+      }
+    ]
   },
   {
     "id": 34,
@@ -303,7 +1824,54 @@
     "type": 1,
     "danger": 5,
     "eta": 64,
-    "temperature": -10
+    "temperature": 10,
+    "events": [
+      {
+        "name": "Радиационное фоновое излучение",
+        "description": "Постоянное излучение красного карлика медленно подтачивает здоровье экипажа.",
+        "commands": [
+          "crew remove 6 3"
+        ],
+        "prob": 0.09,
+        "color": "yellow"
+      },
+      {
+        "name": "Плотная атмосфера",
+        "description": "Тяжёлая атмосфера создаёт дополнительную нагрузку на корпус корабля.",
+        "commands": [
+          "strength remove 8 4"
+        ],
+        "prob": 0.08,
+        "color": "yellow"
+      },
+      {
+        "name": "Атмосферные помехи связи",
+        "description": "Ионизированные слои атмосферы вызывают сбои в электронике.",
+        "commands": [
+          "module_computer 0"
+        ],
+        "prob": 0.07,
+        "color": "yellow"
+      },
+      {
+        "name": "Химически активные облака",
+        "description": "Агрессивные атмосферные соединения ускоряют расход кислорода.",
+        "commands": [
+          "oxygen remove 8 4"
+        ],
+        "prob": 0.06,
+        "color": "red"
+      },
+      {
+        "name": "Пограничная обитаемость",
+        "description": "Условия на планете остаются пригодными для кратковременных исследований.",
+        "commands": [
+          "resources add 20 10"
+        ],
+        "prob": 0.05,
+        "color": "green"
+      }
+    ]
   },
   {
     "id": 35,
@@ -312,16 +1880,112 @@
     "type": 3,
     "danger": 9,
     "eta": 81,
-    "temperature": 822
+    "temperature": 822,
+    "events": [
+      {
+        "name": "Лавовый океан",
+        "description": "Лава попала на корпус корабля!",
+        "commands": [
+          "strength remove 10 5"
+        ],
+        "prob": 0.10,
+        "color": "red"
+      },
+      {
+        "name": "Экстремальный перегрев",
+        "description": "Температуры превышают допустимые пределы для систем корабля.",
+        "commands": [
+          "crew remove 10 4",
+          "oxygen remove 8 4"
+        ],
+        "prob": 0.09,
+        "color": "red"
+      },
+      {
+        "name": "Повреждение систем охлаждения",
+        "description": "Постоянный перегрев выводит из строя систему охлаждения.",
+        "commands": [
+          "module_cooling_system 0"
+        ],
+        "prob": 0.08,
+        "color": "red"
+      },
+      {
+        "name": "Углеродные отложения",
+        "description": "Поверхность содержит необычно высокую концентрацию углеродных соединений.",
+        "commands": [
+          "resources add 35 15"
+        ],
+        "prob": 0.06,
+        "color": "cyan"
+      },
+      {
+        "name": "Приливная нестабильность",
+        "description": "Сильные приливные силы вызывают резкие колебания гравитации.",
+        "commands": [
+          "crew remove 6 3"
+        ],
+        "prob": 0.05,
+        "color": "yellow"
+      }
+    ]
   },
   {
     "id": 36,
-    "name": "HD 189733 b",
+    "name": "HD 189733 A b",
     "description": "Известный мир «стеклянных дождей»: частицы силикатов в атмосфере создают острые, опасные осадки. Планета имеет ярко-синий оттенок из-за рассеяния света.\nВетры достигают нескольких тысяч километров в час. Условия полностью непригодны для жизни.",
     "type": 0,
     "danger": 9,
     "eta": 164,
-    "temperature": -148
+    "temperature": 800,
+    "events": [
+      {
+        "name": "Стеклянный дождь",
+        "description": "Капли расплавленного стекла, несомые ураганным ветром, бьют по корпусу корабля.",
+        "commands": [
+          "strength remove 15 5"
+        ],
+        "prob": 0.10,
+        "color": "red"
+      },
+      {
+        "name": "Сверхзвуковые ветры",
+        "description": "Ветры со скоростью в несколько километров в секунду дестабилизируют корабль.",
+        "commands": [
+          "module_engine 0"
+        ],
+        "prob": 0.08,
+        "color": "red"
+      },
+      {
+        "name": "Атмосферная турбулентность",
+        "description": "Глубокие слои атмосферы создают постоянные вибрации корпуса.",
+        "commands": [
+          "crew remove 8 4"
+        ],
+        "prob": 0.08,
+        "color": "yellow"
+      },
+      {
+        "name": "Ионизированная атмосфера",
+        "description": "Заряженные частицы нарушают работу электроники.",
+        "commands": [
+          "module_computer 0"
+        ],
+        "prob": 0.07,
+        "color": "yellow"
+      },
+      {
+        "name": "Звёздная активность",
+        "description": "Вспышки звезды усиливают излучение в верхних слоях атмосферы планеты.",
+        "commands": [
+          "oxygen remove 10 5",
+          "crew remove 6 3"
+        ],
+        "prob": 0.06,
+        "color": "red"
+      }
+    ]
   },
   {
     "id": 37,
@@ -330,7 +1994,54 @@
     "type": 0,
     "danger": 8,
     "eta": 119,
-    "temperature": -149
+    "temperature": 1000,
+    "events": [
+      {
+        "name": "Испаряющаяся атмосфера",
+        "description": "Атмосфера планеты активно уносится в космос под действием излучения звезды.",
+        "commands": [
+          "oxygen remove 12 6"
+        ],
+        "prob": 0.10,
+        "color": "red"
+      },
+      {
+        "name": "Ионизированный газ",
+        "description": "Потоки ионизированного газа нарушают работу электроники.",
+        "commands": [
+          "module_computer 0"
+        ],
+        "prob": 0.08,
+        "color": "red"
+      },
+      {
+        "name": "Экстремальный перегрев",
+        "description": "Температуры превышают допустимые нормы, корпус испытывает критическую нагрузку.",
+        "commands": [
+          "strength remove 14 6"
+        ],
+        "prob": 0.08,
+        "color": "yellow"
+      },
+      {
+        "name": "Газовые турбулентности",
+        "description": "Бурные потоки атмосферы сбивают ориентацию корабля.",
+        "commands": [
+          "module_engine 0"
+        ],
+        "prob": 0.07,
+        "color": "yellow"
+      },
+      {
+        "name": "Высокоэнергетическое излучение",
+        "description": "Жёсткое излучение звезды негативно влияет на экипаж.",
+        "commands": [
+          "crew remove 10 4"
+        ],
+        "prob": 0.06,
+        "color": "red"
+      }
+    ]
   },
   {
     "id": 38,
@@ -339,7 +2050,55 @@
     "type": 4,
     "danger": 5,
     "eta": 152,
-    "temperature": 21
+    "temperature": 21,
+    "events": [
+      {
+        "name": "Плотная водородная атмосфера",
+        "description": "Густая атмосфера создаёт экстремальное давление на корпус корабля.",
+        "commands": [
+          "strength remove 10 4"
+        ],
+        "prob": 0.09,
+        "color": "yellow"
+      },
+      {
+        "name": "Водяной пар в атмосфере",
+        "description": "Датчики фиксируют значительное количество водяного пара и летучих соединений.",
+        "commands": [
+          "resources add 25 10"
+        ],
+        "prob": 0.08,
+        "color": "cyan"
+      },
+      {
+        "name": "Атмосферная турбулентность",
+        "description": "Сильные потоки в атмосфере нарушают стабильность полёта.",
+        "commands": [
+          "module_engine 0"
+        ],
+        "prob": 0.07,
+        "color": "red"
+      },
+      {
+        "name": "Химически агрессивные облака",
+        "description": "Облака содержат соединения, опасные для экипажа.",
+        "commands": [
+          "crew remove 8 4",
+          "oxygen remove 6 3"
+        ],
+        "prob": 0.06,
+        "color": "red"
+      },
+      {
+        "name": "Возможные биомаркеры",
+        "description": "В атмосфере обнаружены химические сигнатуры, потенциально связанные с жизнью.",
+        "commands": [
+          "resources add 15 5"
+        ],
+        "prob": 0.05,
+        "color": "green"
+      }
+    ]
   },
   {
     "id": 39,
@@ -348,7 +2107,55 @@
     "type": 0,
     "danger": 9,
     "eta": 83,
-    "temperature": -124
+    "temperature": 4000,
+    "events": [
+      {
+        "name": "Температуры звездного уровня",
+        "description": "Температура атмосферы превышает 4000°C, корабль испытывает экстремальную тепловую нагрузку.",
+        "commands": [
+          "strength remove 18 6",
+          "crew remove 10 4"
+        ],
+        "prob": 0.10,
+        "color": "red"
+      },
+      {
+        "name": "Испаряющаяся атмосфера",
+        "description": "Атмосфера планеты уносится в космос под действием излучения звезды.",
+        "commands": [
+          "oxygen remove 12 6"
+        ],
+        "prob": 0.09,
+        "color": "red"
+      },
+      {
+        "name": "Газообразное железо",
+        "description": "Пары металлов разрушают внешние элементы конструкции корабля.",
+        "commands": [
+          "strength remove 14 4"
+        ],
+        "prob": 0.08,
+        "color": "red"
+      },
+      {
+        "name": "Ионизированная атмосфера",
+        "description": "Потоки ионизированного газа выводят из строя электронные системы.",
+        "commands": [
+          "module_computer 0"
+        ],
+        "prob": 0.07,
+        "color": "yellow"
+      },
+      {
+        "name": "Тепловой срыв двигателей",
+        "description": "Перегрев вызывает аварийное отключение двигательных систем.",
+        "commands": [
+          "module_engine 0"
+        ],
+        "prob": 0.06,
+        "color": "yellow"
+      }
+    ]
   },
   {
     "id": 40,
@@ -357,7 +2164,55 @@
     "type": 0,
     "danger": 8,
     "eta": 174,
-    "temperature": -135
+    "temperature": 596,
+    "events": [
+      {
+        "name": "Молодая горячая атмосфера",
+        "description": "Планета всё ещё излучает остаточное тепло формирования, перегружая системы корабля.",
+        "commands": [
+          "strength remove 12 4",
+          "crew remove 6 3"
+        ],
+        "prob": 0.09,
+        "color": "red"
+      },
+      {
+        "name": "Гигантские атмосферные вихри",
+        "description": "Мощные вихри в атмосфере создают сильные турбулентности.",
+        "commands": [
+          "module_engine 0"
+        ],
+        "prob": 0.08,
+        "color": "yellow"
+      },
+      {
+        "name": "Инфракрасное излучение",
+        "description": "Интенсивное тепловое излучение влияет на электронику корабля.",
+        "commands": [
+          "module_computer 0"
+        ],
+        "prob": 0.07,
+        "color": "yellow"
+      },
+      {
+        "name": "Редкие тяжёлые элементы",
+        "description": "В верхних слоях атмосферы обнаружены следы редких элементов.",
+        "commands": [
+          "resources add 30 10"
+        ],
+        "prob": 0.06,
+        "color": "cyan"
+      },
+      {
+        "name": "Гравитационная нестабильность",
+        "description": "Массивная гравитация планеты создаёт дополнительную нагрузку на корпус.",
+        "commands": [
+          "strength remove 10 4"
+        ],
+        "prob": 0.05,
+        "color": "red"
+      }
+    ]
   },
   {
     "id": 41,
@@ -366,7 +2221,55 @@
     "type": 0,
     "danger": 7,
     "eta": 100,
-    "temperature": -114
+    "temperature": 800,
+    "events": [
+      {
+        "name": "Глубинные атмосферные потоки",
+        "description": "Мощные потоки газа в атмосфере планеты создают сильную турбулентность.",
+        "commands": [
+          "strength remove 12 4"
+        ],
+        "prob": 0.09,
+        "color": "yellow"
+      },
+      {
+        "name": "Гравитационное давление",
+        "description": "Массивность газового гиганта создаёт экстремальную нагрузку на конструкции корабля.",
+        "commands": [
+          "crew remove 8 4"
+        ],
+        "prob": 0.08,
+        "color": "yellow"
+      },
+      {
+        "name": "Атмосферный электрический шторм",
+        "description": "Электрические разряды в атмосфере выводят из строя электронные системы.",
+        "commands": [
+          "module_computer 0"
+        ],
+        "prob": 0.07,
+        "color": "red"
+      },
+      {
+        "name": "Высокотемпературные слои",
+        "description": "Погружение в более горячие слои атмосферы приводит к повреждению корпуса.",
+        "commands": [
+          "strength remove 10 4",
+          "oxygen remove 6 3"
+        ],
+        "prob": 0.06,
+        "color": "red"
+      },
+      {
+        "name": "Редкие тяжёлые элементы",
+        "description": "Анализ атмосферы выявляет редкие элементы, ценные для переработки.",
+        "commands": [
+          "resources add 25 10"
+        ],
+        "prob": 0.05,
+        "color": "cyan"
+      }
+    ]
   },
   {
     "id": 42,
@@ -375,7 +2278,55 @@
     "type": 0,
     "danger": 7,
     "eta": 87,
-    "temperature": -127
+    "temperature": -127,
+    "events": [
+      {
+        "name": "Глубинные атмосферные слои",
+        "description": "Корабль попадает в плотные слои атмосферы с экстремальным давлением.",
+        "commands": [
+          "strength remove 14 4"
+        ],
+        "prob": 0.09,
+        "color": "red"
+      },
+      {
+        "name": "Сверхзвуковые ветры",
+        "description": "Мощные атмосферные потоки дестабилизируют траекторию полёта.",
+        "commands": [
+          "module_engine 0"
+        ],
+        "prob": 0.08,
+        "color": "red"
+      },
+      {
+        "name": "Холодный газовый фронт",
+        "description": "Резкое охлаждение атмосферы увеличивает нагрузку на системы жизнеобеспечения.",
+        "commands": [
+          "crew remove 8 4",
+          "oxygen remove 6 3"
+        ],
+        "prob": 0.07,
+        "color": "yellow"
+      },
+      {
+        "name": "Турбулентные вихри",
+        "description": "Атмосферные вихри повреждают внешние элементы корпуса.",
+        "commands": [
+          "strength remove 10 4"
+        ],
+        "prob": 0.06,
+        "color": "yellow"
+      },
+      {
+        "name": "Гравитационные аномалии",
+        "description": "Массивная планета создаёт нестабильные гравитационные возмущения.",
+        "commands": [
+          "module_computer 0"
+        ],
+        "prob": 0.05,
+        "color": "yellow"
+      }
+    ]
   },
   {
     "id": 43,
@@ -438,7 +2389,55 @@
     "type": 2,
     "danger": 6,
     "eta": 75,
-    "temperature": -179
+    "temperature": -200,
+    "events": [
+      {
+        "name": "Абсолютный холод",
+        "description": "Температура поверхности настолько низка, что системы корабля работают на пределе.",
+        "commands": [
+          "crew remove 10 4",
+          "oxygen remove 8 4"
+        ],
+        "prob": 0.09,
+        "color": "red"
+      },
+      {
+        "name": "Замерзание внешних систем",
+        "description": "Критическое охлаждение приводит к отказу внешних механизмов.",
+        "commands": [
+          "module_cooling_system 0"
+        ],
+        "prob": 0.07,
+        "color": "red"
+      },
+      {
+        "name": "Ледяная кора",
+        "description": "Толстая и жёсткая ледяная поверхность создаёт нагрузку на корпус.",
+        "commands": [
+          "strength remove 12 4"
+        ],
+        "prob": 0.08,
+        "color": "yellow"
+      },
+      {
+        "name": "Криогенные утечки",
+        "description": "Экстремальный холод вызывает микротрещины и утечки кислорода.",
+        "commands": [
+          "oxygen remove 10 5"
+        ],
+        "prob": 0.06,
+        "color": "yellow"
+      },
+      {
+        "name": "Замёрзшие минералы",
+        "description": "В ледяных слоях обнаружены редкие замёрзшие соединения.",
+        "commands": [
+          "resources add 15 5"
+        ],
+        "prob": 0.05,
+        "color": "cyan"
+      }
+    ]
   },
   {
     "id": 50,
@@ -447,7 +2446,45 @@
     "type": 0,
     "danger": 8,
     "eta": 177,
-    "temperature": -135
+    "temperature": 885,
+    "events": [
+      {
+        "name": "Инфракрасное излучение недр",
+        "description": "Планета всё ещё излучает тепло, создавая опасные тепловые потоки.",
+        "commands": [
+          "strength remove 10 4"
+        ],
+        "prob": 0.08,
+        "color": "red"
+      },
+      {
+        "name": "Нестабильная атмосфера",
+        "description": "Атмосферные слои постоянно смещаются, вызывая утечки воздуха.",
+        "commands": [
+          "oxygen remove 10 5"
+        ],
+        "prob": 0.07,
+        "color": "red"
+      },
+      {
+        "name": "Гравитационные аномалии",
+        "description": "Необычное распределение массы нарушает работу двигательных систем.",
+        "commands": [
+          "module_engine 0"
+        ],
+        "prob": 0.06,
+        "color": "yellow"
+      },
+      {
+        "name": "Редкие химические соединения",
+        "description": "В атмосфере обнаружены уникальные соединения, не связанные со звездным излучением.",
+        "commands": [
+          "resources add 25 10"
+        ],
+        "prob": 0.05,
+        "color": "cyan"
+      }
+    ]
   },
   {
     "id": 51,
@@ -456,6 +2493,53 @@
     "type": 3,
     "danger": 9,
     "eta": 90,
-    "temperature": 1400
+    "temperature": 1400,
+    "events": [
+      {
+        "name": "Лавовый океан",
+        "description": "Лава попала на корпус корабля!",
+        "commands": [
+          "strength remove 15 5"
+        ],
+        "prob": 0.06,
+        "color": "red"
+      },
+      {
+        "name": "Испарение атмосферы",
+        "description": "Остатки атмосферы моментально рассеиваются, вызывая утечки кислорода.",
+        "commands": [
+          "oxygen remove 12 6"
+        ],
+        "prob": 0.09,
+        "color": "red"
+      },
+      {
+        "name": "Тепловой удар по экипажу",
+        "description": "Экстремальные температуры приводят к тепловому истощению экипажа.",
+        "commands": [
+          "crew remove 10 4"
+        ],
+        "prob": 0.08,
+        "color": "red"
+      },
+      {
+        "name": "Расплавленная пыль",
+        "description": "Микрочастицы расплавленной породы повреждают двигательные системы.",
+        "commands": [
+          "module_engine 0"
+        ],
+        "prob": 0.07,
+        "color": "yellow"
+      },
+      {
+        "name": "Электромагнитные помехи",
+        "description": "Интенсивное тепловое излучение нарушает работу электроники.",
+        "commands": [
+          "module_computer 0"
+        ],
+        "prob": 0.06,
+        "color": "yellow"
+      }
+    ]
   }
 ]

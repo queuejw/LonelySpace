@@ -16,7 +16,7 @@ class Ship:
         self.day = 0  # Количество прожитых дней.
         self.on_planet = False  # Корабль находится на планете?
         self.planet_id = -1  # ID планеты, на которой находится корабль. Если -1, значит корабль не находится на планете (см. выше)
-        self.visited_planets = []  # ID планет, на которых игрок уже побывал.
+        self.visited_planets: list[int] = []  # ID планет, на которых игрок уже побывал.
         # Модули корабля
         self.module_main_engine_damaged = False  # Статус главного двигателя.
         self.module_fuel_tank_damaged = False  # Статус топливного бака.

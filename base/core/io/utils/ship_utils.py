@@ -1,4 +1,4 @@
-from base.game.classes.ship import Ship
+from base.game.classes.ship.ship import Ship
 
 
 # Возвращает случайное название для корабля
