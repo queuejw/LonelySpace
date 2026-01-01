@@ -70,12 +70,18 @@ class Engine:
 
     # Цикл, в котором происходит обработка ввода игрока.
     async def input_loop(self):
+        global input
         # Если не получается импортировать библиотеку keyboard (например, не были получены права суперпользователя на Linux)
         try:
             import keyboard
             keyboard.add_hotkey('space', self.on_space)  # Если игрок нажал пробел, выполнится функция on_space
         except ImportError:
-            print(
+            try:
+            	import tkeyboard
+            	tkeyboard.add_hotkey("space", self.on_space)
+            	input = tkeyboard.get_user_input
+            except:
+            	print(
                 (
                     f"{colorama.Fore.BLACK}{colorama.Back.RED}Не удалось подключить клавиатуру.{colorama.Fore.RED}{colorama.Back.RESET}\n\n"
                     "Если у вас Linux, то для запуска требуются права суперпользователя. Попробуйте запустить через sudo:\n"
@@ -83,7 +89,7 @@ class Engine:
                     f"Если не помогло, свяжитесь с нами: {constants.PRODUCT_GITHUB_LINK}"
                 )
             )
-            self.running = False
+            	self.running = False
 
         while self.running:
             if not self.blocked and self.pending_input:
