@@ -9,16 +9,21 @@ from base.game.classes.planet.planet_event import PlanetEvent
 
 # Загружает список планет из json файла и возвращает его.
 def load_planets(path: str) -> list[Planet]:
-    # Возвращает список с событиями на планете.
-    def load_events_list(d: list[dict]) -> list[PlanetEvent]:
+    # Возвращает список с событиями на планете. Если событий нет, возвращает пустой список
+    def load_events_list(d: dict) -> list[PlanetEvent]:
+        try:
+            planet_event = d['events']
+        except KeyError:
+            if components.SETTINGS.get_debug_mode():
+                print(f"Ошибка при загрузке событий для планеты {d['name']}, используется пустой список.")
+            return []
         return [
             PlanetEvent(item['name'], item['description'], list(item['commands']), float(item['prob']), item['color'])
-            for item in d]
+            for item in planet_event]
 
     if components.SETTINGS.get_debug_mode():
         print(f"Попытка загрузить планеты из файла {path}")
     try:
-        path = path.replace("\\", "/")  # линукс совместимость
         with open(path, 'r', encoding="utf-8") as planets_file:
             planets = json.load(planets_file)
             planets_file.close()
@@ -29,7 +34,7 @@ def load_planets(path: str) -> list[Planet]:
             for m in planets:
                 try:
                     planet = Planet(m['id'], m['name'], m['description'], m['type'], m['danger'], m['eta'],
-                                    m['temperature'], load_events_list(m['events']),
+                                    m['temperature'], load_events_list(m),
                                     custom_planet, constants.PRODUCT_NAME if not custom_planet else m['author'])
                     gen_list.append(planet)
                     del planet

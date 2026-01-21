@@ -449,6 +449,7 @@ class Game:
         # Нет смысла использовать очередь звуков, если звуки отключены.
         if not components.SETTINGS.sound:
             return False
+        path = path.replace("\\", "/")
         self.audio_queue.append(path)
         return True
 

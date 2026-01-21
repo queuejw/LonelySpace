@@ -9,7 +9,7 @@ from base.core.clamp import clamp
 # Класс события на планете
 class PlanetEvent:
 
-    # Возвращает цвет текста
+    # Возвращает цвет текста, используя значение из файла
     @staticmethod
     def get_text_color(value: str) -> str:
         match value:

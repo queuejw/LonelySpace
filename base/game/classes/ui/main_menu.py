@@ -83,8 +83,8 @@ def init_game_launch(skip: bool = False):
     # Здесь по факту происходит запуск игры.
     components.GAME.player = loaded_data['ship']
     from base.core.io.txt_loader import load_txt_file
-    components.GAME.player_in_space_drawing = load_txt_file("base//game//res//txt//ship_in_space.txt")
-    components.GAME.player_on_planet_drawing = load_txt_file("base//game//res//txt//ship_on_planet.txt")
+    components.GAME.player_in_space_drawing = load_txt_file(constants.PLAYER_SPACE_DRAWING_PATH)
+    components.GAME.player_on_planet_drawing = load_txt_file(constants.PLAYER_PLANET_DRAWING_PATH)
     from base.core.io import planet_manager
     components.GAME.planets = planet_manager.load_planets(constants.PLANETS_FILE_PATH)
     # Если планеты сообщества включены, добавляем их в общий список планет.
@@ -152,12 +152,12 @@ class MainMenu(ScreenBase):
                             save_file(components.SETTINGS.export_as_dict(), constants.SETTINGS_FILE_PATH,
                                       constants.USER_FOLDER_NAME)
                             if components.SETTINGS.sound:
-                                playsound3.playsound("base//game//res//audio//command_executed.mp3", False)
+                                playsound3.playsound("base/game/res/audio/command_executed.mp3", False)
                             print(
                                 f"{colorama.Fore.GREEN}Язык успешно изменен. Перезапустите игру, чтобы полностью изменить его.")
                         else:
                             if components.SETTINGS.sound:
-                                playsound3.playsound("base//game//res//audio//command_handle_error.mp3", False)
+                                playsound3.playsound("base/game/res/audio/command_handle_error.mp3", False)
                             print(
                                 f"{colorama.Fore.RED}Этот язык не поддерживается игрой.")
                         del new_lang
@@ -168,7 +168,7 @@ class MainMenu(ScreenBase):
                             save_file(components.SETTINGS.export_as_dict(), constants.SETTINGS_FILE_PATH,
                                       constants.USER_FOLDER_NAME)
                             if components.SETTINGS.sound:
-                                playsound3.playsound("base//game//res//audio//command_executed.mp3", False)
+                                playsound3.playsound("base/game/res/audio/command_executed.mp3", False)
                             print(
                                 f"{colorama.Fore.GREEN}Звук включен. Перезапустите игру, чтобы полностью применить изменения.")
                         elif new_sound_value == '0':
@@ -179,7 +179,7 @@ class MainMenu(ScreenBase):
                                 f"{colorama.Fore.GREEN}Звук отключен. Перезапустите игру, чтобы полностью применить изменения.")
                         else:
                             if components.SETTINGS.sound:
-                                playsound3.playsound("base//game//res//audio//invalid_argument.mp3", False)
+                                playsound3.playsound("base/game/res/audio/invalid_argument.mp3", False)
                             print(
                                 f"{colorama.Fore.RED}Недопустимое значение для аргумента sound.")
                         del new_sound_value
@@ -190,7 +190,7 @@ class MainMenu(ScreenBase):
                             save_file(components.SETTINGS.export_as_dict(), constants.SETTINGS_FILE_PATH,
                                       constants.USER_FOLDER_NAME)
                             if components.SETTINGS.sound:
-                                playsound3.playsound("base//game//res//audio//command_executed.mp3", False)
+                                playsound3.playsound("base/game/res/audio/command_executed.mp3", False)
                             print(
                                 f"{colorama.Fore.GREEN}Режим отладки включен.")
                         elif new_debug_value == '0':
@@ -198,12 +198,12 @@ class MainMenu(ScreenBase):
                             save_file(components.SETTINGS.export_as_dict(), constants.SETTINGS_FILE_PATH,
                                       constants.USER_FOLDER_NAME)
                             if components.SETTINGS.sound:
-                                playsound3.playsound("base//game//res//audio//command_executed.mp3", False)
+                                playsound3.playsound("base/game/res/audio/command_executed.mp3", False)
                             print(
                                 f"{colorama.Fore.GREEN}Режим отладки отключен.")
                         else:
                             if components.SETTINGS.sound:
-                                playsound3.playsound("base//game//res//audio//invalid_argument.mp3", False)
+                                playsound3.playsound("base/game/res/audio/invalid_argument.mp3", False)
                             print(
                                 f"{colorama.Fore.RED}Недопустимое значение для аргумента debug.")
                         del new_debug_value
@@ -214,7 +214,7 @@ class MainMenu(ScreenBase):
                             save_file(components.SETTINGS.export_as_dict(), constants.SETTINGS_FILE_PATH,
                                       constants.USER_FOLDER_NAME)
                             if components.SETTINGS.sound:
-                                playsound3.playsound("base//game//res//audio//command_executed.mp3", False)
+                                playsound3.playsound("base/game/res/audio/command_executed.mp3", False)
                             print(
                                 f"{colorama.Fore.GREEN}Включены планеты сообщества.")
                         elif new_community_value == '0':
@@ -222,12 +222,12 @@ class MainMenu(ScreenBase):
                             save_file(components.SETTINGS.export_as_dict(), constants.SETTINGS_FILE_PATH,
                                       constants.USER_FOLDER_NAME)
                             if components.SETTINGS.sound:
-                                playsound3.playsound("base//game//res//audio//command_executed.mp3", False)
+                                playsound3.playsound("base/game/res/audio/command_executed.mp3", False)
                             print(
                                 f"{colorama.Fore.GREEN}Отключены планеты сообщества.")
                         else:
                             if components.SETTINGS.sound:
-                                playsound3.playsound("base//game//res//audio//invalid_argument.mp3", False)
+                                playsound3.playsound("base/game/res/audio/invalid_argument.mp3", False)
                             print(
                                 f"{colorama.Fore.RED}Недопустимое значение для аргумента debug.")
                         del new_community_value
@@ -251,7 +251,7 @@ class MainMenu(ScreenBase):
                             f"{colorama.Fore.CYAN}settings debug [0 / 1]{colorama.Fore.GREEN} - режим отладки (для разработчиков). 0 - отключить, 1 - включить.\n")
                     case _:
                         if components.SETTINGS.sound:
-                            playsound3.playsound("base//game//res//audio//invalid_argument.mp3", False)
+                            playsound3.playsound("base/game/res/audio/invalid_argument.mp3", False)
                         print(
                             f"{colorama.Fore.RED}Неизвестный аргумент команды. Введите {colorama.Fore.CYAN}settings{colorama.Fore.RED}, если понадобится помощь.")
             else:
@@ -294,7 +294,7 @@ class MainMenu(ScreenBase):
                 handle_settings_command(command)
             case "exit":
                 if components.SETTINGS.get_sound():
-                    playsound3.playsound("base//game//res//audio//shutting_down_basic_systems.mp3", False)
+                    playsound3.playsound("base/game/res/audio/shutting_down_basic_systems.mp3", False)
                 if components.SETTINGS.get_debug_mode():
                     print("Ожидается выход из игры")
                 slow_print("Отключение базовых систем......", colorama.Fore.GREEN, 0.082)
@@ -302,7 +302,7 @@ class MainMenu(ScreenBase):
             # Игрок ввёл неизвестную команду
             case _:
                 if components.SETTINGS.sound:
-                    playsound3.playsound("base//game//res//audio//unknown_command.mp3", False)
+                    playsound3.playsound("base/game/res/audio/unknown_command.mp3", False)
                 print(colorama.Fore.RED + "Неизвестная команда.")
         del command
         return self
