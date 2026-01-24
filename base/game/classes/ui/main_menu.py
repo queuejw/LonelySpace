@@ -4,9 +4,8 @@ import playsound3
 from base.core import components
 from base.core import constants
 from base.core.console import clear_terminal, slow_print
-from base.core.constants import PRODUCT_NAME, PRODUCT_GITHUB_LINK
 from base.core.io.json_manager import save_file
-from base.game.classes.ui.base.screen import ScreenBase
+from base.game.classes.base.screen import ScreenBase
 from base.game.classes.ui.game_screen import GameScreen
 
 
@@ -15,6 +14,15 @@ def init_game_launch(skip: bool = False):
     clear_terminal()
     from base.core import components
     from base.core.io import json_manager
+
+    # Формирует список событий в космосе, а затем возвращает его.
+    def load_space_events() -> list:
+        from base.game.classes.base.game_event import GameEvent
+        f = json_manager.load_file(constants.SPACE_EVENTS_FILE_PATH)
+        return [
+            GameEvent(item['name'], item['description'], list(item['commands']), float(item['prob']), item['color'])
+            for item in f]
+
     loaded_data = json_manager.load_file(constants.SAVE_FILE_PATH)
     # Выводим забавные сообщения, которые никак не влияют на игру
     if not skip:
@@ -90,6 +98,8 @@ def init_game_launch(skip: bool = False):
     # Если планеты сообщества включены, добавляем их в общий список планет.
     if components.SETTINGS.get_custom_planets_support():
         components.GAME.planets += planet_manager.load_planets(constants.CUSTOM_PLANETS_FILE_PATH)
+    # Загружаем события в космосе
+    components.GAME.space_events = load_space_events()
     # Помечаем игру как запущенную
     components.GAME.running = True
     # Блокируем ввод.
@@ -126,7 +136,7 @@ class MainMenu(ScreenBase):
     def render(self):
         clear_terminal()
         text = (
-            f"{colorama.Fore.GREEN}Добро пожаловать в {colorama.Fore.CYAN}{PRODUCT_NAME}\n\n"
+            f"{colorama.Fore.GREEN}Добро пожаловать в {colorama.Fore.CYAN}{constants.PRODUCT_NAME}\n\n"
             f"{colorama.Fore.CYAN}start {colorama.Fore.GREEN}- Начать игру\n"
             f"{colorama.Fore.CYAN}settings {colorama.Fore.GREEN}- Настроить игру\n\n"
             f"{colorama.Fore.CYAN}info {colorama.Fore.GREEN}- Об игре\n"
@@ -283,10 +293,10 @@ class MainMenu(ScreenBase):
                 return init_game_launch(components.SETTINGS.get_debug_mode())
             case "info":
                 a = (
-                    f"{colorama.Fore.CYAN}{PRODUCT_NAME}{colorama.Fore.GREEN} - игра про космос на Python, которая разрабатывается в свободное время небольшой командой разработчиков.\n\n"
+                    f"{colorama.Fore.CYAN}{constants.PRODUCT_NAME}{colorama.Fore.GREEN} - игра про космос на Python, которая разрабатывается в свободное время небольшой командой разработчиков.\n\n"
                     f"{colorama.Fore.CYAN}@pxffd{colorama.Fore.GREEN} - Автор идеи и главный разработчик\n"
                     f"{colorama.Fore.CYAN}неизвестный фанат{colorama.Fore.GREEN} - Автор обложки игры.\n\n"
-                    f"{colorama.Fore.CYAN}{PRODUCT_GITHUB_LINK}{colorama.Fore.GREEN} - Исходный код игры и обратная связь.\n"
+                    f"{colorama.Fore.CYAN}{constants.PRODUCT_GITHUB_LINK}{colorama.Fore.GREEN} - Исходный код игры и обратная связь.\n"
                 )
                 print(a)
                 del a

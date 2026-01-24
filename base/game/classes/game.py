@@ -7,6 +7,7 @@ import playsound3
 
 from base.core import components
 from base.core.clamp import clamp
+from base.game.classes.base.game_event import GameEvent
 from base.game.classes.planet.planet import Planet
 from base.game.classes.ship.ship import Ship
 
@@ -158,6 +159,7 @@ class Game:
         self.player_in_space_drawing: str = ''  # ASCII рисунок корабля в космосе
         self.player_on_planet_drawing: str = ''  # ASCII рисунок корабля на планете
         self.planets: list[Planet] = []  # Список планет
+        self.space_events: list[GameEvent] = []  # Список событий в космосе
         self.last_messages: list[str] = []  # Список последних действий
         self.timer = -1  # Простой таймер, который нужен для вывода времени ожидания какого-то действия. Если -1, значит он не работает
         self.audio_queue: list[str] = []  # Очередь звуков, здесь хранится путь до файлов
@@ -402,47 +404,13 @@ class Game:
 
         else:
             # События, которые происходят только в космосе
-            # todo в будущем перенести их в json и разрешить игроку создавать свои
-            # Негативные события
-            if random.random() > 0.5:
-                # Сбой ИИ навигации
-                if random.random() < 0.008 and self.planet_flying_active:
-                    self.update_last_messages(
-                        f"{colorama.Fore.YELLOW}Сбой навигационного ИИ привёл к ошибке курса! Полёт отменён.")
-                    self.planet_flying_active = False
-                # Столкновение с космическим мусором
-                if random.random() < 0.02:
-                    self.update_last_messages(
-                        f"{colorama.Fore.YELLOW}Столкновение с космическим мусором!")
-                    self.player.strength = clamp(self.player.strength - random.randint(1, 3), 0, 100)
-                    return
-                # Электромагнитный импульс
-                if random.random() < 0.04:
-                    self.update_last_messages(
-                        f"{colorama.Fore.YELLOW}Электромагнитный импульс вывел системы из строя!")
-                    self.damage_random_modules()
-                    return
-                # Поток космической пыли
-                if random.random() < 0.05:
-                    self.update_last_messages(
-                        f"{colorama.Fore.YELLOW}Поток космической пыли истирает обшивку.")
-                    self.player.strength = clamp(self.player.strength - random.randint(2, 6), 0, 100)
-                # Электрическая дуга
-                if random.random() < 0.03:
-                    self.update_last_messages(
-                        f"{colorama.Fore.YELLOW}Электрическая дуга прошла по корпусу!.")
-                    self.damage_random_modules()
-                    self.player.strength = clamp(self.player.strength - random.randint(2, 6), 0, 100)
-            else:
-                # Позитивные события
-                # Поток космической энергии
-                if random.random() < 0.07:
-                    self.update_last_messages(
-                        f"{colorama.Fore.GREEN}Корабль попал в поток безопасной космической энергии.")
-                    self.player.strength = clamp(self.player.strength + random.randint(1, 3), 0, 100)
-                    return
-
-            # todo: ещё больше событий
+            # Проходим по списку событий, если они есть.
+            if len(self.space_events) > 0:
+                for i in self.space_events:
+                    if random.random() < 0.1:
+                        continue
+                    if i.run_event():
+                        self.update_last_messages(f"{i.event_text_color}{i.event_description}")
 
     # Добавляет путь к файлу со звуком в очередь.
     def add_audio_to_queue(self, path: str) -> bool:

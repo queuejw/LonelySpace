@@ -4,8 +4,8 @@ import colorama
 
 from base.core import components, constants
 from base.core.console import clear_terminal
+from base.game.classes.base.screen import ScreenBase
 from base.game.classes.game import Game
-from base.game.classes.ui.base.screen import ScreenBase
 from base.game.classes.ui.main_menu import MainMenu
 
 

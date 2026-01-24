@@ -1,0 +1,20 @@
+[
+  {
+    "name": "Космический мусор",
+    "description": "Корабль столкнулся с космическим мусором!",
+    "commands": [
+      "strength remove 4 2"
+    ],
+    "prob": 0.02,
+    "color": "red"
+  },
+  {
+    "name": "Столкновение с астероидом",
+    "description": "Корабль столкнулся с астероидом!",
+    "commands": [
+      "strength remove 8 2"
+    ],
+    "prob": 0.06,
+    "color": "red"
+  }
+]

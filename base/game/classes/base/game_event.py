@@ -6,8 +6,9 @@ from base.core import components
 from base.core.clamp import clamp
 
 
-# Класс события на планете
-class PlanetEvent:
+# Класс события в игре.
+# В данный момент используется для событий на планетах и в космосе.
+class GameEvent:
 
     # Возвращает цвет текста, используя значение из файла
     @staticmethod
