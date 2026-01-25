@@ -1,5 +1,4 @@
 @echo off
-chcp 65001
-echo –ó–∞–ø—É—Å–∫ Lonely Space, –ø–æ–¥–æ–∂–¥–∏—Ç–µ –Ω–µ–º–Ω–æ–≥–æ ...
+echo á†Ø„·™ Lonely Space, ØÆ§Æ¶§®‚• ≠•¨≠Æ£Æ ...
 python ./main.py
 pause
