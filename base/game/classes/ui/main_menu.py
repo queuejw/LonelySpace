@@ -19,9 +19,12 @@ def init_game_launch(skip: bool = False):
     def load_space_events() -> list:
         from base.game.classes.base.game_event import GameEvent
         f = json_manager.load_file(constants.SPACE_EVENTS_FILE_PATH)
+        f2 = json_manager.load_file(constants.CUSTOM_SPACE_EVENTS_FILE_PATH)
         return [
             GameEvent(item['name'], item['description'], list(item['commands']), float(item['prob']), item['color'])
-            for item in f]
+            for item in f] + [
+            GameEvent(item['name'], item['description'], list(item['commands']), float(item['prob']), item['color'])
+            for item in f2]
 
     loaded_data = json_manager.load_file(constants.SAVE_FILE_PATH)
     # Выводим забавные сообщения, которые никак не влияют на игру

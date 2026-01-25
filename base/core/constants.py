@@ -12,3 +12,5 @@ PLAYER_SPACE_DRAWING_PATH = "base/game/res/txt/ship_in_space.txt"  # Путь д
 PLAYER_PLANET_DRAWING_PATH = "base/game/res/txt/ship_on_planet.txt"  # Путь до файла с рисунком корабля на планете
 
 SPACE_EVENTS_FILE_PATH = "base/game/res/events/space_events.json"  # Путь до файла с событиями в космосе
+CUSTOM_SPACE_EVENTS_FILE_PATH = "base/game/res/custom/custom_space_events.json"  # Путь до файла с событиями сообщества в космосе
+

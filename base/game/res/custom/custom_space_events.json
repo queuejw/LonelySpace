@@ -1,2 +1,11 @@
 [
+  {
+    "name": "Инопланетяне",
+    "description": "Дружелюбные инопланетяне отдали нам ресурсы.",
+    "commands": [
+      "resources add 8 2"
+    ],
+    "prob": 0.03,
+    "color": "green"
+  }
 ]
