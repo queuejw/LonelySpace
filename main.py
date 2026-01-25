@@ -22,6 +22,11 @@ async def start_game_services():
             if components.SETTINGS.get_debug_mode():
                 print(f"{colorama.Fore.RED}Не удалось загрузить значение настройки custom_planets")
         try:
+            components.SETTINGS.custom_planets = loaded_settings['custom_space_events']
+        except KeyError:
+            if components.SETTINGS.get_debug_mode():
+                print(f"{colorama.Fore.RED}Не удалось загрузить значение настройки custom_space_events")
+        try:
             if check_sound_support():
                 components.SETTINGS.sound = loaded_settings['sound']
             else:
