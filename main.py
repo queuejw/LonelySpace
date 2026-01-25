@@ -54,7 +54,12 @@ async def init_game():
 # Здесь происходит запуск программы 
 if __name__ == "__main__":
     import asyncio
-    import colorama
+
+    try:
+        import colorama
+    except ImportError:
+        print("[E] Отсутствуют необходимые библиотеки. Обратитесь к документации, чтобы исправить это.")
+        exit(1)
 
     colorama.init(autoreset=True)
     try:
