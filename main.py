@@ -1,14 +1,12 @@
-from base.core import components
-
-
-# Загружает настройки игры
-def create_game_settings():
-
+# Загружает настройки игры, а затем запускает её
+async def start_game_services():
+    from base.core import components
     # Если звук недоступен, вернет False
     def check_sound_support() -> bool:
         from playsound3 import AVAILABLE_BACKENDS
         if len(AVAILABLE_BACKENDS) < 1:
-            print(f"{colorama.Fore.RED}Не удалось включить поддержку звука на Вашей системе.\n\nОбратитесь к справке, либо попробуйте разобраться с этим самостоятельно.")
+            print(
+                f"{colorama.Fore.RED}Не удалось включить поддержку звука на Вашей системе.\n\nОбратитесь к справке, либо попробуйте разобраться с этим самостоятельно.")
             input("Нажмите Enter, чтобы продолжить запуск игры.")
             return False
         return True
@@ -46,24 +44,24 @@ def create_game_settings():
     components.SETTINGS = Settings()
     apply_loaded_settings(json_manager.load_file(SETTINGS_FILE_PATH, True))
 
-# Запускает движок игры
-async def init_game():
-    create_game_settings()
     await components.ENGINE.start()
 
-# Здесь происходит запуск программы 
+# Здесь происходит запуск программы
 if __name__ == "__main__":
-    import asyncio
-
+    # Импортируем все библиотеки, чтобы проверить их наличие. В случае ошибки игра закроется
     try:
         import colorama
+        import playsound3
+        import keyboard
     except ImportError:
         print("[E] Отсутствуют необходимые библиотеки. Обратитесь к документации, чтобы исправить это.")
         exit(1)
 
     colorama.init(autoreset=True)
+    import asyncio
+
     try:
-        asyncio.run(init_game())
+        asyncio.run(start_game_services())
     except KeyboardInterrupt:
         print(f"{colorama.Back.RED}{colorama.Fore.BLACK}Экстренное завершение работы системы ...")
     except Exception as e:
