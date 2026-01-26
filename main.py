@@ -24,38 +24,38 @@ async def start_game_services():
         game_settings = Settings()
         # Пробуем загрузить значение debug_mode
         try:
-            components.SETTINGS.debug_mode = loaded_settings['debug_mode']
+            game_settings.debug_mode = loaded_settings['debug_mode']
         except KeyError:
             # Режим отладки недоступен.
             pass
         # Пробуем загрузить значение custom_planets
         try:
-            components.SETTINGS.custom_planets = loaded_settings['custom_planets']
+            game_settings.custom_planets = loaded_settings['custom_planets']
         except KeyError:
-            if components.SETTINGS.get_debug_mode():
+            if game_settings.get_debug_mode():
                 print(f"{colorama.Fore.RED}Не удалось загрузить значение настройки custom_planets")
         # Пробуем загрузить значение
         try:
-            components.SETTINGS.custom_planets = loaded_settings['custom_space_events']
+            game_settings.custom_planets = loaded_settings['custom_space_events']
         except KeyError:
-            if components.SETTINGS.get_debug_mode():
+            if game_settings.get_debug_mode():
                 print(f"{colorama.Fore.RED}Не удалось загрузить значение настройки custom_space_events")
         # Пробуем загрузить значение sound
         try:
             if check_sound_support():
-                components.SETTINGS.sound = loaded_settings['sound']
+                game_settings.sound = loaded_settings['sound']
             else:
                 # Если звук не поддерживается, мы должны отключить его, чтобы избежать проблем
-                components.SETTINGS.sound = False
+                game_settings.sound = False
         except KeyError:
-            components.SETTINGS.sound = False
-            if components.SETTINGS.get_debug_mode():
+            game_settings.sound = False
+            if game_settings.get_debug_mode():
                 print(f"{colorama.Fore.RED}Не удалось загрузить значение настройки sound")
         # Пробуем загрузить значение lang
         try:
-            components.SETTINGS.lang = loaded_settings['lang']
+            game_settings.lang = loaded_settings['lang']
         except KeyError:
-            if components.SETTINGS.get_debug_mode():
+            if game_settings.get_debug_mode():
                 print(f"{colorama.Fore.RED}Не удалось загрузить значение настройки lang")
 
         del loaded_settings
