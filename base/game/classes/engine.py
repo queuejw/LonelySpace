@@ -84,7 +84,7 @@ class Engine:
                 print(
                     (
                         f"{colorama.Fore.BLACK}{colorama.Back.RED}Не удалось подключить клавиатуру.{colorama.Fore.RED}{colorama.Back.RESET}\n\n"
-                        f"Мы можем попробовать помочь Вам. Свяжитесь с нами: {constants.PRODUCT_GITHUB_LINK}"
+                        f"Обратная связь: {constants.PRODUCT_GITHUB_LINK}"
                     )
                 )
                 self.running = False
