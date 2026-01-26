@@ -6,7 +6,7 @@
       "strength remove 4 2"
     ],
     "prob": 0.02,
-    "color": "red"
+    "color": "yellow"
   },
   {
     "name": "Столкновение с астероидом",
@@ -14,7 +14,16 @@
     "commands": [
       "strength remove 8 2"
     ],
-    "prob": 0.06,
+    "prob": 0.04,
+    "color": "red"
+  },
+  {
+    "name": "Сбой систем",
+    "description": "Перегрузка! Компьютер повреждён.",
+    "commands": [
+      "module_computer 0"
+    ],
+    "prob": 0.006,
     "color": "red"
   }
 ]
