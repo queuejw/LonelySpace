@@ -22,7 +22,7 @@
 
 Файл с планетами сообщества находится здесь:
 
-    base/game/res/custom/custom_planets.json
+    custom/custom_planets.json
 
 ### Как сделать свою?
 

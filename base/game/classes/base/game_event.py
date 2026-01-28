@@ -256,6 +256,19 @@ class GameEvent:
                     case _:
                         if components.SETTINGS.get_debug_mode():
                             print(f"Неизвестный аргумент {command[1]} события {self.event_name}")
+            # Изменение параметра Утечка воздуха
+            case "air_leaking":
+                # Второй аргумент
+                match command[1]:
+                    # Включить
+                    case "1":
+                        components.GAME.player.air_leaking = True
+                    # Отключить
+                    case "0":
+                        components.GAME.player.air_leaking = False
+                    case _:
+                        if components.SETTINGS.get_debug_mode():
+                            print(f"Неизвестный аргумент {command[1]} события {self.event_name}")
             case _:
                 # Неизвестный аргумент.
                 if components.SETTINGS.get_debug_mode():

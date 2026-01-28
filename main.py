@@ -66,6 +66,7 @@ async def start_game_services():
 
     await components.ENGINE.start()
 
+
 # Здесь происходит запуск программы
 if __name__ == "__main__":
 

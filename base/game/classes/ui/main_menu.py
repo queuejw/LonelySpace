@@ -19,7 +19,8 @@ def init_game_launch(skip: bool = False):
     def load_space_events() -> list:
         from base.game.classes.base.game_event import GameEvent
         f = json_manager.load_file(constants.SPACE_EVENTS_FILE_PATH)
-        f2 = json_manager.load_file(constants.CUSTOM_SPACE_EVENTS_FILE_PATH) if components.SETTINGS.custom_space_events else []
+        f2 = json_manager.load_file(
+            constants.CUSTOM_SPACE_EVENTS_FILE_PATH) if components.SETTINGS.custom_space_events else []
         return [
             GameEvent(item['name'], item['description'], list(item['commands']), float(item['prob']), item['color'])
             for item in f] + [
@@ -140,6 +141,9 @@ class MainMenu(ScreenBase):
         clear_terminal()
         text = (
             f"{colorama.Fore.GREEN}Добро пожаловать в {colorama.Fore.CYAN}{constants.PRODUCT_NAME}\n\n"
+            f"{colorama.Fore.CYAN}// {constants.PRODUCT_VERSION}{colorama.Fore.GREEN}\n"
+            "======\n"
+            f"{colorama.Fore.GREEN}Доступные команды:\n"
             f"{colorama.Fore.CYAN}start {colorama.Fore.GREEN}- Начать игру\n"
             f"{colorama.Fore.CYAN}settings {colorama.Fore.GREEN}- Настроить игру\n\n"
             f"{colorama.Fore.CYAN}info {colorama.Fore.GREEN}- Об игре\n"
@@ -322,10 +326,12 @@ class MainMenu(ScreenBase):
             return self
 
         match command[0]:
+            # Запуск игры
             case "start":
                 if components.SETTINGS.get_debug_mode():
                     print("Ожидается запуск игры")
                 return init_game_launch(components.SETTINGS.get_debug_mode())
+            # Об игре
             case "info":
                 a = (
                     f"{colorama.Fore.CYAN}{constants.PRODUCT_NAME}{colorama.Fore.GREEN} - игра про космос на Python, которая разрабатывается в свободное время небольшой командой разработчиков.\n\n"
@@ -335,8 +341,10 @@ class MainMenu(ScreenBase):
                 )
                 print(a)
                 del a
+            # Обработка настроек
             case "settings":
                 handle_settings_command(command)
+            # Выход из игры
             case "exit":
                 if components.SETTINGS.get_sound():
                     playsound3.playsound("base/game/res/audio/shutting_down_basic_systems.mp3", False)
@@ -344,6 +352,7 @@ class MainMenu(ScreenBase):
                     print("Ожидается выход из игры")
                 slow_print("Отключение базовых систем......", colorama.Fore.GREEN, 0.082)
                 components.ENGINE.stop()
+            # Очистка терминала
             case "clear":
                 self.render()
             # Игрок ввёл неизвестную команду

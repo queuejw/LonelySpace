@@ -31,10 +31,10 @@
     "name": "Разгерметизация отсека",
     "description": "Произошла частичная разгерметизация корабля!",
     "commands": [
-      "oxygen remove 20 5",
+      "oxygen remove 25 5",
       "crew remove 6 3"
     ],
-    "prob": 0.018,
+    "prob": 0.0015,
     "color": "red"
   },
   {
@@ -43,7 +43,7 @@
     "commands": [
       "module_computer 0"
     ],
-    "prob": 0.031,
+    "prob": 0.021,
     "color": "yellow"
   },
   {
@@ -53,26 +53,16 @@
       "oxygen remove 5 3",
       "module_life_support 0"
     ],
-    "prob": 0.026,
-    "color": "red"
-  },
-  {
-    "name": "Электромагнитный импульс",
-    "description": "Неизвестный источник ЭМИ повредил электронику корабля.",
-    "commands": [
-      "module_computer 0",
-      "module_engine 0",
-      "resources remove 15 5"
-    ],
-    "prob": 0.009,
+    "prob": 0.016,
     "color": "red"
   },
   {
     "name": "Трещина в корпусе",
-    "description": "В корпусе корабля образовалась микротрещина!",
+    "description": "В корпусе корабля образовалась микротрещина, началась утечка воздуха.",
     "commands": [
       "strength remove 5 2",
-      "oxygen remove 3 1"
+      "oxygen remove 3 1",
+      "air_leaking 1"
     ],
     "prob": 0.012,
     "color": "red"
