@@ -377,6 +377,8 @@ class Game:
         # Если количество элементов превышает лимит, ликвидируем самое старое
         if len(self.last_messages) > 12:
             self.last_messages.pop()
+        if len(self.audio_queue) < 1:
+            self.add_audio_to_queue("base/game/res/audio/beep.mp3")
 
     # Создаёт случайные события в игре
     async def events_generator(self):
@@ -785,14 +787,12 @@ class Game:
                 if air_leaking_notification_enabled:
                     air_leaking_notification_enabled = False
                     self.update_last_messages(f"{colorama.Fore.RED}Внимание! Утечка воздуха!")
-                    if components.SETTINGS.get_sound():
-                        pass
+                    self.add_audio_to_queue("base/game/res/audio/air_leaking_warning.mp3")
             else:
                 if not air_leaking_notification_enabled:
                     air_leaking_notification_enabled = True
                     self.update_last_messages(f"{colorama.Fore.GREEN}Утечка воздуха устранена!")
-                    if components.SETTINGS.get_sound():
-                        pass
+                    self.add_audio_to_queue("base/game/res/audio/air_leaking_fixed.mp3")
 
             # Генерируем случайное событие, если повезет
             if random.random() < 0.3:
