@@ -5,7 +5,7 @@
     "commands": [
       "strength remove 4 2"
     ],
-    "prob": 0.02,
+    "prob": 0.04,
     "color": "yellow"
   },
   {
@@ -24,7 +24,7 @@
     "commands": [
       "strength remove 10 5"
     ],
-    "prob": 0.085,
+    "prob": 0.055,
     "color": "yellow"
   },
   {
