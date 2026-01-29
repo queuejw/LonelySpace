@@ -4,9 +4,8 @@ import playsound3
 from base.core import components
 from base.core import constants
 from base.core.console import clear_terminal, slow_print
-from base.core.constants import PRODUCT_NAME, PRODUCT_GITHUB_LINK
 from base.core.io.json_manager import save_file
-from base.game.classes.ui.base.screen import ScreenBase
+from base.game.classes.base.screen import ScreenBase
 from base.game.classes.ui.game_screen import GameScreen
 
 
@@ -15,6 +14,19 @@ def init_game_launch(skip: bool = False):
     clear_terminal()
     from base.core import components
     from base.core.io import json_manager
+
+    # Формирует список событий в космосе, а затем возвращает его.
+    def load_space_events() -> list:
+        from base.game.classes.base.game_event import GameEvent
+        f = json_manager.load_file(constants.SPACE_EVENTS_FILE_PATH)
+        f2 = json_manager.load_file(
+            constants.CUSTOM_SPACE_EVENTS_FILE_PATH) if components.SETTINGS.custom_space_events else []
+        return [
+            GameEvent(item['name'], item['description'], list(item['commands']), float(item['prob']), item['color'])
+            for item in f] + [
+            GameEvent(item['name'], item['description'], list(item['commands']), float(item['prob']), item['color'])
+            for item in f2]
+
     loaded_data = json_manager.load_file(constants.SAVE_FILE_PATH)
     # Выводим забавные сообщения, которые никак не влияют на игру
     if not skip:
@@ -90,6 +102,8 @@ def init_game_launch(skip: bool = False):
     # Если планеты сообщества включены, добавляем их в общий список планет.
     if components.SETTINGS.get_custom_planets_support():
         components.GAME.planets += planet_manager.load_planets(constants.CUSTOM_PLANETS_FILE_PATH)
+    # Загружаем события в космосе
+    components.GAME.space_events = load_space_events()
     # Помечаем игру как запущенную
     components.GAME.running = True
     # Блокируем ввод.
@@ -126,11 +140,17 @@ class MainMenu(ScreenBase):
     def render(self):
         clear_terminal()
         text = (
-            f"{colorama.Fore.GREEN}Добро пожаловать в {colorama.Fore.CYAN}{PRODUCT_NAME}\n\n"
+            f"{colorama.Fore.GREEN}Добро пожаловать в {colorama.Fore.CYAN}{constants.PRODUCT_NAME}\n\n"
+            f"{colorama.Fore.CYAN}// {constants.PRODUCT_VERSION}{colorama.Fore.GREEN}\n"
+            "======\n"
+            f"{colorama.Fore.GREEN}Доступные команды:\n"
             f"{colorama.Fore.CYAN}start {colorama.Fore.GREEN}- Начать игру\n"
             f"{colorama.Fore.CYAN}settings {colorama.Fore.GREEN}- Настроить игру\n\n"
             f"{colorama.Fore.CYAN}info {colorama.Fore.GREEN}- Об игре\n"
             f"{colorama.Fore.CYAN}exit {colorama.Fore.GREEN}- Закрыть игру\n\n"
+            "======\n"
+            f"{colorama.Fore.CYAN}clear {colorama.Fore.GREEN}- Очистить экран\n"
+            "======\n\n"
             f"{colorama.Fore.GREEN}Введите команду в терминал:\n"
         )
         print(text)
@@ -207,7 +227,7 @@ class MainMenu(ScreenBase):
                             print(
                                 f"{colorama.Fore.RED}Недопустимое значение для аргумента debug.")
                         del new_debug_value
-                    case 'community':
+                    case 'community_planets':
                         new_community_value = user_command[2]
                         if new_community_value == '1':
                             components.SETTINGS.custom_planets = True
@@ -229,7 +249,31 @@ class MainMenu(ScreenBase):
                             if components.SETTINGS.sound:
                                 playsound3.playsound("base/game/res/audio/invalid_argument.mp3", False)
                             print(
-                                f"{colorama.Fore.RED}Недопустимое значение для аргумента debug.")
+                                f"{colorama.Fore.RED}Недопустимое значение для аргумента community_planets.")
+                        del new_community_value
+                    case 'community_events':
+                        new_community_value = user_command[2]
+                        if new_community_value == '1':
+                            components.SETTINGS.custom_space_events = True
+                            save_file(components.SETTINGS.export_as_dict(), constants.SETTINGS_FILE_PATH,
+                                      constants.USER_FOLDER_NAME)
+                            if components.SETTINGS.sound:
+                                playsound3.playsound("base/game/res/audio/command_executed.mp3", False)
+                            print(
+                                f"{colorama.Fore.GREEN}Включены события сообщества.")
+                        elif new_community_value == '0':
+                            components.SETTINGS.custom_space_events = False
+                            save_file(components.SETTINGS.export_as_dict(), constants.SETTINGS_FILE_PATH,
+                                      constants.USER_FOLDER_NAME)
+                            if components.SETTINGS.sound:
+                                playsound3.playsound("base/game/res/audio/command_executed.mp3", False)
+                            print(
+                                f"{colorama.Fore.GREEN}Отключены события сообщества.")
+                        else:
+                            if components.SETTINGS.sound:
+                                playsound3.playsound("base/game/res/audio/invalid_argument.mp3", False)
+                            print(
+                                f"{colorama.Fore.RED}Недопустимое значение для аргумента community_events.")
                         del new_community_value
             elif len(user_command) == 2:
                 match user_command[1]:
@@ -240,9 +284,12 @@ class MainMenu(ScreenBase):
                         )
                         print(t)
                         del t
-                    case 'community':
+                    case 'community_planets':
                         print(
-                            f"{colorama.Fore.CYAN}settings community [0 / 1]{colorama.Fore.GREEN} - планеты сообщества. 0 - отключить, 1 - включить.\n")
+                            f"{colorama.Fore.CYAN}settings community_planets [0 / 1]{colorama.Fore.GREEN} - планеты сообщества. 0 - отключить, 1 - включить.\n")
+                    case 'community_events':
+                        print(
+                            f"{colorama.Fore.CYAN}settings community_events [0 / 1]{colorama.Fore.GREEN} - события сообщества. 0 - отключить, 1 - включить.\n")
                     case 'sound':
                         print(
                             f"{colorama.Fore.CYAN}settings sound [0 / 1]{colorama.Fore.GREEN} - звук в игре. 0 - отключить, 1 - включить.\n")
@@ -257,13 +304,15 @@ class MainMenu(ScreenBase):
             else:
                 t = (
                     f"{colorama.Fore.GREEN}Настройки игры:\n"
-                    f"Планеты сообщества: {colorama.Fore.CYAN}{'включены' if components.SETTINGS.get_custom_planets_support() else 'отключены'}{colorama.Fore.GREEN}\n\n"
+                    f"Планеты сообщества: {colorama.Fore.CYAN}{'включены' if components.SETTINGS.get_custom_planets_support() else 'отключены'}{colorama.Fore.GREEN}\n"
+                    f"События сообщества: {colorama.Fore.CYAN}{'включены' if components.SETTINGS.get_custom_events_support() else 'отключены'}{colorama.Fore.GREEN}\n\n"
                     f"Язык: {colorama.Fore.CYAN}{get_lang_name(components.SETTINGS.get_lang())}{colorama.Fore.GREEN}\n"
                     f"Звуки: {colorama.Fore.CYAN}{'включены' if components.SETTINGS.get_sound() else 'отключены'}{colorama.Fore.GREEN}\n\n"
                     f"Отладка: {colorama.Fore.CYAN}{'включена' if components.SETTINGS.get_debug_mode() else 'отключена'}{colorama.Fore.GREEN}\n\n"
                     f"Доступные языки: {colorama.Fore.CYAN}ru{colorama.Fore.GREEN}\n\n"
                     "Изменение настроек:\n"
-                    f"{colorama.Fore.CYAN}settings community [0 / 1]{colorama.Fore.GREEN} - планеты сообщества. 0 - отключить, 1 - включить.\n"
+                    f"{colorama.Fore.CYAN}settings community_planets [0 / 1]{colorama.Fore.GREEN} - планеты сообщества. 0 - отключить, 1 - включить.\n"
+                    f"{colorama.Fore.CYAN}settings community_events [0 / 1]{colorama.Fore.GREEN} - события сообщества. 0 - отключить, 1 - включить.\n"
                     f"{colorama.Fore.CYAN}settings lang [код]{colorama.Fore.GREEN} - смена языка по коду, которые вы увидите выше.\n"
                     f"{colorama.Fore.CYAN}settings sound [0 / 1]{colorama.Fore.GREEN} - звук в игре. 0 - отключить, 1 - включить.\n"
                     f"{colorama.Fore.CYAN}settings debug [0 / 1]{colorama.Fore.GREEN} - режим отладки (для разработчиков). 0 - отключить, 1 - включить.\n"
@@ -277,21 +326,25 @@ class MainMenu(ScreenBase):
             return self
 
         match command[0]:
+            # Запуск игры
             case "start":
                 if components.SETTINGS.get_debug_mode():
                     print("Ожидается запуск игры")
                 return init_game_launch(components.SETTINGS.get_debug_mode())
+            # Об игре
             case "info":
                 a = (
-                    f"{colorama.Fore.CYAN}{PRODUCT_NAME}{colorama.Fore.GREEN} - игра про космос на Python, которая разрабатывается в свободное время небольшой командой разработчиков.\n\n"
+                    f"{colorama.Fore.CYAN}{constants.PRODUCT_NAME}{colorama.Fore.GREEN} - игра про космос на Python, которая разрабатывается в свободное время небольшой командой разработчиков.\n\n"
                     f"{colorama.Fore.CYAN}@pxffd{colorama.Fore.GREEN} - Автор идеи и главный разработчик\n"
                     f"{colorama.Fore.CYAN}неизвестный фанат{colorama.Fore.GREEN} - Автор обложки игры.\n\n"
-                    f"{colorama.Fore.CYAN}{PRODUCT_GITHUB_LINK}{colorama.Fore.GREEN} - Исходный код игры и обратная связь.\n"
+                    f"{colorama.Fore.CYAN}{constants.PRODUCT_GITHUB_LINK}{colorama.Fore.GREEN} - Исходный код игры и обратная связь.\n"
                 )
                 print(a)
                 del a
+            # Обработка настроек
             case "settings":
                 handle_settings_command(command)
+            # Выход из игры
             case "exit":
                 if components.SETTINGS.get_sound():
                     playsound3.playsound("base/game/res/audio/shutting_down_basic_systems.mp3", False)
@@ -299,6 +352,9 @@ class MainMenu(ScreenBase):
                     print("Ожидается выход из игры")
                 slow_print("Отключение базовых систем......", colorama.Fore.GREEN, 0.082)
                 components.ENGINE.stop()
+            # Очистка терминала
+            case "clear":
+                self.render()
             # Игрок ввёл неизвестную команду
             case _:
                 if components.SETTINGS.sound:

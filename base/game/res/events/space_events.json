@@ -1,0 +1,107 @@
+[
+  {
+    "name": "Космический мусор",
+    "description": "Корабль столкнулся с космическим мусором!",
+    "commands": [
+      "strength remove 4 2"
+    ],
+    "prob": 0.04,
+    "color": "yellow"
+  },
+  {
+    "name": "Сбой системы охлаждения",
+    "description": "Система охлаждения дала сбой, оборудование перегревается.",
+    "commands": [
+      "module_cooling_system 0",
+      "strength remove 4 2"
+    ],
+    "prob": 0.022,
+    "color": "yellow"
+  },
+  {
+    "name": "Микрометеоритный дождь",
+    "description": "Корабль попал под поток микрометеоритов. Корпус получил повреждения.",
+    "commands": [
+      "strength remove 10 5"
+    ],
+    "prob": 0.055,
+    "color": "yellow"
+  },
+  {
+    "name": "Разгерметизация отсека",
+    "description": "Произошла частичная разгерметизация корабля!",
+    "commands": [
+      "oxygen remove 25 5",
+      "crew remove 6 3"
+    ],
+    "prob": 0.0015,
+    "color": "red"
+  },
+  {
+    "name": "Отказ бортового компьютера",
+    "description": "Бортовой компьютер вышел из строя из-за перегрузки!.",
+    "commands": [
+      "module_computer 0"
+    ],
+    "prob": 0.021,
+    "color": "yellow"
+  },
+  {
+    "name": "Солнечная вспышка",
+    "description": "Мощная вспышка нарушила работу систем жизнеобеспечения!",
+    "commands": [
+      "oxygen remove 5 3",
+      "module_life_support 0"
+    ],
+    "prob": 0.016,
+    "color": "red"
+  },
+  {
+    "name": "Трещина в корпусе",
+    "description": "В корпусе корабля образовалась микротрещина, началась утечка воздуха.",
+    "commands": [
+      "strength remove 5 2",
+      "oxygen remove 3 1",
+      "air_leaking 1"
+    ],
+    "prob": 0.012,
+    "color": "red"
+  },
+  {
+    "name": "Короткое замыкание",
+    "description": "Короткое замыкание повредило электронику корабля.",
+    "commands": [
+      "module_computer 0"
+    ],
+    "prob": 0.038,
+    "color": "yellow"
+  },
+  {
+    "name": "Повреждение обшивки",
+    "description": "Внешняя обшивка корабля получила повреждения из-за износа.",
+    "commands": [
+      "strength remove 10 4"
+    ],
+    "prob": 0.067,
+    "color": "red"
+  },
+  {
+    "name": "Радиационное облучение",
+    "description": "Корабль оказался в зоне остаточного радиационного фона.",
+    "commands": [
+      "crew remove 6 2",
+      "strength remove 6 2"
+    ],
+    "prob": 0.017,
+    "color": "red"
+  },
+  {
+    "name": "Засорение фильтров",
+    "description": "Фильтры системы жизнеобеспечения вышли из строя!",
+    "commands": [
+      "module_life_support 0"
+    ],
+    "prob": 0.028,
+    "color": "red"
+  }
+]

@@ -14,6 +14,7 @@ class Ship:
         self.outside_temperature = -260  # Температура вне корабля
         self.resources = 300  # Ресурсы
         self.day = 0  # Количество прожитых дней.
+        self.air_leaking = False  # Утечка воздуха активна?
         self.on_planet = False  # Корабль находится на планете?
         self.planet_id = -1  # ID планеты, на которой находится корабль. Если -1, значит корабль не находится на планете (см. выше)
         self.visited_planets: list[int] = []  # ID планет, на которых игрок уже побывал.
@@ -44,6 +45,7 @@ class Ship:
             'outside_temperature': self.outside_temperature,
             'resources': self.resources,
             'day': self.day,
+            'air_leaking': self.air_leaking,
             'on_planet': self.on_planet,
             'planet_id': self.planet_id,
             'visited_planets': self.visited_planets,

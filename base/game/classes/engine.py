@@ -4,8 +4,8 @@ import colorama
 
 from base.core import components, constants
 from base.core.console import clear_terminal
+from base.game.classes.base.screen import ScreenBase
 from base.game.classes.game import Game
-from base.game.classes.ui.base.screen import ScreenBase
 from base.game.classes.ui.main_menu import MainMenu
 
 
@@ -84,7 +84,7 @@ class Engine:
                 print(
                     (
                         f"{colorama.Fore.BLACK}{colorama.Back.RED}Не удалось подключить клавиатуру.{colorama.Fore.RED}{colorama.Back.RESET}\n\n"
-                        f"Мы можем попробовать помочь Вам. Свяжитесь с нами: {constants.PRODUCT_GITHUB_LINK}"
+                        f"Обратная связь: {constants.PRODUCT_GITHUB_LINK}"
                     )
                 )
                 self.running = False

@@ -7,8 +7,8 @@ from base.core import components
 from base.core import constants
 from base.core.console import clear_terminal
 from base.core.io.json_manager import save_file
+from base.game.classes.base.screen import ScreenBase
 from base.game.classes.game import print_terminal_help, print_game_help, print_ship_help, print_planets_help
-from base.game.classes.ui.base.screen import ScreenBase
 
 
 # Если перевод переменной в int успешный, вернёт True

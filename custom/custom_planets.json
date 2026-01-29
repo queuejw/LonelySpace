@@ -1,0 +1,34 @@
+[
+  {
+    "id": 255,
+    "name": "Ананас-b",
+    "description": "Планета, которая на 80% состоит из ананасов. Благоприятные условия для жизни.",
+    "type": 1,
+    "danger": 2,
+    "eta": 114,
+    "temperature": 30,
+    "author": "pffxd",
+    "events": [
+      {
+        "name": "Дождь из ананасов",
+        "description": "Начинается дождь из ананасов!.",
+        "commands": [
+          "resources add 50 25",
+          "resources add 10 5"
+        ],
+        "prob": 0.06,
+        "color": "green"
+      },
+      {
+        "name": "Атака ананасов",
+        "description": "Ананасы атаковали нас!!",
+        "commands": [
+          "strength remove 10 2",
+          "crew remove 5 2"
+        ],
+        "prob": 0.03,
+        "color": "red"
+      }
+    ]
+  }
+]
