@@ -46,53 +46,53 @@ def init_game_launch(skip: bool = False):
             sound2 = playsound("base//game//res//audio//checking_basic_systems.mp3", False)
         slow_print("Проверка базовых систем ...", colorama.Fore.GREEN)
         time.sleep(2)
-        print(
-            colorama.Fore.YELLOW + "Внимание: Автоматическая система диагностики обнаружила проблемы с безопасностью. Запущен глубокий анализ.")
-        if components.SETTINGS.get_sound():
-            sound3 = playsound("base//game//res//audio//starting_hardware.mp3", False)
-        slow_print("Запуск оборудования ...", colorama.Fore.GREEN)
-        time.sleep(1)
-        print(colorama.Fore.YELLOW + "-> Проверка системы жизнеобеспечения ...", end='\r')
-        time.sleep(0.5)
-        print(colorama.Fore.YELLOW + "-> Оптимизация системы навигации", end='\r')
-        time.sleep(0.8)
-        print(colorama.Fore.YELLOW + "-> Обновление параметров системы ...", end='\r')
-        time.sleep(0.2)
-        print(colorama.Fore.YELLOW + "-> Очистка временных файлов базовой системы ...", end='\r')
-        time.sleep(0.2)
-        print(colorama.Fore.GREEN + "-> Завершено" + " " * 40)
-        if components.SETTINGS.get_sound():
-            sound4 = playsound("base//game//res//audio//starting_ui.mp3", False)
-        slow_print("Подготовка пользовательского интерфейса ...", colorama.Fore.GREEN)
-        time.sleep(1.5)
-        if components.SETTINGS.get_sound():
-            sound5 = playsound("base//game//res//audio//init_user_space.mp3", False)
-        slow_print("Инициализация пространства пользователя ...", colorama.Fore.GREEN)
-        print(colorama.Fore.RED + "Ошибка: Обнаружена критическая уязвимость в системе безопасности.")
-        time.sleep(0.1)
-        print(colorama.Fore.RED + "Ошибка: Сертификаты безопасности устарели")
-        time.sleep(0.25)
-        print(colorama.Fore.RED + "Ошибка: Отсутствует спасательная капсула")
-        time.sleep(0.3)
-        print(colorama.Fore.RED + "Ошибка: Система фильтрации воздуха имеет неисправимые повреждения")
-        time.sleep(0.75)
-        print(colorama.Fore.CYAN + "Неизвестный пользователь: Предупреждения об угрозах безопасности отключены.")
-        time.sleep(0.3)
+        if loaded_data['default']:
+            print(
+                colorama.Fore.YELLOW + "Внимание: Автоматическая система диагностики обнаружила проблемы с безопасностью. Запущен глубокий анализ.")
+            if components.SETTINGS.get_sound():
+                sound3 = playsound("base//game//res//audio//starting_hardware.mp3", False)
+            slow_print("Запуск оборудования ...", colorama.Fore.GREEN)
+            time.sleep(1)
+            print(colorama.Fore.YELLOW + "-> Проверка системы жизнеобеспечения ...", end='\r')
+            time.sleep(0.5)
+            print(colorama.Fore.YELLOW + "-> Оптимизация системы навигации", end='\r')
+            time.sleep(0.8)
+            print(colorama.Fore.YELLOW + "-> Обновление параметров системы ...", end='\r')
+            time.sleep(0.2)
+            print(colorama.Fore.YELLOW + "-> Очистка временных файлов базовой системы ...", end='\r')
+            time.sleep(0.2)
+            print(colorama.Fore.GREEN + "-> Завершено" + " " * 40)
+            if components.SETTINGS.get_sound():
+                sound4 = playsound("base//game//res//audio//starting_ui.mp3", False)
+            slow_print("Подготовка пользовательского интерфейса ...", colorama.Fore.GREEN)
+            time.sleep(1.5)
+            if components.SETTINGS.get_sound():
+                sound5 = playsound("base//game//res//audio//init_user_space.mp3", False)
+            slow_print("Инициализация пространства пользователя ...", colorama.Fore.GREEN)
+            print(colorama.Fore.RED + "Ошибка: Обнаружена критическая уязвимость в системе безопасности.")
+            time.sleep(0.1)
+            print(colorama.Fore.RED + "Ошибка: Сертификаты безопасности устарели")
+            time.sleep(0.25)
+            print(colorama.Fore.RED + "Ошибка: Отсутствует спасательная капсула")
+            time.sleep(0.3)
+            print(colorama.Fore.RED + "Ошибка: Система фильтрации воздуха имеет неисправимые повреждения")
+            time.sleep(0.75)
+            print(colorama.Fore.CYAN + "Неизвестный пользователь: Предупреждения об угрозах безопасности отключены.")
+            time.sleep(0.3)
+            clear_terminal()
+            print(colorama.Fore.GREEN + "Все системы в рабочем состоянии.")
+            if components.SETTINGS.get_sound():
+                sound6 = playsound("base//game//res//audio//systems_ready.mp3", True)
+                del sound1
+                del sound2
+                del sound3
+                del sound4
+                del sound5
+                del sound6
+        components.GAME.add_audio_to_queue("base//game//res//audio//welcome.mp3")
         clear_terminal()
-        print(colorama.Fore.GREEN + "Все системы в рабочем состоянии.")
-        if components.SETTINGS.get_sound():
-            sound6 = playsound("base//game//res//audio//systems_ready.mp3", True)
-            del sound1
-            del sound2
-            del sound3
-            del sound4
-            del sound5
-            del sound6
-        if components.SETTINGS.get_sound():
-            components.GAME.add_audio_to_queue("base//game//res//audio//welcome.mp3")
-        clear_terminal()
-
     # Здесь по факту происходит запуск игры.
+
     components.GAME.player = loaded_data['ship']
     from base.core.io.txt_loader import load_txt_file
     components.GAME.player_in_space_drawing = load_txt_file(constants.PLAYER_SPACE_DRAWING_PATH)
