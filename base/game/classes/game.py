@@ -808,9 +808,13 @@ class Game:
             self.pending_update = True
             await asyncio.sleep(3)
 
-    # Ремонт корабля, нужно доработать это.
+    # Ремонт корабля (в процессе)
     async def repair_cycle(self):
+
+        base_price = 200
+
         repair_time = round(40 * (self.player.strength / 100))
+
         self.update_last_messages(
             f"{colorama.Fore.CYAN}Начинаем ремонт корабля!{colorama.Fore.GREEN}")
         while repair_time > 0:
