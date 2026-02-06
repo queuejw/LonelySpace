@@ -58,7 +58,7 @@ def print_ship_help():
         f"{colorama.Fore.CYAN}goto [ID]{colorama.Fore.GREEN} - Отправиться на планету с выбранным ID\n"
         f"{colorama.Fore.CYAN}goto leave{colorama.Fore.GREEN} - Покинуть планету\n"
         f"{colorama.Fore.CYAN}goto cancel{colorama.Fore.GREEN} - Отменить полёт\n"
-        f"{colorama.Fore.CYAN}repair [todo]{colorama.Fore.GREEN} - Начать ремонт корабля. Для 1 секунды ремонта требуется 5 ресурсов. todo"
+        f"{colorama.Fore.CYAN}repair (run){colorama.Fore.GREEN} - Ремонт корабля. Выполнив эту команду, Вы узнаете цену ремонта. Цена ремонта зависит от повреждений. Введите аргумент run, чтобы начать ремонт."
     )
     print(text)
 
@@ -808,12 +808,48 @@ class Game:
             self.pending_update = True
             await asyncio.sleep(3)
 
-    # Ремонт корабля (в процессе)
+    # Возвращает цену для ремонта
+    def get_repair_price(self) -> int:
+        if components.SETTINGS.get_debug_mode():
+            print(f"Здоровье игрока: {self.player.get_total_health()}")
+        return int(20 + ((700 - self.player.get_total_health()) // 10) * 2)
+
+    # Возвращает требуемое для ремонта время. Максимум 60.
+    def get_repair_time(self) -> int:
+        return clamp(int(5 + ((700 - self.player.get_total_health()) // 10) * 2), 5, 60)  # Время ремонта
+
+    # Ремонт корабля
     async def repair_cycle(self):
 
-        base_price = 200
+        # Возвращает отремонтированный корабль
+        def get_repaired_ship(ship: Ship) -> Ship:
+            ship.oxygen = 100
+            ship.air_leaking = False
+            ship.strength = 100
+            ship.module_weapon_damaged = False
+            ship.module_life_support_damaged = False
+            ship.module_computer_damaged = False
+            ship.module_cooling_system_damaged = False
+            ship.module_fuel_tank_damaged = False
+            ship.module_main_engine_damaged = False
 
-        repair_time = round(40 * (self.player.strength / 100))
+            return ship
+
+        price = self.get_repair_price()
+
+        if price == 1:
+            # Корабль не нуждается в ремонте
+            print(f"{colorama.Fore.YELLOW}Корабль не нуждается в ремонте!{colorama.Fore.GREEN}")
+            return
+
+        if self.player.resources < price:
+            # Недостаточно ресурсов для ремонта
+            print(f"{colorama.Fore.RED}Недостаточно ресурсов для ремонта{colorama.Fore.GREEN}")
+            return
+
+        self.player.resources = clamp(self.player.resources - price, 0, 99999)
+
+        repair_time = self.get_repair_time()  # Время ремонта
 
         self.update_last_messages(
             f"{colorama.Fore.CYAN}Начинаем ремонт корабля!{colorama.Fore.GREEN}")
@@ -821,12 +857,13 @@ class Game:
             # Если движок был остановлен, то нужно остановить цикл
             if not components.ENGINE.running and not self.running:
                 break
+
             # Если игра приостановлена, пропускаем итерацию
             if self.paused or components.ENGINE.pending_input:
                 await asyncio.sleep(1)
                 continue
 
-            if repair_time % 3 == 0:
+            if repair_time % 4 == 0:
                 self.update_last_messages(
                     f"{colorama.Fore.GREEN}Идёт ремонт корабля. Осталось: {colorama.Fore.CYAN}{repair_time}{colorama.Fore.GREEN} секунд.")
             repair_time -= 1
@@ -838,7 +875,9 @@ class Game:
         # Ремонт завершён
         del repair_time
         self.timer = -1
-        self.update_last_messages(f"{colorama.Fore.GREEN}Ремонт успешно завершён!")
+        self.player = get_repaired_ship(self.player)
+
+        self.update_last_messages(f"{colorama.Back.GREEN}{colorama.Fore.BLACK}Ремонт успешно завершён!")
 
     # Цикл полёта.
     async def fly_cycle(self, time: int, leave_planet: bool):

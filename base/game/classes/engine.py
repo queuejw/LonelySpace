@@ -69,6 +69,7 @@ class Engine:
         return True
 
     # Цикл, в котором происходит обработка ввода игрока.
+    # + костыль для линукса
     async def input_loop(self):
         global input
         # Если не получается импортировать библиотеку keyboard (например, не были получены права суперпользователя на Linux)
@@ -78,7 +79,7 @@ class Engine:
         except ImportError:
             try:
                 from base.core import tkeyboard
-                tkeyboard.add_hotkey("space", self.on_space)
+                tkeyboard.add_hotkey("space", self.on_space)  # Если игрок нажал пробел, выполнится функция on_space
                 input = tkeyboard.get_user_input
             except:
                 print(

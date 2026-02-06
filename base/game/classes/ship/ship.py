@@ -34,17 +34,17 @@ class Ship:
     # Возвращает здоровье игрока с учетом кислорода, повреждений и т.д.
     def get_total_health(self) -> int:
         value = 0
-        value += self.strength
-        value += self.crew_health
-        value += self.oxygen
-        value += 100 if not self.air_leaking else 0
-        value += 100 if not self.module_main_engine_damaged else 0
-        value += 100 if not self.module_fuel_tank_damaged else 0
-        value += 100 if not self.module_cooling_system_damaged else 0
-        value += 100 if not self.module_life_support_damaged else 0
-        value += 100 if not self.module_computer_damaged else 0
-        value += 100 if not self.module_weapon_damaged else 0
-        # Максимум 1000
+        value += self.strength * 2
+        value += self.crew_health * 2
+        value += self.oxygen * 2
+        value += 25 if not self.air_leaking else 0
+        value += 15 if not self.module_main_engine_damaged else 0
+        value += 10 if not self.module_fuel_tank_damaged else 0
+        value += 10 if not self.module_cooling_system_damaged else 0
+        value += 20 if not self.module_life_support_damaged else 0
+        value += 10 if not self.module_computer_damaged else 0
+        value += 10 if not self.module_weapon_damaged else 0
+        # Максимум 700
         return value
 
     # Экспортирует этот объект в виде словаря, для удобного сохранения в json.
