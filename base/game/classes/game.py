@@ -610,7 +610,7 @@ class Game:
                 if fire_notification_enabled:
                     fire_notification_enabled = False
                     self.update_last_messages(
-                        f"{colorama.Back.RED}{colorama.Fore.BLACK}Пожар на корабле! Срочно начните ремонт!")
+                        f"{colorama.Back.RED}{colorama.Fore.BLACK}Пожар на корабле! Срочно начните ремонт!{colorama.Back.RESET}{colorama.Fore.GREEN}")
                     self.add_audio_to_queue("base/game/res/audio/fire_warning.mp3")
 
                 handle_fire()
