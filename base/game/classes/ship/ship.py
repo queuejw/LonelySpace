@@ -15,6 +15,7 @@ class Ship:
         self.resources = 300  # Ресурсы
         self.day = 0  # Количество прожитых дней.
         self.air_leaking = False  # Утечка воздуха активна?
+        self.fire = False  # Пожар?
         self.on_planet = False  # Корабль находится на планете?
         self.planet_id = -1  # ID планеты, на которой находится корабль. Если -1, значит корабль не находится на планете (см. выше)
         self.visited_planets: list[int] = []  # ID планет, на которых игрок уже побывал.
@@ -24,12 +25,11 @@ class Ship:
         self.module_cooling_system_damaged = False  # Статус систем охлаждения двигателя.
         self.module_life_support_damaged = False  # Статус системы жизнеобеспечения.
         self.module_computer_damaged = False  # Статус бортового компьютера.
-        self.module_weapon_damaged = False  # Статус орудия.
 
     # Вернёт True, если повреждены все модули корабля.
     def are_all_system_damaged(self) -> bool:
         return (self.module_main_engine_damaged and self.module_fuel_tank_damaged and self.module_cooling_system_damaged
-                and self.module_life_support_damaged and self.module_computer_damaged and self.module_weapon_damaged)
+                and self.module_life_support_damaged and self.module_computer_damaged)
 
     # Возвращает здоровье игрока с учетом кислорода, повреждений и т.д.
     def get_total_health(self) -> int:
@@ -37,13 +37,13 @@ class Ship:
         value += self.strength * 2
         value += self.crew_health * 2
         value += self.oxygen * 2
-        value += 25 if not self.air_leaking else 0
+        value += 20 if not self.air_leaking else 0
+        value += 15 if not self.fire else 0
         value += 15 if not self.module_main_engine_damaged else 0
         value += 10 if not self.module_fuel_tank_damaged else 0
         value += 10 if not self.module_cooling_system_damaged else 0
         value += 20 if not self.module_life_support_damaged else 0
         value += 10 if not self.module_computer_damaged else 0
-        value += 10 if not self.module_weapon_damaged else 0
         # Максимум 700
         return value
 
@@ -62,6 +62,7 @@ class Ship:
             'resources': self.resources,
             'day': self.day,
             'air_leaking': self.air_leaking,
+            'fire': self.fire,
             'on_planet': self.on_planet,
             'planet_id': self.planet_id,
             'visited_planets': self.visited_planets,
@@ -69,8 +70,7 @@ class Ship:
             'module_fuel_tank_damaged': self.module_fuel_tank_damaged,
             'module_cooling_system_damaged': self.module_cooling_system_damaged,
             'module_life_support_damaged': self.module_life_support_damaged,
-            'module_computer_damaged': self.module_computer_damaged,
-            'module_weapon_damaged': self.module_weapon_damaged
+            'module_computer_damaged': self.module_computer_damaged
         }
 
     # Применяет значения из словаря.
@@ -109,6 +109,8 @@ class Ship:
             self.outside_temperature = imported_ship['outside_temperature']
             self.resources = imported_ship['resources']
             self.day = imported_ship['day']
+            self.air_leaking = imported_ship['air_leaking']
+            self.fire = imported_ship['fire']
             self.on_planet = imported_ship['on_planet']
             self.planet_id = imported_ship['planet_id']
             self.visited_planets = imported_ship['visited_planets']
@@ -117,7 +119,6 @@ class Ship:
             self.module_cooling_system_damaged = imported_ship['module_cooling_system_damaged']
             self.module_life_support_damaged = imported_ship['module_life_support_damaged']
             self.module_computer_damaged = imported_ship['module_computer_damaged']
-            self.module_weapon_damaged = imported_ship['module_weapon_damaged']
         except KeyError as e:
             print(f"[E] Не удалось импортировать какие-то данные из JSON. Возможно, файл устарел. Детали: {e}")
         return self

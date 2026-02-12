@@ -317,7 +317,6 @@ class Game:
             f"{colorama.Fore.GREEN}Корабль:\n"
             f"{colorama.Fore.CYAN}Двигатель: {get_module_status_text(self.player.module_main_engine_damaged)}\n"
             f"{colorama.Fore.CYAN}Топливный бак: {get_module_status_text(self.player.module_fuel_tank_damaged)}\n"
-            f"{colorama.Fore.CYAN}Орудие: {get_module_status_text(self.player.module_weapon_damaged)}\n"
         )
         return result
 
@@ -422,9 +421,10 @@ class Game:
             # Проходим по списку событий, если они есть.
             if len(self.space_events) > 0:
                 for i in self.space_events:
-                    if random.random() < 0.1:
+                    if random.random() > 0.15:
                         continue
-                    if i.run_event():
+                    # Выводим текст события на экран, если событие выполнилось и текст не пустой
+                    if i.run_event() and i.event_description != "":
                         self.update_last_messages(f"{i.event_text_color}{i.event_description}")
 
     # Добавляет путь к файлу со звуком в очередь.
@@ -496,11 +496,13 @@ class Game:
         module_cooling_system_notification_enabled = True
         module_life_support_notification_enabled = True
         module_computer_notification_enabled = True
-        module_weapon_notification_enabled = True
 
+        # Уведомление о том, что все модули повреждены
         all_modules_damaged_notification_enabled = True
-
+        # Уведомление об утечке воздуха
         air_leaking_notification_enabled = True
+        # Уведомление о пожаре
+        fire_notification_enabled = True
 
         # Обновляет температуру
         def update_temperature():
@@ -551,6 +553,20 @@ class Game:
                 self.player.outside_temperature = clamp(self.player.outside_temperature + random.randint(-2, 2),
                                                         -273,
                                                         -180)
+        # Обработка пожара
+        def handle_fire():
+            if random.random() > 0.5:
+                self.player.resources = clamp(self.player.resources - random.randint(1, 3), 0, 99999)
+            if random.random() > 0.5:
+                self.player.strength = clamp(self.player.strength - random.randint(1, 3), 0, 100)
+            if random.random() > 0.5:
+                self.player.oxygen = clamp(self.player.oxygen - random.randint(1, 3), 0, 100)
+            if random.random() > 0.5:
+                self.player.crew_health = clamp(self.player.crew_health - random.randint(1, 3), 0, 100)
+            if random.random() > 0.5:
+                self.player.oxygen = clamp(self.player.oxygen - random.randint(1, 3), 0, 100)
+
+
 
         c = 0  # Простой счетчик, который нужен для обновления количества дней.
         while components.ENGINE.running:
@@ -588,6 +604,23 @@ class Game:
 
             # Обновляет температуру
             update_temperature()
+
+            # Пожар
+            if self.player.fire:
+                if fire_notification_enabled:
+                    fire_notification_enabled = False
+                    self.update_last_messages(
+                        f"{colorama.Back.RED}{colorama.Fore.BLACK}Пожар на корабле! Срочно начните ремонт!")
+                    self.add_audio_to_queue("base/game/res/audio/fire_warning.mp3")
+
+                handle_fire()
+            else:
+                if not fire_notification_enabled:
+                    fire_notification_enabled = True
+                    self.update_last_messages(
+                        f"{colorama.Back.GREEN}{colorama.Fore.BLACK}Пожар потушен.")
+
+
 
             # Если игрок не на планете, изменяем скорость и топливо
             if not self.player.on_planet:
@@ -758,19 +791,6 @@ class Game:
                     module_computer_notification_enabled = True
                     self.update_last_messages(f"{colorama.Fore.GREEN}Бортовой компьютер восстановлен.")
                     self.add_audio_to_queue("base//game//res//audio//computer_repaired.mp3")
-
-            # todo: стрельба не реализована.
-            # Орудие
-            if self.player.module_weapon_damaged:
-                if module_weapon_notification_enabled:
-                    module_weapon_notification_enabled = False
-                    self.update_last_messages(f"{colorama.Fore.RED}Орудие повреждено! Точность стрельбы снижена.")
-                    self.add_audio_to_queue("base/game/res/audio/cannon_damaged.mp3")
-            else:
-                if not module_weapon_notification_enabled:
-                    module_weapon_notification_enabled = True
-                    self.update_last_messages(f"{colorama.Fore.GREEN}Орудие восстановлено.")
-                    self.add_audio_to_queue("base/game/res/audio/cannon_repaired.mp3")
 
             # Уведомление о том, что повреждены все системы
             if self.player.are_all_system_damaged():

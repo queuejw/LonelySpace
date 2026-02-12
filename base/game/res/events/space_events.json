@@ -5,7 +5,7 @@
     "commands": [
       "strength remove 4 2"
     ],
-    "prob": 0.04,
+    "prob": 0.004,
     "color": "yellow"
   },
   {
@@ -15,7 +15,7 @@
       "module_cooling_system 0",
       "strength remove 4 2"
     ],
-    "prob": 0.022,
+    "prob": 0.0022,
     "color": "yellow"
   },
   {
@@ -24,7 +24,7 @@
     "commands": [
       "strength remove 10 5"
     ],
-    "prob": 0.055,
+    "prob": 0.0055,
     "color": "yellow"
   },
   {
@@ -34,7 +34,7 @@
       "oxygen remove 25 5",
       "crew remove 6 3"
     ],
-    "prob": 0.0015,
+    "prob": 0.00015,
     "color": "red"
   },
   {
@@ -43,7 +43,7 @@
     "commands": [
       "module_computer 0"
     ],
-    "prob": 0.021,
+    "prob": 0.0021,
     "color": "yellow"
   },
   {
@@ -53,7 +53,7 @@
       "oxygen remove 5 3",
       "module_life_support 0"
     ],
-    "prob": 0.016,
+    "prob": 0.0016,
     "color": "red"
   },
   {
@@ -64,16 +64,16 @@
       "oxygen remove 3 1",
       "air_leaking 1"
     ],
-    "prob": 0.012,
+    "prob": 0.0012,
     "color": "red"
   },
   {
     "name": "Короткое замыкание",
-    "description": "Короткое замыкание повредило электронику корабля.",
+    "description": "Короткое замыкание! Компьютер поврежден",
     "commands": [
       "module_computer 0"
     ],
-    "prob": 0.038,
+    "prob": 0.00038,
     "color": "yellow"
   },
   {
@@ -82,17 +82,7 @@
     "commands": [
       "strength remove 10 4"
     ],
-    "prob": 0.067,
-    "color": "red"
-  },
-  {
-    "name": "Радиационное облучение",
-    "description": "Корабль оказался в зоне остаточного радиационного фона.",
-    "commands": [
-      "crew remove 6 2",
-      "strength remove 6 2"
-    ],
-    "prob": 0.017,
+    "prob": 0.0067,
     "color": "red"
   },
   {
@@ -101,7 +91,16 @@
     "commands": [
       "module_life_support 0"
     ],
-    "prob": 0.028,
+    "prob": 0.0028,
     "color": "red"
+  },
+  {
+    "name": "Просто пожар",
+    "description": "",
+    "commands": [
+      "fire 1"
+    ],
+    "prob": 0.00002,
+    "color": "cyan"
   }
 ]
