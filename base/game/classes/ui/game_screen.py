@@ -202,7 +202,7 @@ class GameScreen(ScreenBase):
             print(f"{colorama.Fore.MAGENTA}Игрок ввёл команду: {command}{colorama.Fore.RESET}")
 
         # Если бортовой компьютер поврежден, есть шанс, что произойдет сбой.
-        if components.GAME.player.module_computer_damaged and random.random() < 0.2:
+        if components.GAME.player.module_computer_damaged and command[0].lower() not in ["stop", "save"] and random.random() < 0.2:
             print(
                 f"{colorama.Fore.RED}[СБОЙ] {colorama.Fore.GREEN}Попробу{colorama.Fore.YELLOW}йте ещё р{colorama.Fore.WHITE}аз.")
             return self
