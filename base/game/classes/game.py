@@ -849,6 +849,7 @@ class Game:
 
         # Возвращает отремонтированный корабль
         def get_repaired_ship(ship: Ship) -> Ship:
+            ship.fire = False
             ship.oxygen = 100
             ship.air_leaking = False
             ship.strength = 100
@@ -905,6 +906,7 @@ class Game:
         self.player = get_repaired_ship(self.player)
 
         self.update_last_messages(f"{colorama.Back.GREEN}{colorama.Fore.BLACK}Ремонт успешно завершён!{colorama.Back.RESET}{colorama.Fore.GREEN}")
+        self.add_audio_to_queue("base/game/res/audio/repair_finished.mp3")
 
     # Цикл полёта.
     async def fly_cycle(self, time: int, leave_planet: bool):
@@ -1007,8 +1009,8 @@ class Game:
             match planet.planet_type:
                 case 1:
                     if random.random() > 0.8:
-                        self.update_last_messages(f"{colorama.Fore.YELLOW}Корабль приземлился на неровную поверхность!")
-                        self.player.strength = clamp(self.player.strength - random.randint(1, 4), 0, 100)
+                        self.update_last_messages(f"{colorama.Fore.YELLOW}Корабль приземлился на неровную поверхность, получены незначительные повреждения.")
+                        self.player.strength = clamp(self.player.strength - random.randint(1, 3), 0, 100)
 
             if planet.planet_type == 0:
                 self.update_last_messages(

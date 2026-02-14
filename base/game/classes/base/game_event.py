@@ -302,7 +302,7 @@ class GameEvent:
         if len(self.event_commands) < 1:
             if components.SETTINGS.get_debug_mode():
                 print(f"События не найдены. Возможно, планета без событий.")
-            return True
+            return False
 
         for item in self.event_commands:
             c = item.split()
