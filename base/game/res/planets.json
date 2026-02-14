@@ -50,7 +50,7 @@
         "commands": [
           "air_leaking 1"
         ],
-        "prob": 0.0009,
+        "prob": 0.009,
         "color": "red"
       },
       {
@@ -59,7 +59,7 @@
         "commands": [
           "crew remove 5 2"
         ],
-        "prob": 0.0009,
+        "prob": 0.009,
         "color": "red"
       }
     ]
@@ -136,7 +136,7 @@
           "module_cooling_system 0",
           "strength remove 7 3"
         ],
-        "prob": 0.0009,
+        "prob": 0.009,
         "color": "red"
       },
       {
@@ -145,7 +145,7 @@
         "commands": [
           "fire 1"
         ],
-        "prob": 0.0005,
+        "prob": 0.005,
         "color": "red"
       },
       {
@@ -154,7 +154,7 @@
         "commands": [
           "module_computer 0"
         ],
-        "prob": 0.0003,
+        "prob": 0.003,
         "color": "red"
       }
     ]

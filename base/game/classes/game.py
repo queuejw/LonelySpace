@@ -241,6 +241,11 @@ class Game:
             computer_text += [
                 colorama.Fore.GREEN + f"Скорость: " + colorama.Fore.CYAN + f"{get_ship_state_value_text(self.player.speed)} км/с" + colorama.Fore.GREEN,
             ]
+        # Уведмоляем игрока о пожаре
+        if self.player.fire:
+            computer_text += [
+                colorama.Fore.RED + "Пожар на корабле!" + colorama.Fore.GREEN,
+            ]
 
         computer_text += [
             colorama.Fore.GREEN + f"Температура внутри: {colorama.Fore.CYAN}{get_ship_state_value_text(self.player.inside_temperature)}°C" + colorama.Fore.GREEN,
@@ -399,17 +404,17 @@ class Game:
                 danger_level = planet.planet_danger
 
                 if danger_level >= 7:
-                    r = random.randint(90, 225)
+                    r = random.randint(25, 50)
                     self.update_last_messages(
                         f"{colorama.Fore.GREEN}Найдены ресурсы! Добавлено {r} ресурсов в хранилище.")
                     self.player.resources += r
                 if 7 > danger_level > 3:
-                    r = random.randint(45, 150)
+                    r = random.randint(10, 25)
                     self.update_last_messages(
                         f"{colorama.Fore.GREEN}Найдены ресурсы! Добавлено {r} ресурсов в хранилище.")
                     self.player.resources += r
                 if danger_level < 4:
-                    r = random.randint(25, 80)
+                    r = random.randint(1, 10)
                     self.update_last_messages(
                         f"{colorama.Fore.GREEN}Найдены ресурсы! Добавлено {r} ресурсов в хранилище.")
                     self.player.resources += r
@@ -555,16 +560,16 @@ class Game:
                                                         -180)
         # Обработка пожара
         def handle_fire():
-            if random.random() > 0.5:
-                self.player.resources = clamp(self.player.resources - random.randint(1, 3), 0, 99999)
-            if random.random() > 0.5:
-                self.player.strength = clamp(self.player.strength - random.randint(1, 3), 0, 100)
-            if random.random() > 0.5:
-                self.player.oxygen = clamp(self.player.oxygen - random.randint(1, 3), 0, 100)
-            if random.random() > 0.5:
-                self.player.crew_health = clamp(self.player.crew_health - random.randint(1, 3), 0, 100)
-            if random.random() > 0.5:
-                self.player.oxygen = clamp(self.player.oxygen - random.randint(1, 3), 0, 100)
+            if random.random() > 0.8:
+                self.player.resources = clamp(self.player.resources - random.randint(1, 2), 0, 99999)
+            if random.random() > 0.75:
+                self.player.strength = clamp(self.player.strength - random.randint(1, 2), 0, 100)
+            if random.random() > 0.8:
+                self.player.oxygen = clamp(self.player.oxygen - random.randint(1, 2), 0, 100)
+            if random.random() > 0.8:
+                self.player.crew_health = clamp(self.player.crew_health - random.randint(1, 2), 0, 100)
+            if random.random() > 0.75:
+                self.player.oxygen = clamp(self.player.oxygen - random.randint(1, 2), 0, 100)
 
 
 
@@ -847,6 +852,7 @@ class Game:
             ship.oxygen = 100
             ship.air_leaking = False
             ship.strength = 100
+            ship.crew_health = 100
             ship.module_weapon_damaged = False
             ship.module_life_support_damaged = False
             ship.module_computer_damaged = False
@@ -898,7 +904,7 @@ class Game:
         self.timer = -1
         self.player = get_repaired_ship(self.player)
 
-        self.update_last_messages(f"{colorama.Back.GREEN}{colorama.Fore.BLACK}Ремонт успешно завершён!")
+        self.update_last_messages(f"{colorama.Back.GREEN}{colorama.Fore.BLACK}Ремонт успешно завершён!{colorama.Back.RESET}{colorama.Fore.GREEN}")
 
     # Цикл полёта.
     async def fly_cycle(self, time: int, leave_planet: bool):
