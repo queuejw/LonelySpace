@@ -35,7 +35,7 @@
         "commands": [
           "fire 1"
         ],
-        "prob": 0.7,
+        "prob": 0.1,
         "color": "red"
       }
     ]
