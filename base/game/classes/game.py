@@ -558,6 +558,7 @@ class Game:
                 self.player.outside_temperature = clamp(self.player.outside_temperature + random.randint(-2, 2),
                                                         -273,
                                                         -180)
+
         # Обработка пожара
         def handle_fire():
             if random.random() > 0.8:
@@ -570,8 +571,6 @@ class Game:
                 self.player.crew_health = clamp(self.player.crew_health - random.randint(1, 2), 0, 100)
             if random.random() > 0.75:
                 self.player.oxygen = clamp(self.player.oxygen - random.randint(1, 2), 0, 100)
-
-
 
         c = 0  # Простой счетчик, который нужен для обновления количества дней.
         while components.ENGINE.running:
@@ -625,8 +624,6 @@ class Game:
                     self.update_last_messages(
                         f"{colorama.Back.GREEN}{colorama.Fore.BLACK}Пожар потушен.")
                     self.add_audio_to_queue("base/game/res/audio/fire_extinguished.mp3")
-
-
 
             # Если игрок не на планете, изменяем скорость и топливо
             if not self.player.on_planet:
@@ -905,7 +902,8 @@ class Game:
         self.timer = -1
         self.player = get_repaired_ship(self.player)
 
-        self.update_last_messages(f"{colorama.Back.GREEN}{colorama.Fore.BLACK}Ремонт успешно завершён!{colorama.Back.RESET}{colorama.Fore.GREEN}")
+        self.update_last_messages(
+            f"{colorama.Back.GREEN}{colorama.Fore.BLACK}Ремонт успешно завершён!{colorama.Back.RESET}{colorama.Fore.GREEN}")
         self.add_audio_to_queue("base/game/res/audio/repair_finished.mp3")
 
     # Цикл полёта.
@@ -974,7 +972,8 @@ class Game:
                         f"{colorama.Fore.YELLOW}Мы покинули планету {planet.planet_name}, но двигатели заглохли. Причина: {colorama.Fore.RED}Недостаточно топлива.")
                     self.player.planet_id = -1
                     self.player.on_planet = False
-                elif final_time < 5 and not leave_planet:
+                # Если оставалось несколько секунд до конца полета, выполняем жесткую посадку
+                elif final_time < 8 and not leave_planet:
                     self.update_last_messages(
                         f"{colorama.Fore.YELLOW}Жёсткая посадка! Причина: {colorama.Fore.RED}Недостаточно топлива для завершения полёта")
                     self.player.planet_id = self.player.planet_id
@@ -1009,7 +1008,8 @@ class Game:
             match planet.planet_type:
                 case 1:
                     if random.random() > 0.8:
-                        self.update_last_messages(f"{colorama.Fore.YELLOW}Корабль приземлился на неровную поверхность, получены незначительные повреждения.")
+                        self.update_last_messages(
+                            f"{colorama.Fore.YELLOW}Корабль приземлился на неровную поверхность, получены незначительные повреждения.")
                         self.player.strength = clamp(self.player.strength - random.randint(1, 3), 0, 100)
 
             if planet.planet_type == 0:
