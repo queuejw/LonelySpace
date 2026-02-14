@@ -619,6 +619,7 @@ class Game:
                     fire_notification_enabled = True
                     self.update_last_messages(
                         f"{colorama.Back.GREEN}{colorama.Fore.BLACK}Пожар потушен.")
+                    self.add_audio_to_queue("base/game/res/audio/fire_extinguished.mp3")
 
 
 
