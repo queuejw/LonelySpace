@@ -399,7 +399,7 @@ class Game:
                         self.update_last_messages(f"{i.event_text_color}{i.event_description}")
 
             # Получение ресурсов (независимо от планеты)
-            if random.random() < 0.1:
+            if random.random() < 0.16:
 
                 danger_level = planet.planet_danger
 
@@ -426,7 +426,7 @@ class Game:
             # Проходим по списку событий, если они есть.
             if len(self.space_events) > 0:
                 for i in self.space_events:
-                    if random.random() > 0.15:
+                    if random.random() > 0.2:
                         continue
                     # Выводим текст события на экран, если событие выполнилось и текст не пустой
                     if i.run_event() and i.event_description != "":
@@ -818,7 +818,7 @@ class Game:
                     self.add_audio_to_queue("base/game/res/audio/air_leaking_fixed.mp3")
 
             # Генерируем случайное событие, если повезет
-            if random.random() < 0.3:
+            if random.random() < 0.35:
                 await self.events_generator()
 
             # Обновление счётчика дней.

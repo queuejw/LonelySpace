@@ -34,7 +34,7 @@
       "oxygen remove 25 5",
       "crew remove 6 3"
     ],
-    "prob": 0.00015,
+    "prob": 0.0015,
     "color": "red"
   },
   {
@@ -64,7 +64,7 @@
       "oxygen remove 3 1",
       "air_leaking 1"
     ],
-    "prob": 0.0012,
+    "prob": 0.0019,
     "color": "red"
   },
   {
@@ -73,7 +73,7 @@
     "commands": [
       "module_computer 0"
     ],
-    "prob": 0.00038,
+    "prob": 0.0038,
     "color": "yellow"
   },
   {
@@ -100,7 +100,7 @@
     "commands": [
       "fire 1"
     ],
-    "prob": 0.00002,
+    "prob": 0.0002,
     "color": "cyan"
   }
 ]
