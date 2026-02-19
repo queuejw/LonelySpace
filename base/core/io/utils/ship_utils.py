@@ -4,7 +4,7 @@ from base.game.classes.ship.ship import Ship
 # Возвращает случайное название для корабля
 def create_random_name() -> str:
     import random
-    names = ["Спутник-", "Марс-", "Луна-", "F-", "G-"]
+    names = ["Спутник-", "Марс-", "Луна-", "F-", "G-", "Mi-", "Z-"]
     return f"{random.choice(names)}{random.randint(1, 999)}"
 
 

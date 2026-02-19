@@ -426,10 +426,10 @@ class Game:
             # Проходим по списку событий, если они есть.
             if len(self.space_events) > 0:
                 for i in self.space_events:
-                    if random.random() > 0.2:
+                    if random.random() > 0.31:
                         continue
                     # Выводим текст события на экран, если событие выполнилось и текст не пустой
-                    if i.run_event() and i.event_description != "":
+                    if i.run_event() and len(i.event_description.split()) > 0:
                         self.update_last_messages(f"{i.event_text_color}{i.event_description}")
 
     # Добавляет путь к файлу со звуком в очередь.
@@ -818,7 +818,7 @@ class Game:
                     self.add_audio_to_queue("base/game/res/audio/air_leaking_fixed.mp3")
 
             # Генерируем случайное событие, если повезет
-            if random.random() < 0.35:
+            if random.random() < 0.52:
                 await self.events_generator()
 
             # Обновление счётчика дней.
