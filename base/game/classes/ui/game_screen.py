@@ -256,19 +256,58 @@ class GameScreen(ScreenBase):
         elif command_first_arg_lower == 'repair':
             if len(command) > 1:
                 if command[1].lower() == 'run':
-                    print(f"{colorama.Fore.CYAN}Запланирован ремонт корабля.")
-                    asyncio.create_task(components.GAME.repair_cycle())
+                    if components.GAME.player.get_total_health() < 700:
+                        print(f"{colorama.Fore.CYAN}Запланирован ремонт корабля.")
+                        components.GAME.add_audio_to_queue("base//game//res//audio//command_executed.mp3")
+                        asyncio.create_task(components.GAME.repair_cycle())
+                    else:
+                        print(f"{colorama.Fore.CYAN}Корабль не нуждается в ремонте.")
+                        components.GAME.add_audio_to_queue("base//game//res//audio//command_handle_error.mp3")
                 else:
                     components.GAME.add_audio_to_queue("base//game//res//audio//invalid_argument.mp3")
                     print(
                         f"{colorama.Fore.RED}Неизвестный аргумент команды repair. Введите {colorama.Fore.CYAN}help ship{colorama.Fore.RED},чтобы вывести инструкции.")
             else:
                 components.GAME.add_audio_to_queue("base//game//res//audio//command_executed.mp3")
-                print(
-                    f"{colorama.Fore.GREEN}Стоимость ремонта корабля: {colorama.Fore.CYAN}{components.GAME.get_repair_price()}{colorama.Fore.GREEN} ресурсов."
-                    f"\nЭто займёт {colorama.Fore.CYAN}{components.GAME.get_repair_time()}{colorama.Fore.GREEN} секунд."
-                    f"\nВведите {colorama.Fore.CYAN}repair run{colorama.Fore.GREEN}, чтобы начать ремонт."
-                )
+                if components.GAME.player.get_total_health() < 700:
+                    print(
+                        f"{colorama.Fore.GREEN}Стоимость ремонта корабля: {colorama.Fore.CYAN}{components.GAME.get_repair_price()}{colorama.Fore.GREEN} ресурсов."
+                        f"\nЭто займёт {colorama.Fore.CYAN}{components.GAME.get_repair_time()}{colorama.Fore.GREEN} секунд."
+                        f"\nВведите {colorama.Fore.CYAN}repair run{colorama.Fore.GREEN}, чтобы начать ремонт."
+                    )
+                else:
+                    print(f"{colorama.Fore.GREEN}Корабль не нуждается в ремонте.")
+        # Заправить корабль
+        elif command_first_arg_lower == 'refuel':
+            if len(command) > 1:
+                if command[1].lower() == 'run':
+                    # Заправка корабля
+                    price = components.GAME.get_refuel_price()
+                    if components.GAME.player.resources - price > 0:
+                        if components.GAME.player_refuel(price):
+                            print(f"{colorama.Fore.CYAN}Заправка завершена!")
+                            components.GAME.add_audio_to_queue("base//game//res//audio//command_executed.mp3")
+                        else:
+                            print(f"{colorama.Fore.CYAN}Корабль не нуждается в заправке.")
+                            components.GAME.add_audio_to_queue("base//game//res//audio//command_handle_error.mp3")
+                    else:
+                        print(f"{colorama.Fore.RED}Недостаточно ресурсов!")
+
+                else:
+                    components.GAME.add_audio_to_queue("base//game//res//audio//invalid_argument.mp3")
+                    print(
+                        f"{colorama.Fore.RED}Неизвестный аргумент команды refuel. Введите {colorama.Fore.CYAN}help ship{colorama.Fore.RED},чтобы вывести инструкции.")
+            else:
+                components.GAME.add_audio_to_queue("base//game//res//audio//command_executed.mp3")
+                if components.GAME.player.fuel != 100:
+                    print(
+                        f"{colorama.Fore.GREEN}Стоимость заправки корабля: {colorama.Fore.CYAN}{components.GAME.get_refuel_price()}{colorama.Fore.GREEN} ресурсов."
+                        f"\nВведите {colorama.Fore.CYAN}refuel run{colorama.Fore.GREEN}, чтобы заправить корабль."
+                    )
+                else:
+                    print(f"{colorama.Fore.GREEN}Корабль не нуждается в заправке.")
+
+
         # Статус корабля
         elif command_first_arg_lower == 'status':
             components.GAME.add_audio_to_queue("base//game//res//audio//command_executed.mp3")

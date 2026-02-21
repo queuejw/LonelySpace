@@ -59,6 +59,7 @@ def print_ship_help():
         f"{colorama.Fore.CYAN}goto leave{colorama.Fore.GREEN} - Покинуть планету\n"
         f"{colorama.Fore.CYAN}goto cancel{colorama.Fore.GREEN} - Отменить полёт\n"
         f"{colorama.Fore.CYAN}repair (run){colorama.Fore.GREEN} - Ремонт корабля. Выполнив эту команду, Вы узнаете цену ремонта. Цена ремонта зависит от повреждений. Введите аргумент run, чтобы начать ремонт."
+        f"{colorama.Fore.CYAN}refuel (run){colorama.Fore.GREEN} - Заправить корабль. Выполнив эту команду, Вы узнаете цену создания топлива. Цена зависит от текущего количества топлива. Введите аргумент run, чтобы создать топливо и заправить корабль."
     )
     print(text)
 
@@ -319,6 +320,9 @@ class Game:
         def get_module_status_text(value: bool) -> str:
             return f'{colorama.Fore.RED}повреждено' if value else f'{colorama.Fore.GREEN}работает'
 
+        def get_sensor_status_text(value: bool) -> str:
+            return f'{colorama.Fore.RED}да' if value else f'{colorama.Fore.GREEN}нет'
+
         result = (
             f"{colorama.Fore.GREEN}Основные системы:\n"
             f"{colorama.Fore.CYAN}Системы жизнеобеспечения: {get_module_status_text(self.player.module_life_support_damaged)}\n"
@@ -327,6 +331,9 @@ class Game:
             f"{colorama.Fore.GREEN}Корабль:\n"
             f"{colorama.Fore.CYAN}Двигатель: {get_module_status_text(self.player.module_main_engine_damaged)}\n"
             f"{colorama.Fore.CYAN}Топливный бак: {get_module_status_text(self.player.module_fuel_tank_damaged)}\n"
+            f"{colorama.Fore.GREEN}Датчики:\n"
+            f"{colorama.Fore.CYAN}Пожар: {get_sensor_status_text(self.player.fire)}\n"
+            f"{colorama.Fore.CYAN}Утечка воздуха: {get_sensor_status_text(self.player.air_leaking)}\n"
         )
         return result
 
@@ -1038,3 +1045,19 @@ class Game:
         del planet
         del final_time
         self.planet_flying_active = False
+
+    # Возвращает цену для создания топлива (заправки)
+    def get_refuel_price(self) -> int:
+        if components.SETTINGS.get_debug_mode():
+            print(f"Текущий уровень топлива: {self.player.fuel}%")
+        base = 2  # Цена за 1%
+        return (100 - self.player.fuel) * base
+
+    # Заправка корабля
+    def player_refuel(self, price: int) -> bool:
+        if self.player.fuel == 100:
+            # Корабль не нуждается в заправке
+            return False
+        self.player.resources = clamp(self.player.resources - price, 0, 99999)
+        self.player.fuel = 100
+        return True
