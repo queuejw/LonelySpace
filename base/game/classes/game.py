@@ -178,38 +178,38 @@ class Game:
 
     # Повреждает все модули на корабле с шансом x% на каждый
     def damage_all_modules(self, chance: float):
-        if random.random() > chance:
+        if random.random() < chance:
             self.player.module_main_engine_damaged = True
-        if random.random() > chance:
+        if random.random() < chance:
             self.player.module_fuel_tank_damaged = True
-        if random.random() > chance:
+        if random.random() < chance:
             self.player.module_cooling_system_damaged = True
-        if random.random() > chance:
+        if random.random() < chance:
             self.player.module_life_support_damaged = True
-        if random.random() > chance:
+        if random.random() < chance:
             self.player.module_computer_damaged = True
-        if random.random() > chance:
+        if random.random() < chance:
             self.player.module_weapon_damaged = True
 
-    # Повреждает случайный модуль
-    def damage_random_modules(self):
+    # Повреждает один случайный модуль
+    def damage_random_modules(self, chance: float = 0.4):
         while True:
-            if random.random() > 0.6:
+            if random.random() < chance:
                 self.player.module_main_engine_damaged = True
                 break
-            if random.random() > 0.6:
+            if random.random() < chance:
                 self.player.module_fuel_tank_damaged = True
                 break
-            if random.random() > 0.6:
+            if random.random() < chance:
                 self.player.module_cooling_system_damaged = True
                 break
-            if random.random() > 0.6:
+            if random.random() < chance:
                 self.player.module_life_support_damaged = True
                 break
-            if random.random() > 0.6:
+            if random.random() < chance:
                 self.player.module_computer_damaged = True
                 break
-            if random.random() > 0.6:
+            if random.random() < chance:
                 self.player.module_weapon_damaged = True
                 break
 
@@ -241,10 +241,15 @@ class Game:
             computer_text += [
                 colorama.Fore.GREEN + f"Скорость: " + colorama.Fore.CYAN + f"{get_ship_state_value_text(self.player.speed)} км/с" + colorama.Fore.GREEN,
             ]
-        # Уведмоляем игрока о пожаре
+        # Уведомляем игрока о пожаре
         if self.player.fire:
             computer_text += [
                 colorama.Fore.RED + "Пожар на корабле!" + colorama.Fore.GREEN,
+            ]
+        # Уведомляем игрока об утечке воздуха
+        if self.player.air_leaking:
+            computer_text += [
+                colorama.Fore.RED + "Утечка воздуха!" + colorama.Fore.GREEN,
             ]
 
         computer_text += [
@@ -561,16 +566,20 @@ class Game:
 
         # Обработка пожара
         def handle_fire():
-            if random.random() > 0.8:
+            if random.random() > 0.7:
                 self.player.resources = clamp(self.player.resources - random.randint(1, 2), 0, 99999)
             if random.random() > 0.75:
                 self.player.strength = clamp(self.player.strength - random.randint(1, 2), 0, 100)
-            if random.random() > 0.8:
+            if random.random() > 0.7:
                 self.player.oxygen = clamp(self.player.oxygen - random.randint(1, 2), 0, 100)
-            if random.random() > 0.8:
+            if random.random() > 0.7:
                 self.player.crew_health = clamp(self.player.crew_health - random.randint(1, 2), 0, 100)
             if random.random() > 0.75:
                 self.player.oxygen = clamp(self.player.oxygen - random.randint(1, 2), 0, 100)
+            self.damage_all_modules(0.001)
+            if random.random() > 0.92:
+                if not self.player.air_leaking:
+                    self.player.air_leaking = True
 
         c = 0  # Простой счетчик, который нужен для обновления количества дней.
         while components.ENGINE.running:
@@ -622,7 +631,7 @@ class Game:
                 if not fire_notification_enabled:
                     fire_notification_enabled = True
                     self.update_last_messages(
-                        f"{colorama.Back.GREEN}{colorama.Fore.BLACK}Пожар потушен.")
+                        f"{colorama.Back.GREEN}{colorama.Fore.BLACK}Пожар потушен.{colorama.Back.RESET}{colorama.Fore.GREEN}")
                     self.add_audio_to_queue("base/game/res/audio/fire_extinguished.mp3")
 
             # Если игрок не на планете, изменяем скорость и топливо
@@ -809,12 +818,14 @@ class Game:
             if self.player.air_leaking:
                 if air_leaking_notification_enabled:
                     air_leaking_notification_enabled = False
-                    self.update_last_messages(f"{colorama.Fore.RED}Внимание! Утечка воздуха!")
+                    self.update_last_messages(
+                        f"{colorama.Back.RED}{colorama.Fore.BLACK}Внимание! Утечка воздуха!{colorama.Back.RESET}{colorama.Fore.GREEN}")
                     self.add_audio_to_queue("base/game/res/audio/air_leaking_warning.mp3")
             else:
                 if not air_leaking_notification_enabled:
                     air_leaking_notification_enabled = True
-                    self.update_last_messages(f"{colorama.Fore.GREEN}Утечка воздуха устранена!")
+                    self.update_last_messages(
+                        f"{colorama.Back.GREEN}{colorama.Fore.BLACK}Утечка воздуха устранена!{colorama.Back.RESET}{colorama.Fore.GREEN}")
                     self.add_audio_to_queue("base/game/res/audio/air_leaking_fixed.mp3")
 
             # Генерируем случайное событие, если повезет

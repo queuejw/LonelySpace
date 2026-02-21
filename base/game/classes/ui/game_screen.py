@@ -201,15 +201,18 @@ class GameScreen(ScreenBase):
         if components.SETTINGS.get_debug_mode():
             print(f"{colorama.Fore.MAGENTA}Игрок ввёл команду: {command}{colorama.Fore.RESET}")
 
+        command_first_arg_lower = command[0].lower()
+
         # Если бортовой компьютер поврежден, есть шанс, что произойдет сбой.
-        if components.GAME.player.module_computer_damaged and command[0].lower() not in ["stop", "save"] and random.random() < 0.2:
+        if components.GAME.player.module_computer_damaged and command_first_arg_lower not in ["stop",
+                                                                                              "save"] and random.random() < 0.2:
             print(
                 f"{colorama.Fore.RED}[СБОЙ] {colorama.Fore.GREEN}Попробу{colorama.Fore.YELLOW}йте ещё р{colorama.Fore.WHITE}аз.")
             return self
 
         # Мы не можем выполнять команды, если игра была остановлена.
         if not components.GAME.running:
-            if command[0].lower() == 'stop':
+            if command_first_arg_lower == 'stop':
                 return stop_game()
             else:
                 print(
@@ -217,10 +220,10 @@ class GameScreen(ScreenBase):
                 return self
 
         # Остановка игры
-        if command[0].lower() == 'stop':
+        if command_first_arg_lower == 'stop':
             return stop_game()
         # Помощь
-        elif command[0].lower() == 'help':
+        elif command_first_arg_lower == 'help':
             if len(command) > 1:
                 if command[1].lower() == 'game':
                     components.GAME.add_audio_to_queue("base//game//res//audio//command_executed.mp3")
@@ -238,7 +241,7 @@ class GameScreen(ScreenBase):
             else:
                 print_terminal_help()
         # Сохранить игру
-        elif command[0].lower() == 'save':
+        elif command_first_arg_lower == 'save':
             components.GAME.add_audio_to_queue("base//game//res//audio//command_executed.mp3")
             if save_file(components.GAME.player.export_as_dict(), constants.SAVE_FILE_PATH,
                          constants.USER_FOLDER_NAME):
@@ -247,10 +250,10 @@ class GameScreen(ScreenBase):
                 components.GAME.add_audio_to_queue("base//game//res//audio//command_handle_error.mp3")
                 print(f"{colorama.Fore.RED}Не получилось сохранить игру.")
         # Переименовать корабль
-        elif command[0].lower() == 'rename':
+        elif command_first_arg_lower == 'rename':
             rename_player_ship(command)
         # Ремонтировать корабль
-        elif command[0].lower() == 'repair':
+        elif command_first_arg_lower == 'repair':
             if len(command) > 1:
                 if command[1].lower() == 'run':
                     print(f"{colorama.Fore.CYAN}Запланирован ремонт корабля.")
@@ -267,21 +270,38 @@ class GameScreen(ScreenBase):
                     f"\nВведите {colorama.Fore.CYAN}repair run{colorama.Fore.GREEN}, чтобы начать ремонт."
                 )
         # Статус корабля
-        elif command[0].lower() == 'status':
+        elif command_first_arg_lower == 'status':
             components.GAME.add_audio_to_queue("base//game//res//audio//command_executed.mp3")
             print(components.GAME.get_ship_status_text())
         # Перемещение корабля по планетам
-        elif command[0].lower() == 'goto':
+        elif command_first_arg_lower == 'goto':
             handle_goto_command(command)
         # Вывести инфо о планете
-        elif command[0].lower() == 'planet':
+        elif command_first_arg_lower == 'planet':
             print_planet_info(command)
         # Закрыть терминал
-        elif command[0].lower() == 'exit':
+        elif command_first_arg_lower == 'exit':
             if components.GAME.is_audio_queue_empty():
                 components.GAME.add_audio_to_queue("base//game//res//audio//terminal_off.mp3")
             components.ENGINE.pending_input = False
             self.update(True)
+
+        # Отладка игры. Полезные штуки, которые я использую для тестирования. Работает только при включенной настройке отладки.
+        elif command_first_arg_lower == "debug":
+            if not components.SETTINGS.get_debug_mode():
+                print(
+                    f"{colorama.Fore.CYAN}Не найдена точка входа. Включите отладку в настройках игры, чтобы продолжить.")
+            else:
+                if len(command) > 1:
+                    if command[1].lower() == 'fire':
+                        components.GAME.player.fire = True
+                        print("Выполнено")
+                    if command[1].lower() == 'airleak':
+                        components.GAME.player.air_leaking = True
+                        print("Выполнено")
+                else:
+                    print(
+                        f"{colorama.Fore.CYAN}Доступно: fire, airleak")
 
         else:
             components.GAME.add_audio_to_queue("base//game//res//audio//unknown_command.mp3")
