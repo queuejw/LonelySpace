@@ -20,6 +20,13 @@ def is_int(value) -> bool:
         return False
 
 
+# Останавливает игру и возвращает главное меню игры
+def stop_game():
+    components.GAME.running = False
+    from base.game.classes.ui.main_menu import MainMenu
+    return MainMenu()
+
+
 class GameScreen(ScreenBase):
 
     def __init__(self):
@@ -33,16 +40,8 @@ class GameScreen(ScreenBase):
             print(text)
             del text
 
-    def handle_input(self, command: str):
-
-        command = command.split()
-
-        # Останавливает игру и возвращает главное меню игры
-        def stop_game():
-            components.GAME.running = False
-            from base.game.classes.ui.main_menu import MainMenu
-            return MainMenu()
-
+    # Обработка команд игрока
+    def handle_user_command(self, commands: list[str]):
         # Переименовывает корабль игра
         def rename_player_ship(user_command: list[str]):
             if len(user_command) > 1:
@@ -182,7 +181,7 @@ class GameScreen(ScreenBase):
         def print_planet_info(user_command: list[str]):
             if len(user_command) > 1:
                 try:
-                    pos = int(command[1])
+                    pos = int(commands[1])
                     print(components.GAME.get_text_planet_list(pos))
                     components.GAME.add_audio_to_queue("base//game//res//audio//command_executed.mp3")
                     del pos
@@ -194,44 +193,44 @@ class GameScreen(ScreenBase):
                     f"{colorama.Fore.RED}Укажите аргумент команды. Введите {colorama.Fore.CYAN}help planets{colorama.Fore.RED}, если понадобится помощь.")
 
         # Если игрок ничего не ввёл, обрабатывать ввод не нужно.
-        if len(command) < 1:
-            del command
-            return self
+        if len(commands) < 1:
+            del commands
+            return True
 
         if components.SETTINGS.get_debug_mode():
-            print(f"{colorama.Fore.MAGENTA}Игрок ввёл команду: {command}{colorama.Fore.RESET}")
+            print(f"{colorama.Fore.MAGENTA}Игрок ввёл команду: {commands}{colorama.Fore.RESET}")
 
-        command_first_arg_lower = command[0].lower()
+        command_first_arg_lower = commands[0].lower()
 
         # Если бортовой компьютер поврежден, есть шанс, что произойдет сбой.
         if components.GAME.player.module_computer_damaged and command_first_arg_lower not in ["stop",
                                                                                               "save"] and random.random() < 0.2:
             print(
                 f"{colorama.Fore.RED}[СБОЙ] {colorama.Fore.GREEN}Попробу{colorama.Fore.YELLOW}йте ещё р{colorama.Fore.WHITE}аз.")
-            return self
+            return True
 
         # Мы не можем выполнять команды, если игра была остановлена.
         if not components.GAME.running:
             if command_first_arg_lower == 'stop':
-                return stop_game()
+                return False
             else:
                 print(
                     f"{colorama.Fore.YELLOW}Игра завершена, введите {colorama.Fore.CYAN}stop{colorama.Fore.YELLOW}, чтобы отключить бортовой компьютер.")
-                return self
+                return True
 
         # Остановка игры
         if command_first_arg_lower == 'stop':
-            return stop_game()
+            return False
         # Помощь
         elif command_first_arg_lower == 'help':
-            if len(command) > 1:
-                if command[1].lower() == 'game':
+            if len(commands) > 1:
+                if commands[1].lower() == 'game':
                     components.GAME.add_audio_to_queue("base//game//res//audio//command_executed.mp3")
                     print_game_help()
-                elif command[1].lower() == 'ship':
+                elif commands[1].lower() == 'ship':
                     components.GAME.add_audio_to_queue("base//game//res//audio//command_executed.mp3")
                     print_ship_help()
-                elif command[1].lower() == 'planets':
+                elif commands[1].lower() == 'planets':
                     components.GAME.add_audio_to_queue("base//game//res//audio//command_executed.mp3")
                     print_planets_help(len(components.GAME.planets) - 1)
                 else:
@@ -251,11 +250,11 @@ class GameScreen(ScreenBase):
                 print(f"{colorama.Fore.RED}Не получилось сохранить игру.")
         # Переименовать корабль
         elif command_first_arg_lower == 'rename':
-            rename_player_ship(command)
+            rename_player_ship(commands)
         # Ремонтировать корабль
         elif command_first_arg_lower == 'repair':
-            if len(command) > 1:
-                if command[1].lower() == 'run':
+            if len(commands) > 1:
+                if commands[1].lower() == 'run':
                     if components.GAME.player.get_total_health() < 700:
                         print(f"{colorama.Fore.CYAN}Запланирован ремонт корабля.")
                         components.GAME.add_audio_to_queue("base//game//res//audio//command_executed.mp3")
@@ -279,8 +278,8 @@ class GameScreen(ScreenBase):
                     print(f"{colorama.Fore.GREEN}Корабль не нуждается в ремонте.")
         # Заправить корабль
         elif command_first_arg_lower == 'refuel':
-            if len(command) > 1:
-                if command[1].lower() == 'run':
+            if len(commands) > 1:
+                if commands[1].lower() == 'run':
                     # Заправка корабля
                     price = components.GAME.get_refuel_price()
                     if components.GAME.player.resources - price > 0:
@@ -314,10 +313,10 @@ class GameScreen(ScreenBase):
             print(components.GAME.get_ship_status_text())
         # Перемещение корабля по планетам
         elif command_first_arg_lower == 'goto':
-            handle_goto_command(command)
+            handle_goto_command(commands)
         # Вывести инфо о планете
         elif command_first_arg_lower == 'planet':
-            print_planet_info(command)
+            print_planet_info(commands)
         # Закрыть терминал
         elif command_first_arg_lower == 'exit':
             if components.GAME.is_audio_queue_empty():
@@ -331,11 +330,11 @@ class GameScreen(ScreenBase):
                 print(
                     f"{colorama.Fore.CYAN}Не найдена точка входа. Включите отладку в настройках игры, чтобы продолжить.")
             else:
-                if len(command) > 1:
-                    if command[1].lower() == 'fire':
+                if len(commands) > 1:
+                    if commands[1].lower() == 'fire':
                         components.GAME.player.fire = True
                         print("Выполнено")
-                    if command[1].lower() == 'airleak':
+                    if commands[1].lower() == 'airleak':
                         components.GAME.player.air_leaking = True
                         print("Выполнено")
                 else:
@@ -346,7 +345,11 @@ class GameScreen(ScreenBase):
             components.GAME.add_audio_to_queue("base//game//res//audio//unknown_command.mp3")
             print(
                 f"{colorama.Fore.RED}Неизвестная команда. Если возникли трудности, введите команду {colorama.Fore.CYAN}help{colorama.Fore.GREEN}.")
-        del command
+        return True
+
+    def handle_input(self, command: str):
+        if not self.handle_user_command(command.split()):
+            return stop_game()
         return self
 
     def update(self, force_update: bool = False):

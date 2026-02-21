@@ -79,15 +79,6 @@ def print_planets_help(planets_count: int):
     )
     print(text)
 
-
-# Выводит на экран текст руководства по созданию (крафту) предметов todo: крафт предметов еще на этапе "я подумал о нём".
-def print_craft_help():
-    text = (
-        "К"
-    )
-    print(text)
-
-
 # Вычисляет время до завершения полёта, в секундах
 def calculate_time(ship_speed: int, planet_distance: int) -> int:
     return planet_distance // ship_speed
@@ -174,7 +165,6 @@ class Game:
         self.planets: list[Planet] = []  # Список планет
         self.space_events: list[GameEvent] = []  # Список событий в космосе
         self.last_messages: list[str] = []  # Список последних действий
-        self.timer = -1  # Простой таймер, который нужен для вывода времени ожидания какого-то действия. Если -1, значит он не работает
         self.audio_queue: list[str] = []  # Очередь звуков, здесь хранится путь до файлов
 
     # Повреждает все модули на корабле с шансом x% на каждый
@@ -917,7 +907,6 @@ class Game:
 
         # Ремонт завершён
         del repair_time
-        self.timer = -1
         self.player = get_repaired_ship(self.player)
 
         self.update_last_messages(
