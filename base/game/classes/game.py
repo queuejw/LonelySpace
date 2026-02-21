@@ -107,10 +107,10 @@ def calculate_speed(ship: Ship) -> int:
 def update_fuel(ship: Ship) -> int:
     # Если топливный бак пробит
     if ship.module_fuel_tank_damaged:
-        if random.random() > 0.75:
+        if random.random() > 0.76:
             ship.fuel = clamp(ship.fuel - 1, 0, 100)
 
-    if random.random() > 0.89:
+    if random.random() > 0.9:
         # Если повезло
         return clamp(ship.fuel - 1, 0, 100)
     else:
@@ -567,14 +567,16 @@ class Game:
                 self.player.resources = clamp(self.player.resources - random.randint(1, 2), 0, 99999)
             if random.random() > 0.75:
                 self.player.strength = clamp(self.player.strength - random.randint(1, 2), 0, 100)
+            if random.random() > 0.75:
+                self.player.fuel = clamp(self.player.fuel - random.randint(1, 2), 0, 100)
             if random.random() > 0.7:
                 self.player.oxygen = clamp(self.player.oxygen - random.randint(1, 2), 0, 100)
             if random.random() > 0.7:
                 self.player.crew_health = clamp(self.player.crew_health - random.randint(1, 2), 0, 100)
             if random.random() > 0.75:
                 self.player.oxygen = clamp(self.player.oxygen - random.randint(1, 2), 0, 100)
-            self.damage_all_modules(0.001)
-            if random.random() > 0.92:
+            self.damage_all_modules(0.025)
+            if random.random() > 0.96:
                 if not self.player.air_leaking:
                     self.player.air_leaking = True
 
