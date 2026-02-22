@@ -326,7 +326,8 @@ class GameScreen(ScreenBase):
 
         # Отладка игры. Полезные штуки, которые я использую для тестирования. Работает только при включенной настройке отладки.
         elif command_first_arg_lower == "debug":
-            if not components.SETTINGS.get_debug_mode():
+            force = False
+            if not components.SETTINGS.get_debug_mode() and not force:
                 print(
                     f"{colorama.Fore.CYAN}Не найдена точка входа. Включите отладку в настройках игры, чтобы продолжить.")
             else:

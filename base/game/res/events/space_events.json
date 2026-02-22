@@ -15,16 +15,16 @@
       "module_cooling_system 0",
       "strength remove 4 2"
     ],
-    "prob": 0.0022,
+    "prob": 0.022,
     "color": "yellow"
   },
   {
     "name": "Микрометеоритный дождь",
     "description": "Корабль попал под поток микрометеоритов. Корпус получил повреждения.",
     "commands": [
-      "strength remove 10 5"
+      "strength remove 4 2"
     ],
-    "prob": 0.0055,
+    "prob": 0.055,
     "color": "yellow"
   },
   {
@@ -34,7 +34,7 @@
       "oxygen remove 25 5",
       "crew remove 6 3"
     ],
-    "prob": 0.0015,
+    "prob": 0.015,
     "color": "red"
   },
   {
@@ -43,7 +43,7 @@
     "commands": [
       "module_computer 0"
     ],
-    "prob": 0.0021,
+    "prob": 0.021,
     "color": "yellow"
   },
   {
@@ -53,7 +53,7 @@
       "oxygen remove 5 3",
       "module_life_support 0"
     ],
-    "prob": 0.0016,
+    "prob": 0.016,
     "color": "red"
   },
   {
@@ -64,7 +64,7 @@
       "oxygen remove 3 1",
       "air_leaking 1"
     ],
-    "prob": 0.0019,
+    "prob": 0.019,
     "color": "red"
   },
   {
@@ -73,16 +73,16 @@
     "commands": [
       "module_computer 0"
     ],
-    "prob": 0.0038,
+    "prob": 0.038,
     "color": "yellow"
   },
   {
     "name": "Повреждение обшивки",
     "description": "Внешняя обшивка корабля получила повреждения из-за износа.",
     "commands": [
-      "strength remove 10 4"
+      "strength remove 8 2"
     ],
-    "prob": 0.0067,
+    "prob": 0.047,
     "color": "red"
   },
   {
@@ -91,7 +91,7 @@
     "commands": [
       "module_life_support 0"
     ],
-    "prob": 0.0028,
+    "prob": 0.0088,
     "color": "red"
   },
   {
@@ -100,7 +100,22 @@
     "commands": [
       "fire 1"
     ],
-    "prob": 0.0002,
-    "color": "cyan"
+    "prob": 0.002,
+    "color": "red"
+  },
+  {
+    "name": "Взрыв",
+    "description": "Произошёл взрыв на корабле! Корабль получил критические повреждения.",
+    "commands": [
+      "strength remove 50 25",
+      "crew remove 50 25",
+      "oxygen remove 50 25",
+      "fire 1",
+      "air_leaking 1",
+      "module_engine 0",
+      "module_life_support 0"
+    ],
+    "prob": 0.000012,
+    "color": "red"
   }
 ]
