@@ -79,6 +79,7 @@ def print_planets_help(planets_count: int):
     )
     print(text)
 
+
 # Вычисляет время до завершения полёта, в секундах
 def calculate_time(ship_speed: int, planet_distance: int) -> int:
     return planet_distance // ship_speed
@@ -420,6 +421,8 @@ class Game:
                     self.update_last_messages(
                         f"{colorama.Fore.GREEN}Найдены ресурсы! Добавлено {r} ресурсов в хранилище.")
                     self.player.resources += r
+
+                self.add_audio_to_queue("base/game/res/audio/resources_found.mp3")
 
             del planet
 
@@ -888,6 +891,7 @@ class Game:
 
         self.update_last_messages(
             f"{colorama.Fore.CYAN}Начинаем ремонт корабля!{colorama.Fore.GREEN}")
+        self.add_audio_to_queue("base/game/res/audio/repair_started.mp3")
         while repair_time > 0:
             # Если движок был остановлен, то нужно остановить цикл
             if not components.ENGINE.running and not self.running:
@@ -966,6 +970,7 @@ class Game:
             # Если полёт был отменен, то нужно остановить цикл.
             if not self.planet_flying_active:
                 self.update_last_messages(f"{colorama.Fore.RED}Полёт был отменён.")
+                self.add_audio_to_queue("base/game/res/audio/flight_canceled.mp3")
                 successful = False
                 break
             # Если игра приостановлена, пропускаем итерацию
